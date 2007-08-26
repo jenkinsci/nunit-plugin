@@ -1,0 +1,16 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.jvnet.hudson.plugins</groupId>
+		<artifactId>plugin</artifactId>
+		<version>1.132</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>nunit</artifactId>
+	<packaging>hpi</packaging>
+	<version>0.1-SNAPSHOT</version>
+	<name>Hudson NUnit plugin</name>
+
+</project>
