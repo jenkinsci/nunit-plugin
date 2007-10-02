@@ -32,7 +32,7 @@ import hudson.tasks.junit.JUnitResultArchiver;
  */
 public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 
-	private static final String JUNIT_REPORTS_PATH = "junit-reports";
+	private static final String JUNIT_REPORTS_PATH = "temporary-junit-reports";
 
 	private transient final String testResultsPattern;
 	
@@ -56,7 +56,6 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 		this.listener = listener;
 		this.testResultsPattern = testResults;
 	}
-
 	
 	/** {@inheritDoc} */
 	public Boolean invoke(File ws, VirtualChannel channel) throws IOException {
@@ -74,7 +73,7 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
         Boolean retValue = performJUnitArchiver();
         
 		// Delete JUnit report files and temp folder        
-        listener.getLogger().println("Deleting transformed NUnit results");
+        listener.getLogger().println("Deleting transformed JUnit results");
         for (File file : junitOutputPath.listFiles()) {
         	file.delete();
         }
@@ -132,11 +131,10 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 	 */
 	private void transformNUnitReports(File nunitInputPath, String[] nunitFilesStr, 
 			File junitOutputPath) throws IOException {
-
 		
 		for (String nunitFileStr : nunitFilesStr) {
         	File nunitFile = new File(nunitInputPath, nunitFileStr);
-        	File junitFile = new File(junitOutputPath, "junit-" + nunitFile.getName() + ".xml");
+        	File junitFile = new File(junitOutputPath, "junit-" + nunitFile.getName());
     		
         	try {
         		transformer.setParameter("outputpath", junitFile.getParentFile().getAbsolutePath());

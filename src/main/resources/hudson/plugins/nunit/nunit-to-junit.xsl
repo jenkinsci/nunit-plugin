@@ -31,24 +31,19 @@
 										select="count(./failure/stack-trace/*) + count(./failure/stack-trace/text())" />
 									<failure>
 										<xsl:choose>
-											<xsl:when
-												test="$failstack &gt; 0 or not($generalfailure)">
-												MESSAGE:
-												<xsl:value-of
-													select="./failure/message" />
-												+++++++++++++++++++
-												STACK TRACE:
-												<xsl:value-of
-													select="./failure/stack-trace" />
+											<xsl:when test="$failstack &gt; 0 or not($generalfailure)">
+MESSAGE:
+<xsl:value-of select="./failure/message" />
++++++++++++++++++++
+STACK TRACE:
+<xsl:value-of select="./failure/stack-trace" />
 											</xsl:when>
 											<xsl:otherwise>
-												MESSAGE:
-												<xsl:value-of
-													select="$generalfailure/message" />
-												+++++++++++++++++++
-												STACK TRACE:
-												<xsl:value-of
-													select="$generalfailure/stack-trace" />
+MESSAGE:
+<xsl:value-of select="$generalfailure/message" />
++++++++++++++++++++
+STACK TRACE:
+<xsl:value-of select="$generalfailure/stack-trace" />
 											</xsl:otherwise>
 										</xsl:choose>
 									</failure>
@@ -58,10 +53,6 @@
 					</testsuite>
 				</redirect:write>
 			</xsl:for-each>
-			<!--
-				<xsl:variable name="testcases" select="@name"/>
-				<a name="{$testcases}"/>
-			-->
 		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>
