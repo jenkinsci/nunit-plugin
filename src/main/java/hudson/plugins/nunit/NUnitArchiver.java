@@ -14,6 +14,7 @@ import javax.xml.transform.TransformerFactory;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.xalan.transformer.TransformerImpl;
 
 import hudson.FilePath;
 import hudson.Launcher;
@@ -61,23 +62,20 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 	public Boolean invoke(File ws, VirtualChannel channel) throws IOException {
 		
 		listener.getLogger().println("Transforming NUnit tests results");
-		
 		String[] nunitFiles = findNUnitReports(ws);
         
-		// Setup so the JUnit files are stored so they can be deleted
-		Set<File> junitReportFiles = new HashSet<File>();
         File junitOutputPath = new File(ws, JUNIT_REPORTS_PATH);
         junitOutputPath.mkdirs();
         
         // Transform all NUnit files
-        transformNUnitReports(ws, nunitFiles, junitOutputPath, junitReportFiles);
+        transformNUnitReports(ws, nunitFiles, junitOutputPath);
 
         // Run the JUnit test archiver
         Boolean retValue = performJUnitArchiver();
         
 		// Delete JUnit report files and temp folder        
-        // listener.getLogger().println("Deleting transformed NUnit results");
-        for (File file : junitReportFiles) {
+        listener.getLogger().println("Deleting transformed NUnit results");
+        for (File file : junitOutputPath.listFiles()) {
         	file.delete();
         }
         junitOutputPath.delete();
@@ -113,7 +111,7 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 	 */
 	private Boolean performJUnitArchiver() throws IOException {
 		Boolean retValue = Boolean.TRUE;
-		JUnitResultArchiver unitResultArchiver = new JUnitResultArchiver(JUNIT_REPORTS_PATH + "/junit-*.xml");
+		JUnitResultArchiver unitResultArchiver = new JUnitResultArchiver(JUNIT_REPORTS_PATH + "/TEST-*.xml");
 		try {
 			if (! unitResultArchiver.perform(build, launcher, listener)) {
 				retValue = Boolean.FALSE;
@@ -133,13 +131,15 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 	 * @throws IOException
 	 */
 	private void transformNUnitReports(File nunitInputPath, String[] nunitFilesStr, 
-			File junitOutputPath, Set<File> junitFiles) throws IOException {
+			File junitOutputPath) throws IOException {
+
+		
 		for (String nunitFileStr : nunitFilesStr) {
         	File nunitFile = new File(nunitInputPath, nunitFileStr);
         	File junitFile = new File(junitOutputPath, "junit-" + nunitFile.getName() + ".xml");
-        	junitFiles.add(junitFile);
-        	
+    		
         	try {
+        		transformer.setParameter("outputpath", junitFile.getParentFile().getAbsolutePath());
         		transformer.transform(
         				new javax.xml.transform.stream.StreamSource(nunitFile), 
         				new javax.xml.transform.stream.StreamResult(junitFile));
