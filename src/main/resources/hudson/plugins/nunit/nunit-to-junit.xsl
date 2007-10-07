@@ -1,20 +1,20 @@
-<xsl:stylesheet version="2.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:redirect="http://xml.apache.org/xalan/redirect"
-	extension-element-prefixes="redirect">
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output method="xml" indent="yes" />
 	
-	<xsl:param name="outputpath" select="'.'"/>
-	
 	<xsl:template match="/test-results">
+	<testsuites>
 		<xsl:for-each select="test-suite//results//test-case[1]">
+	
 			<xsl:for-each select="../..">
 				<xsl:variable name="firstTestName"
 					select="results//test-case[1]//@name" />
 				<xsl:variable name="assembly"
 					select="concat(substring-before($firstTestName, @name), @name)" />
 				
-				<redirect:write file="{$outputpath}/TEST-{$assembly}.xml">
+				<!--  <redirect:write file="{$outputpath}/TEST-{$assembly}.xml">-->
+
 					<testsuite name="{$assembly}"
 						tests="{count(*/test-case)}" time="{@time}"
 						failures="{count(*/test-case/failure)}" errors="0">
@@ -48,11 +48,12 @@ STACK TRACE:
 										</xsl:choose>
 									</failure>
 								</xsl:if>
-							</testcase>
+				 			</testcase>
 						</xsl:for-each>
 					</testsuite>
-				</redirect:write>
+				<!--  </redirect:write>-->
 			</xsl:for-each>
 		</xsl:for-each>
+		</testsuites>
 	</xsl:template>
 </xsl:stylesheet>
