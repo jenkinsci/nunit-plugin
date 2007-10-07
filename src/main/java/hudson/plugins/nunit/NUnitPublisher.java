@@ -10,9 +10,9 @@ import hudson.tasks.Publisher;
 import hudson.tasks.test.TestResultProjectAction;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -24,7 +24,6 @@ import org.kohsuke.stapler.StaplerRequest;
 public class NUnitPublisher extends hudson.tasks.Publisher {
 
 	private static transient final String PLUGIN_NUNIT = "/plugin/nunit/";
-	private static transient final String NUNIT_TO_JUNIT_XSL = "nunit-to-junit.xsl";
 
 	public static final Descriptor<Publisher> DESCRIPTOR = new DescriptorImpl();
 	
@@ -46,14 +45,13 @@ public class NUnitPublisher extends hudson.tasks.Publisher {
 	public boolean perform(final Build<?, ?> build, final Launcher launcher,
 			final BuildListener listener) throws InterruptedException, IOException {
 		Boolean result = Boolean.FALSE;
-		
 		try {
-			InputStream xslFile = this.getClass().getResourceAsStream(NUNIT_TO_JUNIT_XSL);
-			NUnitArchiver transformer = new NUnitArchiver(xslFile, build, launcher, listener, testResultsPattern);
+			NUnitArchiver transformer = new NUnitArchiver(build, launcher, listener, testResultsPattern);
 			result = build.getProject().getWorkspace().act(transformer);
-			
-		} catch (TransformerConfigurationException tce) {
-			throw new AbortException("There was a problem with the XSL transform file, please notify the plugin responsible", tce);
+		} catch (TransformerException te) {
+			throw new AbortException("Could not read the XSL XML file. Please report this issue to the plugin author", te);
+		} catch (ParserConfigurationException pce) {
+			throw new AbortException("Could not initalize the XML parser. Please report this issue to the plugin author", pce);
 		}
 		
 		return result.booleanValue();
