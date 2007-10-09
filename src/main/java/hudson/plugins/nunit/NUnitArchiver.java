@@ -64,7 +64,7 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 	        
 	        // Transform all NUnit files
 	        for (String nunitFileName : nunitFiles) {
-	        	listener.getLogger().println("Transforming " + nunitFileName);
+	        	//listener.getLogger().println("Transforming " + nunitFileName);
 				unitReportTransformer.transform(new FileInputStream(new File(ws, nunitFileName)), junitOutputPath);
 	        }
 	
@@ -76,11 +76,11 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 			throw new AbortException("Could not read the transformed JUnit report. Please report this issue to the plugin author", se);
 		} finally {
 			// Delete JUnit report files and temp folder        
-	        listener.getLogger().println("Deleting transformed JUnit results");
-	        /*for (File file : junitOutputPath.listFiles()) {
+	        // listener.getLogger().println("Deleting transformed JUnit results");
+	        for (File file : junitOutputPath.listFiles()) {
 	        	file.delete();
 	        }
-	        junitOutputPath.delete();*/
+	        junitOutputPath.delete();
 		}
         
     	return retValue;
