@@ -11,30 +11,36 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class NUnitReportTransformerTest implements FilenameFilter {
+public class NUnitReportTransformerTest  extends AbstractWorkspaceTest implements FilenameFilter {
 
 	private NUnitReportTransformer transformer;
 	private File tempFilePath;
 
 	@Before
 	public void setup() throws Exception {
+		super.createWorkspace();
 		transformer = new NUnitReportTransformer();
-		tempFilePath = new File(System.getProperty("java.io.tmpdir"), "nunit-files");
-		tempFilePath.mkdir();
+		tempFilePath = AbstractWorkspaceTest.PARENT_FILE;
 	}
 	
 	@After
-	public void teardown() {
-		for (File file : tempFilePath.listFiles()) {
-			file.delete();
-		}
-		tempFilePath.delete();
+	public void teardown() throws Exception {
+		super.deleteWorkspace();
 	}
 	
 	@Test
 	public void testUnicodeTransform() throws Exception {
 		transformer.transform(this.getClass().getResourceAsStream("NUnitUnicode.xml"), tempFilePath);
 		assertJunitFiles(1);
+	}
+	
+	@Test
+	public void testDeleteOutputFiles() throws Exception {
+		transformer.transform(this.getClass().getResourceAsStream("NUnit.xml"), tempFilePath);
+		File[] listFiles = tempFilePath.listFiles(this);
+		for (File file : listFiles) {
+			Assert.assertTrue("Could not delete the transformed files", file.delete());
+		}
 	}
 	
 	@Test
