@@ -10,4 +10,15 @@
 	">
     	<f:textbox name="nunit_reports.pattern" value="${instance.testResultsPattern}" />
 	</f:entry>
+	<j:if test="${instance.debug}">
+		<f:entry title="Debug">
+			<f:checkbox name="nunit_reports.debug" checked="${instance.debug}"/>
+		</f:entry>
+		<f:entry title="Keep JUnit report files">
+			<f:checkbox name="nunit_reports.keepjunitreports" checked="${instance.keepJunitReports}"/>
+		</f:entry>
+		<f:entry title="Skip JUnit archiving">
+			<f:checkbox name="nunit_reports.skipjunitarchiver" checked="${instance.skipJunitArchiver}"/>
+		</f:entry>
+	</j:if>
 </j:jelly>

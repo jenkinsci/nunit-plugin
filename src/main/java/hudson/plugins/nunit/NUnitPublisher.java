@@ -7,6 +7,7 @@ import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
 import hudson.tasks.Publisher;
+import hudson.tasks.junit.JUnitResultArchiver;
 import hudson.tasks.test.TestResultProjectAction;
 
 import java.io.IOException;
@@ -21,20 +22,37 @@ import org.kohsuke.stapler.StaplerRequest;
  * 
  * @author Erik Ramfelt
  */
-public class NUnitPublisher extends hudson.tasks.Publisher {
+public class NUnitPublisher extends hudson.tasks.Publisher implements TestReportArchiver {
 
 	private static transient final String PLUGIN_NUNIT = "/plugin/nunit/";
 
 	public static final Descriptor<Publisher> DESCRIPTOR = new DescriptorImpl();
 	
 	private String testResultsPattern;
-
-	public NUnitPublisher(String testResultsPattern) {
+	private boolean debug;
+	private boolean keepJUnitReports;
+	private boolean skipJUnitArchiver;
+	
+	public NUnitPublisher(String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver) {
 		this.testResultsPattern = testResultsPattern;
+		this.debug = debug;
+		if (this.debug) {
+			this.keepJUnitReports = keepJUnitReports;
+			this.skipJUnitArchiver = skipJUnitArchiver;
+		}
 	}
 	
 	public String getTestResultsPattern() {
 		return testResultsPattern;
+	}
+	public boolean getDebug() {
+		return debug;
+	}
+	public boolean getKeepJunitReports() {
+		return keepJUnitReports;
+	}
+	public boolean getSkipJunitArchiver() {
+		return skipJUnitArchiver;
 	}
 
 	@Override
@@ -46,7 +64,8 @@ public class NUnitPublisher extends hudson.tasks.Publisher {
 			final BuildListener listener) throws InterruptedException, IOException {
 		Boolean result = Boolean.FALSE;
 		try {
-			NUnitArchiver transformer = new NUnitArchiver(build, launcher, listener, testResultsPattern);
+			NUnitArchiver transformer = new NUnitArchiver(build, launcher, listener, testResultsPattern, 
+					this, new NUnitReportTransformer(), keepJUnitReports, skipJUnitArchiver);
 			result = build.getProject().getWorkspace().act(transformer);
 		} catch (TransformerException te) {
 			throw new AbortException("Could not read the XSL XML file. Please report this issue to the plugin author", te);
@@ -55,6 +74,11 @@ public class NUnitPublisher extends hudson.tasks.Publisher {
 		}
 		
 		return result.booleanValue();
+	}
+	
+	public boolean archive(Build build, Launcher launcher, BuildListener listener) 
+		throws java.lang.InterruptedException, java.io.IOException {
+		return new JUnitResultArchiver(NUnitArchiver.JUNIT_REPORTS_PATH + "/TEST-*.xml").perform(build, launcher, listener);
 	}
 
 	public Descriptor<Publisher> getDescriptor() {
@@ -79,7 +103,10 @@ public class NUnitPublisher extends hudson.tasks.Publisher {
 
 		@Override
 		public Publisher newInstance(StaplerRequest req) throws FormException {
-			return new NUnitPublisher(req.getParameter("nunit_reports.pattern"));
+			return new NUnitPublisher(req.getParameter("nunit_reports.pattern"), 
+                                                  (req.getParameter("nunit_reports.debug") != null),
+                                                  (req.getParameter("nunit_reports.keepjunitreports") != null),
+                                                  (req.getParameter("nunit_reports.skipjunitarchiver") != null));
 		}
-	}
+	}		
 }

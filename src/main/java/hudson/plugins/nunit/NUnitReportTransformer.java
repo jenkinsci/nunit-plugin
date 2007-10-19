@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  * split up one NUnit report into several JUnit files. 
  *
  */
-public class NUnitReportTransformer {
+public class NUnitReportTransformer implements TestReportTransformer {
 	
 	public static final String JUNIT_FILE_POSTFIX = ".xml";
 	public static final String JUNIT_FILE_PREFIX = "TEST-";
@@ -63,7 +63,12 @@ public class NUnitReportTransformer {
 	 */
 	public void transform(InputStream nunitFileStream, File junitOutputPath) throws IOException, TransformerException, SAXException {
 		File junitTargetFile = new File(junitOutputPath, TEMP_JUNIT_FILE_STR);
-		nunitTransformer.transform( new StreamSource(nunitFileStream), new StreamResult(new FileOutputStream(junitTargetFile)));
+		FileOutputStream fileOutputStream = new FileOutputStream(junitTargetFile);
+		try {		
+			nunitTransformer.transform( new StreamSource(nunitFileStream), new StreamResult(fileOutputStream));
+		} finally {
+			fileOutputStream.close();
+		}
 		splitJUnitFile(junitTargetFile, junitOutputPath);
 	}
 
@@ -83,8 +88,13 @@ public class NUnitReportTransformer {
 	    	Element element = (Element) elementsByTagName.item(i);
 	    	DOMSource source = new DOMSource(element);
 	        File junitOutputFile = new File(junitOutputPath, JUNIT_FILE_PREFIX + element.getAttribute("name") + JUNIT_FILE_POSTFIX);
-			StreamResult result = new StreamResult(new FileOutputStream(junitOutputFile));
-	        writerTransformer.transform(source, result);
+			FileOutputStream fileOutputStream = new FileOutputStream(junitOutputFile);
+			try {
+				StreamResult result = new StreamResult(fileOutputStream);
+	        	writerTransformer.transform(source, result); 
+			} finally {
+				fileOutputStream.close();
+			}
 	    }
 	}
 }

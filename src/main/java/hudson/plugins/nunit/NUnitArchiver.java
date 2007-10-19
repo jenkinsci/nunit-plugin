@@ -12,13 +12,13 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.xml.sax.SAXException;
 
+import hudson.AbortException;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.maven.agent.AbortException;
 import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
-import hudson.tasks.junit.JUnitResultArchiver;
+import hudson.util.IOException2;
 
 /**
  * Class responsible for transforming NUnit to JUnit files and then run
@@ -30,26 +30,34 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String JUNIT_REPORTS_PATH = "temporary-junit-reports";
+	public static final String JUNIT_REPORTS_PATH = "temporary-junit-reports";
 
 	private transient final String testResultsPattern;
+	private transient boolean keepJUnitReports;
+	private transient boolean skipJUnitArchiver;
 	
 	// Build related objects
 	private transient final BuildListener listener;
 	private transient final Build<?, ?> build;
 	private transient final Launcher launcher;
 
-	private transient NUnitReportTransformer unitReportTransformer;
+	private transient TestReportTransformer unitReportTransformer;
+	private transient TestReportArchiver unitResultArchiver;;
 
 	public NUnitArchiver(
 			Build<?, ?> build, Launcher launcher, BuildListener listener,
-			String testResults) throws TransformerException, ParserConfigurationException  {
+			String testResults, TestReportArchiver unitResultArchiver, TestReportTransformer transformer,
+			boolean keepJUnitReports, boolean skipJUnitArchiver) 
+				throws TransformerException, ParserConfigurationException  {
 
+		this.unitResultArchiver = unitResultArchiver;
 		this.launcher = launcher;
 		this.build = build;
 		this.listener = listener;
 		this.testResultsPattern = testResults;
-		unitReportTransformer = new NUnitReportTransformer();
+		this.unitReportTransformer = transformer;
+		this.keepJUnitReports = keepJUnitReports;
+		this.skipJUnitArchiver = skipJUnitArchiver;
 	}
 	
 	/** {@inheritDoc} */
@@ -60,21 +68,26 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
         File junitOutputPath = new File(ws, JUNIT_REPORTS_PATH);
         junitOutputPath.mkdirs();
 
-    	try {
-	        
-	        // Transform all NUnit files
-	        for (String nunitFileName : nunitFiles) {
+        for (String nunitFileName : nunitFiles) {
+	        FileInputStream fileStream = new FileInputStream(new File(ws, nunitFileName));
+	    	try {		        
+		        // Transform all NUnit files
 	        	//listener.getLogger().println("Transforming " + nunitFileName);
-				unitReportTransformer.transform(new FileInputStream(new File(ws, nunitFileName)), junitOutputPath);
-	        }
-	
+				unitReportTransformer.transform(fileStream, junitOutputPath);
+			} catch (TransformerException te) {
+				throw new IOException2("Could not transform the NUnit report. Please report this issue to the plugin author", te);
+			} catch (SAXException se) {
+				throw new IOException2("Could not transform the NUnit report. Please report this issue to the plugin author", se);
+			} finally {
+				fileStream.close();
+			}
+        }
+    	
+        if (!skipJUnitArchiver) {
 	        // Run the JUnit test archiver
 	        retValue = performJUnitArchiver();
-		} catch (TransformerException te) {
-			throw new AbortException("Could not transform the NUnit report. Please report this issue to the plugin author", te);
-		} catch (SAXException se) {
-			throw new AbortException("Could not read the transformed JUnit report. Please report this issue to the plugin author", se);
-		} finally {
+        }
+		if (! keepJUnitReports) {
 			// Delete JUnit report files and temp folder        
 	        // listener.getLogger().println("Deleting transformed JUnit results");
 	        for (File file : junitOutputPath.listFiles()) {
@@ -91,7 +104,7 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 	 * @param parentPath parent
 	 * @return an array of strings
 	 */
-	private String[] findNUnitReports(File parentPath) {
+	private String[] findNUnitReports(File parentPath) throws AbortException {
 		FileSet fs = new FileSet();
         Project p = new Project();
         fs.setProject(p);
@@ -102,7 +115,8 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
         String[] nunitFiles = ds.getIncludedFiles();
         if(nunitFiles.length==0) {
             // no test result. Most likely a configuration error or fatal problem
-            throw new AbortException("No NUnit test report files were found. Configuration error?");
+        	listener.fatalError("No NUnit test report files were found. Configuration error?");
+            throw new AbortException();
         }
 		return nunitFiles;
 	}
@@ -114,13 +128,12 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 	 */
 	private Boolean performJUnitArchiver() throws IOException {
 		Boolean retValue = Boolean.TRUE;
-		JUnitResultArchiver unitResultArchiver = new JUnitResultArchiver(JUNIT_REPORTS_PATH + "/TEST-*.xml");
 		try {
-			if (! unitResultArchiver.perform(build, launcher, listener)) {
+			if (! unitResultArchiver.archive(build, launcher, listener)) {
 				retValue = Boolean.FALSE;
 			}
 		} catch (InterruptedException ie) {
-			throw new AbortException("Interrupted", ie);
+			throw new IOException2(ie);
 		}
 		return retValue;
 	}
