@@ -29,9 +29,9 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements TestReport
 	public static final Descriptor<Publisher> DESCRIPTOR = new DescriptorImpl();
 	
 	private String testResultsPattern;
-	private boolean debug;
-	private boolean keepJUnitReports;
-	private boolean skipJUnitArchiver;
+	private boolean debug = false;
+	private boolean keepJUnitReports = false;
+	private boolean skipJUnitArchiver = false;
 	
 	public NUnitPublisher(String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver) {
 		this.testResultsPattern = testResultsPattern;
@@ -62,6 +62,9 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements TestReport
 
 	public boolean perform(final Build<?, ?> build, final Launcher launcher,
 			final BuildListener listener) throws InterruptedException, IOException {
+		if (debug) {
+			listener.getLogger().println("NUnit publisher running in debug mode.");
+		}
 		Boolean result = Boolean.FALSE;
 		try {
 			NUnitArchiver transformer = new NUnitArchiver(build, launcher, listener, testResultsPattern, 
@@ -104,9 +107,9 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements TestReport
 		@Override
 		public Publisher newInstance(StaplerRequest req) throws FormException {
 			return new NUnitPublisher(req.getParameter("nunit_reports.pattern"), 
-                                                  (req.getParameter("nunit_reports.debug") != null),
-                                                  (req.getParameter("nunit_reports.keepjunitreports") != null),
-                                                  (req.getParameter("nunit_reports.skipjunitarchiver") != null));
+					(req.hasParameter("nunit_reports.debug") ? Boolean.parseBoolean(req.getParameter("nunit_reports.debug")) : false),
+					(req.hasParameter("nunit_reports.keepjunitreports") ? Boolean.parseBoolean(req.getParameter("nunit_reports.keepjunitreports")) : false),
+					(req.hasParameter("nunit_reports.skipjunitarchiver") ? Boolean.parseBoolean(req.getParameter("nunit_reports.skipjunitarchiver")) : false));
 		}
 	}		
 }

@@ -33,8 +33,8 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 	public static final String JUNIT_REPORTS_PATH = "temporary-junit-reports";
 
 	private transient final String testResultsPattern;
-	private transient boolean keepJUnitReports;
-	private transient boolean skipJUnitArchiver;
+	private transient boolean keepJUnitReports = false;
+	private transient boolean skipJUnitArchiver = false;
 	
 	// Build related objects
 	private transient final BuildListener listener;
@@ -83,11 +83,16 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 			}
         }
     	
-        if (!skipJUnitArchiver) {
+        if (skipJUnitArchiver) {
+        	listener.getLogger().println("Skipping feeding JUnit reports to JUnitArchiver");
+        } else {
 	        // Run the JUnit test archiver
 	        retValue = performJUnitArchiver();
         }
-		if (! keepJUnitReports) {
+
+		if (keepJUnitReports) {
+			listener.getLogger().println("Skipping deletion of temporary JUnit reports.");
+		} else {
 			// Delete JUnit report files and temp folder        
 	        // listener.getLogger().println("Deleting transformed JUnit results");
 	        for (File file : junitOutputPath.listFiles()) {
