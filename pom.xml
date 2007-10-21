@@ -10,7 +10,7 @@
 
 	<artifactId>nunit</artifactId>
 	<packaging>hpi</packaging>
-	<version>0.3-SNAPSHOT</version>
+	<version>0.2.3</version>
 	<name>Hudson NUnit plugin</name>
 	
 	<dependencies>
@@ -34,4 +34,8 @@
 			<scope>test</scope>
 	    </dependency>
 	</dependencies>
+
+  <scm>
+    <tag>nunit-0_2_3</tag>
+  </scm>
 </project>
