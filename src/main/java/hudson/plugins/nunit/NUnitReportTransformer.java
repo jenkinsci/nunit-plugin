@@ -33,7 +33,7 @@ public class NUnitReportTransformer implements TestReportTransformer {
 	public static final String JUNIT_FILE_PREFIX = "TEST-";
 	
 	private static final String TEMP_JUNIT_FILE_STR = "temp-junit.xml";	
-	private static final String NUNIT_TO_JUNIT_XSLFILE_STR = "nunit-to-junit.xsl";
+	public static final String NUNIT_TO_JUNIT_XSLFILE_STR = "nunit-to-junit.xsl";
 	
 	private transient Transformer nunitTransformer;
 	private transient Transformer writerTransformer;

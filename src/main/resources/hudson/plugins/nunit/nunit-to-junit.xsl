@@ -17,8 +17,9 @@
 
 					<testsuite name="{$assembly}"
 						tests="{count(*/test-case)}" time="{@time}"
-						failures="{count(*/test-case/failure)}" errors="0">
-						<xsl:for-each select="*/test-case">
+						failures="{count(*/test-case/failure)}" errors="0"
+						skipped="{count(*/test-case[@executed='False'])}">
+						<xsl:for-each select="*/test-case[@executed='True']">
 							<testcase classname="{$assembly}"
 								name="{substring-after(./@name, concat($assembly,'.'))}"
 								time="{@time}">
