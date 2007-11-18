@@ -11,8 +11,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 import hudson.AbortException;
-import hudson.Launcher;
-import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
 
@@ -22,9 +20,7 @@ import org.junit.Test;
 
 public class NUnitArchiverTest extends AbstractWorkspaceTest {
 
-    private Launcher launcher;
     private BuildListener buildListener;
-    private Build build;
     private Mockery context;
     private Mockery classContext;
     private TestReportArchiver archiver;
@@ -43,9 +39,7 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
             }
         };
 
-        launcher = classContext.mock(Launcher.class);
         buildListener = classContext.mock(BuildListener.class);
-        build = classContext.mock(Build.class);
 
         archiver = context.mock(TestReportArchiver.class);
         transformer = context.mock(TestReportTransformer.class);
@@ -59,7 +53,7 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
 
     @Test
     public void testRemovalOfJunitFiles() throws Exception {
-        nunitArchiver = new NUnitArchiver(build, launcher, buildListener, "*.xml", archiver, transformer, false, false);
+        nunitArchiver = new NUnitArchiver(buildListener, "*.xml", archiver, transformer, false, false);
         workspace.createTextTempFile("nunit-report", ".xml", "content");
         workspace.child(NUnitArchiver.JUNIT_REPORTS_PATH).mkdirs();
         workspace.child(NUnitArchiver.JUNIT_REPORTS_PATH).createTextTempFile("TEST-", ".xml", "<tests>");
@@ -67,7 +61,7 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
         context.checking(new Expectations() {
             {
                 one(transformer).transform(with(any(InputStream.class)), with(any(File.class)));
-                one(archiver).archive(build, launcher, buildListener);
+                one(archiver).archive();
                 will(returnValue(true));
             }
         });
@@ -86,14 +80,14 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
 
     @Test
     public void testTransformOfTwoReports() throws Exception {
-        nunitArchiver = new NUnitArchiver(build, launcher, buildListener, "*.xml", archiver, transformer, false, false);
+        nunitArchiver = new NUnitArchiver(buildListener, "*.xml", archiver, transformer, false, false);
         workspace.createTextTempFile("nunit-report", ".xml", "content");
         workspace.createTextTempFile("nunit-report", ".xml", "content");
 
         context.checking(new Expectations() {
             {
                 exactly(2).of(transformer).transform(with(any(InputStream.class)), with(any(File.class)));
-                one(archiver).archive(build, launcher, buildListener);
+                one(archiver).archive();
                 will(returnValue(true));
             }
         });
@@ -110,13 +104,13 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
 
     @Test
     public void testKeepJUnitReportFiles() throws Exception {
-        nunitArchiver = new NUnitArchiver(build, launcher, buildListener, "*.xml", archiver, transformer, true, false);
+        nunitArchiver = new NUnitArchiver(buildListener, "*.xml", archiver, transformer, true, false);
         workspace.createTextTempFile("nunit-report", ".xml", "content");
 
         context.checking(new Expectations() {
             {
                 one(transformer).transform(with(any(InputStream.class)), with(any(File.class)));
-                one(archiver).archive(build, launcher, buildListener);
+                one(archiver).archive();
                 will(returnValue(true));
             }
         });
@@ -135,7 +129,7 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
 
     @Test
     public void testSkipJUnitArchiver() throws Exception {
-        nunitArchiver = new NUnitArchiver(build, launcher, buildListener, "*.xml", archiver, transformer, true, true);
+        nunitArchiver = new NUnitArchiver(buildListener, "*.xml", archiver, transformer, true, true);
         workspace.createTextTempFile("nunit-report", ".xml", "content");
 
         context.checking(new Expectations() {
@@ -163,7 +157,7 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
                 one(buildListener).fatalError(with(any(String.class)));
             }
         });
-        nunitArchiver = new NUnitArchiver(build, launcher, buildListener, "*.xml", archiver, transformer, true, true);
+        nunitArchiver = new NUnitArchiver(buildListener, "*.xml", archiver, transformer, true, true);
         nunitArchiver.invoke(PARENT_FILE, virtualChannel);
     }
 }

@@ -14,8 +14,6 @@ import org.xml.sax.SAXException;
 
 import hudson.AbortException;
 import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
 import hudson.util.IOException2;
@@ -37,19 +35,15 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 
     // Build related objects
     private transient final BuildListener listener;
-    private transient final Build<?, ?> build;
-    private transient final Launcher launcher;
 
     private transient TestReportTransformer unitReportTransformer;
     private transient TestReportArchiver unitResultArchiver;;
 
-    public NUnitArchiver(Build<?, ?> build, Launcher launcher, BuildListener listener, String testResults,
+    public NUnitArchiver(BuildListener listener, String testResults,
             TestReportArchiver unitResultArchiver, TestReportTransformer transformer, boolean keepJUnitReports,
             boolean skipJUnitArchiver) throws TransformerException, ParserConfigurationException {
 
         this.unitResultArchiver = unitResultArchiver;
-        this.launcher = launcher;
-        this.build = build;
         this.listener = listener;
         this.testResultsPattern = testResults;
         this.unitReportTransformer = transformer;
@@ -138,7 +132,7 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
     private Boolean performJUnitArchiver() throws IOException {
         Boolean retValue = Boolean.TRUE;
         try {
-            if (!unitResultArchiver.archive(build, launcher, listener)) {
+            if (!unitResultArchiver.archive()) {
                 retValue = Boolean.FALSE;
             }
         } catch (InterruptedException ie) {

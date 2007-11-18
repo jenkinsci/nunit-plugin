@@ -2,8 +2,8 @@ package hudson.plugins.nunit;
 
 import hudson.Launcher;
 import hudson.maven.agent.AbortException;
+import hudson.model.AbstractBuild;
 import hudson.model.Action;
-import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
 import hudson.tasks.Publisher;
@@ -32,6 +32,10 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements TestReport
     private boolean debug = false;
     private boolean keepJUnitReports = false;
     private boolean skipJUnitArchiver = false;
+
+    private AbstractBuild<?, ?> build;
+    private Launcher launcher;
+    private BuildListener listener;
 
     public NUnitPublisher(String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver) {
         this.testResultsPattern = testResultsPattern;
@@ -63,14 +67,18 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements TestReport
         return new TestResultProjectAction(project);
     }
 
-    public boolean perform(final Build<?, ?> build, final Launcher launcher, final BuildListener listener)
+    @Override
+    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
             throws InterruptedException, IOException {
+        this.build = build;
+        this.launcher = launcher;
+        this.listener = listener;
         if (debug) {
             listener.getLogger().println("NUnit publisher running in debug mode.");
         }
         Boolean result = Boolean.FALSE;
         try {
-            NUnitArchiver transformer = new NUnitArchiver(build, launcher, listener, testResultsPattern, this,
+            NUnitArchiver transformer = new NUnitArchiver(listener, testResultsPattern, this,
                     new NUnitReportTransformer(), keepJUnitReports, skipJUnitArchiver);
             result = build.getProject().getWorkspace().act(transformer);
         } catch (TransformerException te) {
@@ -84,7 +92,7 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements TestReport
         return result.booleanValue();
     }
 
-    public boolean archive(Build build, Launcher launcher, BuildListener listener)
+    public boolean archive()
             throws java.lang.InterruptedException, java.io.IOException {
         return new JUnitResultArchiver(NUnitArchiver.JUNIT_REPORTS_PATH + "/TEST-*.xml").perform(build, launcher,
                 listener);
