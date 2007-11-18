@@ -19,63 +19,68 @@ import org.xml.sax.InputSource;
  * @author Erik Ramfelt
  */
 public class NUnitToJUnitXslTest {
-	@Before
-	public void setUp() {
+    @Before
+    public void setUp() {
         XMLUnit.setIgnoreWhitespace(true);
         XMLUnit.setNormalizeWhitespace(true);
         XMLUnit.setIgnoreComments(true);
-	}
-	
-	@Test
-	public void testTransformation() throws Exception {
-		
-		Transform myTransform = new Transform(new InputSource(this.getClass().getResourceAsStream("NUnit-simple.xml")), 
-        		new InputSource(this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
+    }
+
+    @Test
+    public void testTransformation() throws Exception {
+
+        Transform myTransform = new Transform(new InputSource(this.getClass().getResourceAsStream("NUnit-simple.xml")),
+                new InputSource(this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-simple.xml"), myTransform);
         assertTrue("XSL transformation did not work" + myDiff, myDiff.similar());
-	}
-	@Test
-	public void testTransformationFailure() throws Exception {
-		
-		Transform myTransform = new Transform(new InputSource(this.getClass().getResourceAsStream("NUnit-failure.xml")), 
-        		new InputSource(this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
+    }
+
+    @Test
+    public void testTransformationFailure() throws Exception {
+
+        Transform myTransform = new Transform(
+                new InputSource(this.getClass().getResourceAsStream("NUnit-failure.xml")), new InputSource(this
+                        .getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-failure.xml"), myTransform.getResultString());
         assertTrue("XSL transformation did not work" + myDiff, myDiff.similar());
-	}
-	
-	@Test
-	public void testTransformationMultiNamespace() throws Exception {
+    }
+
+    @Test
+    public void testTransformationMultiNamespace() throws Exception {
 
         XMLUnit.setNormalizeWhitespace(false);
-        Transform myTransform = new Transform(new InputSource(this.getClass().getResourceAsStream("NUnit-multinamespace.xml")), 
-        		new InputSource(this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
+        Transform myTransform = new Transform(new InputSource(this.getClass().getResourceAsStream(
+                "NUnit-multinamespace.xml")), new InputSource(this.getClass().getResourceAsStream(
+                NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-multinamespace.xml"), myTransform);
         assertTrue("XSL transformation did not work" + myDiff, myDiff.similar());
-	}
-	
-	@Test
-	public void testTransformedIgnored() throws Exception {
-        Transform myTransform = new Transform(new InputSource(this.getClass().getResourceAsStream("NUnit-ignored.xml")), 
-        		new InputSource(this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
+    }
+
+    @Test
+    public void testTransformedIgnored() throws Exception {
+        Transform myTransform = new Transform(
+                new InputSource(this.getClass().getResourceAsStream("NUnit-ignored.xml")), new InputSource(this
+                        .getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-ignored.xml"), myTransform);
         assertTrue("XSL transformation did not work" + myDiff, myDiff.similar());
-	}
-	
-	private String readXmlAsString(String resourceName) throws IOException {
-		String xmlString = "";
-		
-		BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(resourceName)));
-		String line = reader.readLine();
-		while (line != null) {
-			xmlString += line + "\n";
-			line = reader.readLine();
-		}
-		reader.close();
-		
-		return xmlString;
-	}
+    }
+
+    private String readXmlAsString(String resourceName) throws IOException {
+        String xmlString = "";
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(
+                resourceName)));
+        String line = reader.readLine();
+        while (line != null) {
+            xmlString += line + "\n";
+            line = reader.readLine();
+        }
+        reader.close();
+
+        return xmlString;
+    }
 }
