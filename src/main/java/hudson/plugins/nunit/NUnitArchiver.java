@@ -56,44 +56,46 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
         Boolean retValue = Boolean.FALSE;
         listener.getLogger().println("Transforming NUnit tests results");
         String[] nunitFiles = findNUnitReports(ws);
-        File junitOutputPath = new File(ws, JUNIT_REPORTS_PATH);
-        junitOutputPath.mkdirs();
-
-        for (String nunitFileName : nunitFiles) {
-            FileInputStream fileStream = new FileInputStream(new File(ws, nunitFileName));
-            try {
-                // Transform all NUnit files
-                // listener.getLogger().println("Transforming " +
-                // nunitFileName);
-                unitReportTransformer.transform(fileStream, junitOutputPath);
-            } catch (TransformerException te) {
-                throw new IOException2(
-                        "Could not transform the NUnit report. Please report this issue to the plugin author", te);
-            } catch (SAXException se) {
-                throw new IOException2(
-                        "Could not transform the NUnit report. Please report this issue to the plugin author", se);
-            } finally {
-                fileStream.close();
+        if (nunitFiles.length > 0) {
+            File junitOutputPath = new File(ws, JUNIT_REPORTS_PATH);
+            junitOutputPath.mkdirs();
+    
+            for (String nunitFileName : nunitFiles) {
+                FileInputStream fileStream = new FileInputStream(new File(ws, nunitFileName));
+                try {
+                    // Transform all NUnit files
+                    // listener.getLogger().println("Transforming " +
+                    // nunitFileName);
+                    unitReportTransformer.transform(fileStream, junitOutputPath);
+                } catch (TransformerException te) {
+                    throw new IOException2(
+                            "Could not transform the NUnit report. Please report this issue to the plugin author", te);
+                } catch (SAXException se) {
+                    throw new IOException2(
+                            "Could not transform the NUnit report. Please report this issue to the plugin author", se);
+                } finally {
+                    fileStream.close();
+                }
             }
-        }
-
-        if (skipJUnitArchiver) {
-            listener.getLogger().println("Skipping feeding JUnit reports to JUnitArchiver");
-        } else {
-            // Run the JUnit test archiver
-            retValue = performJUnitArchiver();
-        }
-
-        if (keepJUnitReports) {
-            listener.getLogger().println("Skipping deletion of temporary JUnit reports.");
-        } else {
-            // Delete JUnit report files and temp folder
-            // listener.getLogger().println("Deleting transformed JUnit
-            // results");
-            for (File file : junitOutputPath.listFiles()) {
-                file.delete();
+    
+            if (skipJUnitArchiver) {
+                listener.getLogger().println("Skipping feeding JUnit reports to JUnitArchiver");
+            } else {
+                // Run the JUnit test archiver
+                retValue = performJUnitArchiver();
             }
-            junitOutputPath.delete();
+    
+            if (keepJUnitReports) {
+                listener.getLogger().println("Skipping deletion of temporary JUnit reports.");
+            } else {
+                // Delete JUnit report files and temp folder
+                // listener.getLogger().println("Deleting transformed JUnit
+                // results");
+                for (File file : junitOutputPath.listFiles()) {
+                    file.delete();
+                }
+                junitOutputPath.delete();
+            }
         }
 
         return retValue;
@@ -115,10 +117,8 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
 
         String[] nunitFiles = ds.getIncludedFiles();
         if (nunitFiles.length == 0) {
-            // no test result. Most likely a configuration error or fatal
-            // problem
+            // no test result. Most likely a configuration error or fatal problem
             listener.fatalError("No NUnit test report files were found. Configuration error?");
-            throw new AbortException();
         }
         return nunitFiles;
     }

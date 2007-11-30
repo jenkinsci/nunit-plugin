@@ -148,7 +148,7 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
         context.assertIsSatisfied();
     }
 
-    @Test(expected = AbortException.class)
+    @Test
     public void testNoNUnitReports() throws Exception {
         classContext.checking(new Expectations() {
             {
