@@ -12,7 +12,6 @@ import hudson.tasks.test.TestResultProjectAction;
 
 import java.io.IOException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.kohsuke.stapler.StaplerRequest;
@@ -22,7 +21,7 @@ import org.kohsuke.stapler.StaplerRequest;
  * 
  * @author Erik Ramfelt
  */
-public class NUnitPublisher extends hudson.tasks.Publisher implements TestReportArchiver {
+public class NUnitPublisher extends hudson.tasks.Publisher {
 
     private static transient final String PLUGIN_NUNIT = "/plugin/nunit/";
 
@@ -32,10 +31,6 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements TestReport
     private boolean debug = false;
     private boolean keepJUnitReports = false;
     private boolean skipJUnitArchiver = false;
-
-    private AbstractBuild<?, ?> build;
-    private Launcher launcher;
-    private BuildListener listener;
 
     public NUnitPublisher(String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver) {
         this.testResultsPattern = testResultsPattern;
@@ -70,32 +65,36 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements TestReport
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
             throws InterruptedException, IOException {
-        this.build = build;
-        this.launcher = launcher;
-        this.listener = listener;
         if (debug) {
             listener.getLogger().println("NUnit publisher running in debug mode.");
         }
-        Boolean result = Boolean.FALSE;
+        Boolean result = Boolean.TRUE;
         try {
-            NUnitArchiver transformer = new NUnitArchiver(listener, testResultsPattern, this,
-                    new NUnitReportTransformer(), keepJUnitReports, skipJUnitArchiver);
+            NUnitArchiver transformer = new NUnitArchiver(listener, testResultsPattern, new NUnitReportTransformer());
             result = build.getProject().getWorkspace().act(transformer);
+
+            if (result.booleanValue()) {
+                if (skipJUnitArchiver) {
+                    listener.getLogger().println("Skipping feeding JUnit reports to JUnitArchiver");
+                } else {
+                    // Run the JUnit test archiver
+                    result = Boolean.valueOf(new JUnitResultArchiver(NUnitArchiver.JUNIT_REPORTS_PATH + "/TEST-*.xml").
+                            perform(build, launcher, listener));
+                }
+                
+                if (keepJUnitReports) {
+                    listener.getLogger().println("Skipping deletion of temporary JUnit reports.");
+                } else {
+                    build.getProject().getWorkspace().child(NUnitArchiver.JUNIT_REPORTS_PATH).deleteRecursive();
+                }
+            }
+            
         } catch (TransformerException te) {
             throw new AbortException("Could not read the XSL XML file. Please report this issue to the plugin author",
                     te);
-        } catch (ParserConfigurationException pce) {
-            throw new AbortException(
-                    "Could not initalize the XML parser. Please report this issue to the plugin author", pce);
         }
 
         return result.booleanValue();
-    }
-
-    public boolean archive()
-            throws java.lang.InterruptedException, java.io.IOException {
-        return new JUnitResultArchiver(NUnitArchiver.JUNIT_REPORTS_PATH + "/TEST-*.xml").perform(build, launcher,
-                listener);
     }
 
     public Descriptor<Publisher> getDescriptor() {

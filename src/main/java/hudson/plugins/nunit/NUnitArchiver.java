@@ -3,6 +3,7 @@ package hudson.plugins.nunit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -23,37 +24,27 @@ import hudson.util.IOException2;
  * 
  * @author Erik Ramfelt
  */
-public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
+public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
     public static final String JUNIT_REPORTS_PATH = "temporary-junit-reports";
 
-    private transient final String testResultsPattern;
-    private transient boolean keepJUnitReports = false;
-    private transient boolean skipJUnitArchiver = false;
-
     // Build related objects
-    private transient final BuildListener listener;
+    private final BuildListener listener;
+    private final String testResultsPattern;
 
-    private transient TestReportTransformer unitReportTransformer;
-    private transient TestReportArchiver unitResultArchiver;;
+    private TestReportTransformer unitReportTransformer;
 
-    public NUnitArchiver(BuildListener listener, String testResults,
-            TestReportArchiver unitResultArchiver, TestReportTransformer transformer, boolean keepJUnitReports,
-            boolean skipJUnitArchiver) throws TransformerException, ParserConfigurationException {
-
-        this.unitResultArchiver = unitResultArchiver;
+    public NUnitArchiver(BuildListener listener, String testResults, TestReportTransformer unitReportTransformer) throws TransformerException {
         this.listener = listener;
         this.testResultsPattern = testResults;
-        this.unitReportTransformer = transformer;
-        this.keepJUnitReports = keepJUnitReports;
-        this.skipJUnitArchiver = skipJUnitArchiver;
+        this.unitReportTransformer = unitReportTransformer;
     }
 
     /** {@inheritDoc} */
     public Boolean invoke(File ws, VirtualChannel channel) throws IOException {
-        Boolean retValue = Boolean.FALSE;
+        Boolean retValue = Boolean.TRUE;
         listener.getLogger().println("Transforming NUnit tests results");
         String[] nunitFiles = findNUnitReports(ws);
         if (nunitFiles.length > 0) {
@@ -63,9 +54,6 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
             for (String nunitFileName : nunitFiles) {
                 FileInputStream fileStream = new FileInputStream(new File(ws, nunitFileName));
                 try {
-                    // Transform all NUnit files
-                    // listener.getLogger().println("Transforming " +
-                    // nunitFileName);
                     unitReportTransformer.transform(fileStream, junitOutputPath);
                 } catch (TransformerException te) {
                     throw new IOException2(
@@ -73,28 +61,12 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
                 } catch (SAXException se) {
                     throw new IOException2(
                             "Could not transform the NUnit report. Please report this issue to the plugin author", se);
+                } catch (ParserConfigurationException pce) {
+                    throw new IOException2(
+                            "Could not initalize the XML parser. Please report this issue to the plugin author", pce);
                 } finally {
                     fileStream.close();
                 }
-            }
-    
-            if (skipJUnitArchiver) {
-                listener.getLogger().println("Skipping feeding JUnit reports to JUnitArchiver");
-            } else {
-                // Run the JUnit test archiver
-                retValue = performJUnitArchiver();
-            }
-    
-            if (keepJUnitReports) {
-                listener.getLogger().println("Skipping deletion of temporary JUnit reports.");
-            } else {
-                // Delete JUnit report files and temp folder
-                // listener.getLogger().println("Deleting transformed JUnit
-                // results");
-                for (File file : junitOutputPath.listFiles()) {
-                    file.delete();
-                }
-                junitOutputPath.delete();
             }
         }
 
@@ -121,23 +93,5 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean> {
             listener.fatalError("No NUnit test report files were found. Configuration error?");
         }
         return nunitFiles;
-    }
-
-    /**
-     * Run all JUnit reports through the JUnit archiver
-     * 
-     * @return true if the JUnitResultArchiver was successful; false otherwise
-     * @throws IOException thrown if the JUnitResultArchiver.perform() methods throws it
-     */
-    private Boolean performJUnitArchiver() throws IOException {
-        Boolean retValue = Boolean.TRUE;
-        try {
-            if (!unitResultArchiver.archive()) {
-                retValue = Boolean.FALSE;
-            }
-        } catch (InterruptedException ie) {
-            throw new IOException2(ie);
-        }
-        return retValue;
     }
 }
