@@ -19,9 +19,20 @@
 						tests="{count(*/test-case)}" time="{@time}"
 						failures="{count(*/test-case/failure)}" errors="0"
 						skipped="{count(*/test-case[@executed='False'])}">
-						<xsl:for-each select="*/test-case[@executed='True']">
+						<xsl:for-each select="*/test-case[@time!='']">
+							<xsl:variable name="testcaseName">
+								<xsl:choose>
+									<xsl:when test="contains(./@name, $assembly)">
+										<xsl:value-of select="substring-after(./@name, concat($assembly,'.'))"/><!-- We either instantiate a "15" -->
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="./@name"/><!-- ...or a "20" -->
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>
+						
 							<testcase classname="{$assembly}"
-								name="{substring-after(./@name, concat($assembly,'.'))}"
+								name="{$testcaseName}"
 								time="{@time}">
 
 								<xsl:variable name="generalfailure"
