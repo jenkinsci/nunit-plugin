@@ -1,0 +1,3 @@
+<div>
+  This plugin transforms NUnit test reports so they can be recorded by Hudson's JUnit features.
+</div>
