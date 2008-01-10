@@ -1,9 +1,13 @@
 package hudson.plugins.nunit;
 
+import java.io.File;
+import java.io.InputStream;
+
 import hudson.model.Action;
 import hudson.model.Project;
 import hudson.tasks.test.TestResultProjectAction;
 
+import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import static org.junit.Assert.*;
@@ -65,7 +69,24 @@ public class NUnitPublisherTest {
     }
 
     @Test
+    public void testGetProjectActionProjectReusing() {
+        classContext.checking(new Expectations() {
+            {
+                one(project).getAction(with(equal(TestResultProjectAction.class))); will(returnValue(new TestResultProjectAction(project)));
+            }
+        });
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", false, false, true);
+        Action projectAction = publisher.getProjectAction(project);
+        assertNull("The action was not null", projectAction);
+    }
+
+    @Test
     public void testGetProjectActionProject() {
+        classContext.checking(new Expectations() {
+            {
+                one(project).getAction(with(equal(TestResultProjectAction.class))); will(returnValue(null));
+            }
+        });
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml", false, false, true);
         Action projectAction = publisher.getProjectAction(project);
         assertNotNull("The action was null", projectAction);

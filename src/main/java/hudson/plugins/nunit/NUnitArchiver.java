@@ -45,7 +45,6 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializab
     /** {@inheritDoc} */
     public Boolean invoke(File ws, VirtualChannel channel) throws IOException {
         Boolean retValue = Boolean.TRUE;
-        listener.getLogger().println("Transforming NUnit tests results");
         String[] nunitFiles = findNUnitReports(ws);
         if (nunitFiles.length > 0) {
             File junitOutputPath = new File(ws, JUNIT_REPORTS_PATH);
