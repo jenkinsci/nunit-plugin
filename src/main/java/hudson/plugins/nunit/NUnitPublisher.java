@@ -225,9 +225,9 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
         @Override
         public Publisher newInstance(StaplerRequest req) throws FormException {
             return new NUnitPublisher(req.getParameter("nunit_reports.pattern"), 
-                    (req.hasParameter("nunit_reports.debug") ? Boolean.parseBoolean(req.getParameter("nunit_reports.debug")) : false), 
-                    (req.hasParameter("nunit_reports.keepjunitreports") ? Boolean.parseBoolean(req.getParameter("nunit_reports.keepjunitreports")) : false), 
-                    (req.hasParameter("nunit_reports.skipjunitarchiver") ? Boolean.parseBoolean(req.getParameter("nunit_reports.skipjunitarchiver")) : false));
+                    (req.getParameter("nunit_reports.debug") != null), 
+                    (req.getParameter("nunit_reports.keepjunitreports") != null), 
+                    (req.getParameter("nunit_reports.skipjunitarchiver") != null));
         }
     }
 }
