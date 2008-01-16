@@ -15,6 +15,7 @@ import org.xml.sax.SAXException;
 
 import hudson.AbortException;
 import hudson.FilePath;
+import hudson.Util;
 import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
 import hudson.util.IOException2;
@@ -67,6 +68,8 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializab
                     fileStream.close();
                 }
             }
+        } else {
+            retValue = Boolean.FALSE;
         }
 
         return retValue;
@@ -79,12 +82,8 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializab
      * @return an array of strings
      */
     private String[] findNUnitReports(File parentPath) throws AbortException {
-        FileSet fs = new FileSet();
-        Project p = new Project();
-        fs.setProject(p);
-        fs.setDir(parentPath);
-        fs.setIncludes(testResultsPattern);
-        DirectoryScanner ds = fs.getDirectoryScanner(p);
+        FileSet fs = Util.createFileSet(parentPath,testResultsPattern);
+        DirectoryScanner ds = fs.getDirectoryScanner();
 
         String[] nunitFiles = ds.getIncludedFiles();
         if (nunitFiles.length == 0) {

@@ -1,6 +1,7 @@
 package hudson.plugins.nunit;
 
 import hudson.Launcher;
+import hudson.Util;
 import hudson.FilePath.FileCallable;
 import hudson.maven.agent.AbortException;
 import hudson.model.AbstractBuild;
@@ -179,12 +180,8 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
             final TestResult existingTestResults, final long buildTime) throws IOException, InterruptedException {
         TestResult result = build.getProject().getWorkspace().act(new FileCallable<TestResult>() {
             public TestResult invoke(File ws, VirtualChannel channel) throws IOException {
-                FileSet fs = new FileSet();
-                Project p = new Project();
-                fs.setProject(p);
-                fs.setDir(ws);
-                fs.setIncludes(junitFilePattern);
-                DirectoryScanner ds = fs.getDirectoryScanner(p);
+                FileSet fs = Util.createFileSet(ws,junitFilePattern);
+                DirectoryScanner ds = fs.getDirectoryScanner();
 
                 String[] files = ds.getIncludedFiles();
                 if(files.length==0) {
