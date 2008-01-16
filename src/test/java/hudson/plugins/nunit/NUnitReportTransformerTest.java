@@ -20,7 +20,7 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
     public void setup() throws Exception {
         super.createWorkspace();
         transformer = new NUnitReportTransformer();
-        tempFilePath = AbstractWorkspaceTest.PARENT_FILE;
+        tempFilePath = parentFile;
     }
 
     @After

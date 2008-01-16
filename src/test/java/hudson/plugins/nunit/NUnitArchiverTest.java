@@ -93,7 +93,7 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
                 will(returnValue(new PrintStream(new ByteArrayOutputStream())));
             }
         });
-        nunitArchiver.invoke(PARENT_FILE, virtualChannel);
+        nunitArchiver.invoke(parentFile, virtualChannel);
 
         context.assertIsSatisfied();
     }
@@ -154,6 +154,7 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
             }
         });
         nunitArchiver = new NUnitArchiver(buildListener, "*.xml", transformer);
-        nunitArchiver.invoke(PARENT_FILE, virtualChannel);
+        Boolean result = nunitArchiver.invoke(parentFile, virtualChannel);
+        assertFalse("The archiver did not return false when it could not find any files", result);
     }
 }
