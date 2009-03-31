@@ -15,13 +15,6 @@
 	<url>http://hudson.gotdns.com/wiki/display/HUDSON/NUnit+Plugin</url>
 	
 	<dependencies>
-    <dependency>
-      <!-- this is an unnecessary dependency, due to the (unintended) 
-           use of hudson.maven.agent.AbortException 
-        -->
-      <groupId>org.jvnet.hudson.main</groupId>
-      <artifactId>maven-plugin</artifactId>
-    </dependency>
 		<dependency>
 			<groupId>org.jmock</groupId>
 			<artifactId>jmock-junit4</artifactId>
