@@ -1,9 +1,9 @@
 package hudson.plugins.nunit;
 
+import hudson.AbortException;
 import hudson.Launcher;
 import hudson.Util;
 import hudson.FilePath.FileCallable;
-import hudson.maven.agent.AbortException;
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.model.BuildListener;
@@ -107,8 +107,9 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
             }
             
         } catch (TransformerException te) {
-            throw new AbortException("Could not read the XSL XML file. Please report this issue to the plugin author",
-                    te);
+//            throw new AbortException("Could not read the XSL XML file. Please report this issue to the plugin author");
+            throw new AbortException();
+                    
         }
 
         return result;
@@ -143,8 +144,10 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
                 action = existingAction;
                 action.setResult(result, listener);
             }
-            if(result.getPassCount()==0 && result.getFailCount()==0)
-                new AbortException("None of the test reports contained any result");
+            if(result.getPassCount()==0 && result.getFailCount()==0){
+                new AbortException();
+//                new AbortException("None of the test reports contained any result");
+            }
         } catch (AbortException e) {
             if(build.getResult()==Result.FAILURE)
                 // most likely a build failed before it gets to the test phase.
@@ -186,7 +189,8 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
                 String[] files = ds.getIncludedFiles();
                 if(files.length==0) {
                     // no test result. Most likely a configuration error or fatal problem
-                    throw new AbortException("No test report files were found. Configuration error?");
+//                    throw new AbortException("No test report files were found. Configuration error?");
+                    throw new AbortException();
                 }
                 if (existingTestResults == null) {
                     return new TestResult(buildTime, ds);
