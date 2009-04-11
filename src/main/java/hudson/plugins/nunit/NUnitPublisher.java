@@ -107,9 +107,7 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
             }
             
         } catch (TransformerException te) {
-//            throw new AbortException("Could not read the XSL XML file. Please report this issue to the plugin author");
-            throw new AbortException();
-                    
+            throw new AbortException("Could not read the XSL XML file. Please report this issue to the plugin author");
         }
 
         return result;
@@ -145,8 +143,7 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
                 action.setResult(result, listener);
             }
             if(result.getPassCount()==0 && result.getFailCount()==0){
-                new AbortException();
-//                new AbortException("None of the test reports contained any result");
+                throw new AbortException("None of the test reports contained any result");
             }
         } catch (AbortException e) {
             if(build.getResult()==Result.FAILURE)
@@ -189,8 +186,7 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
                 String[] files = ds.getIncludedFiles();
                 if(files.length==0) {
                     // no test result. Most likely a configuration error or fatal problem
-//                    throw new AbortException("No test report files were found. Configuration error?");
-                    throw new AbortException();
+                    throw new AbortException("No test report files were found. Configuration error?");
                 }
                 if (existingTestResults == null) {
                     return new TestResult(buildTime, ds);
