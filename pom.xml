@@ -10,7 +10,7 @@
 
 	<artifactId>nunit</artifactId>
 	<packaging>hpi</packaging>
-	<version>0.8-SNAPSHOT</version>
+	<version>0.8</version>
 	<name>Hudson NUnit plugin</name>
 	<url>http://hudson.gotdns.com/wiki/display/HUDSON/NUnit+Plugin</url>
 	
@@ -35,4 +35,10 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+  <scm>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/nunit-0.8</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/nunit-0.8</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/hudson/plugins/nunit/tags/nunit-0.8</url>
+  </scm>
 </project>
