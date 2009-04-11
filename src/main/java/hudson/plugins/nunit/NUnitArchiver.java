@@ -9,11 +9,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.xml.sax.SAXException;
 
-import hudson.AbortException;
 import hudson.FilePath;
 import hudson.Util;
 import hudson.model.BuildListener;
@@ -81,7 +79,7 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializab
      * @param parentPath parent
      * @return an array of strings
      */
-    private String[] findNUnitReports(File parentPath) throws AbortException {
+    private String[] findNUnitReports(File parentPath) {
         FileSet fs = Util.createFileSet(parentPath,testResultsPattern);
         DirectoryScanner ds = fs.getDirectoryScanner();
 
