@@ -1,16 +1,21 @@
 package hudson.plugins.nunit;
 
 import hudson.AbortException;
+import hudson.Extension;
 import hudson.Launcher;
 import hudson.Util;
 import hudson.FilePath.FileCallable;
 import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
 import hudson.model.Result;
 import hudson.remoting.VirtualChannel;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
+import hudson.tasks.Recorder;
 import hudson.tasks.junit.TestResult;
 import hudson.tasks.junit.TestResultAction;
 import hudson.tasks.test.TestResultProjectAction;
@@ -21,8 +26,8 @@ import java.io.Serializable;
 
 import javax.xml.transform.TransformerException;
 
+import net.sf.json.JSONObject;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -31,13 +36,14 @@ import org.kohsuke.stapler.StaplerRequest;
  * 
  * @author Erik Ramfelt
  */
-public class NUnitPublisher extends hudson.tasks.Publisher implements Serializable {
+public class NUnitPublisher extends Recorder implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private static transient final String PLUGIN_NUNIT = "/plugin/nunit/";
 
-    public static final Descriptor<Publisher> DESCRIPTOR = new DescriptorImpl();
+    @Extension
+    public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
     private String testResultsPattern;
     private boolean debug = false;
@@ -70,13 +76,17 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
     }
 
     @Override
-    public Action getProjectAction(hudson.model.Project project) {
+    public Action getProjectAction(AbstractProject<?,?> project) {
         TestResultProjectAction action = project.getAction(TestResultProjectAction.class);
         if (action == null) {
             return new TestResultProjectAction(project);
         } else {
             return null;
         }
+    }
+
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.BUILD;
     }
 
     @Override
@@ -89,7 +99,7 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
         try {
             listener.getLogger().println("Recording NUnit tests results");
             NUnitArchiver transformer = new NUnitArchiver(listener, testResultsPattern, new NUnitReportTransformer());
-            result = build.getProject().getWorkspace().act(transformer);
+            result = build.getWorkspace().act(transformer);
 
             if (result) {
                 if (skipJUnitArchiver) {
@@ -102,7 +112,7 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
                 if (keepJUnitReports) {
                     listener.getLogger().println("Skipping deletion of temporary JUnit reports.");
                 } else {
-                    build.getProject().getWorkspace().child(NUnitArchiver.JUNIT_REPORTS_PATH).deleteRecursive();
+                    build.getWorkspace().child(NUnitArchiver.JUNIT_REPORTS_PATH).deleteRecursive();
                 }
             }
             
@@ -178,7 +188,7 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
      */
     private TestResult getTestResult(final String junitFilePattern, AbstractBuild<?, ?> build,
             final TestResult existingTestResults, final long buildTime) throws IOException, InterruptedException {
-        TestResult result = build.getProject().getWorkspace().act(new FileCallable<TestResult>() {
+        TestResult result = build.getWorkspace().act(new FileCallable<TestResult>() {
             public TestResult invoke(File ws, VirtualChannel channel) throws IOException {
                 FileSet fs = Util.createFileSet(ws,junitFilePattern);
                 DirectoryScanner ds = fs.getDirectoryScanner();
@@ -199,11 +209,12 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
         return result;
     }
 
-    public Descriptor<Publisher> getDescriptor() {
+    @Override
+    public BuildStepDescriptor<Publisher> getDescriptor() {
         return DESCRIPTOR;
     }
 
-    public static class DescriptorImpl extends Descriptor<Publisher> {
+    public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
         protected DescriptorImpl() {
             super(NUnitPublisher.class);
@@ -220,7 +231,12 @@ public class NUnitPublisher extends hudson.tasks.Publisher implements Serializab
         }
 
         @Override
-        public Publisher newInstance(StaplerRequest req) throws FormException {
+        public boolean isApplicable(Class<? extends AbstractProject> jobType) {
+            return true;
+        }
+
+        @Override
+        public Publisher newInstance(StaplerRequest req, JSONObject formData) throws FormException {
             return new NUnitPublisher(req.getParameter("nunit_reports.pattern"), 
                     (req.getParameter("nunit_reports.debug") != null), 
                     (req.getParameter("nunit_reports.keepjunitreports") != null), 
