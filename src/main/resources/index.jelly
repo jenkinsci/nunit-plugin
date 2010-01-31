@@ -1,3 +1,4 @@
 <div>
-  This plugin transforms NUnit test reports so they can be recorded by Hudson's JUnit features.
+  This plugin transforms <a href="http://www.nunit.org/">NUnit</a> test reports
+  so they can be recorded by Hudson's JUnit features.
 </div>
