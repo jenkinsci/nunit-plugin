@@ -1,8 +1,6 @@
 package hudson.plugins.nunit;
 
-import java.io.File;
-import java.io.InputStream;
-
+import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.Project;
 import hudson.tasks.test.TestResultProjectAction;
@@ -76,7 +74,7 @@ public class NUnitPublisherTest {
             }
         });
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml", false, false, true);
-        Action projectAction = publisher.getProjectAction(project);
+        Action projectAction = publisher.getProjectAction((AbstractProject)project);
         assertNull("The action was not null", projectAction);
     }
 
@@ -88,7 +86,7 @@ public class NUnitPublisherTest {
             }
         });
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml", false, false, true);
-        Action projectAction = publisher.getProjectAction(project);
+        Action projectAction = publisher.getProjectAction((AbstractProject)project);
         assertNotNull("The action was null", projectAction);
         assertEquals("The action type is incorrect", TestResultProjectAction.class, projectAction.getClass());
     }

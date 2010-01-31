@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-import hudson.AbortException;
 import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
 
