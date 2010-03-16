@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.jvnet.hudson.test.Bug;
 
 public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements FilenameFilter {
 
@@ -47,6 +48,13 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
     public void testTransform() throws Exception {
         transformer.transform(this.getClass().getResourceAsStream("NUnit.xml"), tempFilePath);
         assertJunitFiles(2);
+    }
+
+    @Bug(5673)
+    @Test
+    public void testFilenameDoesNotContainInvalidChars() throws Exception {
+        transformer.transform(this.getClass().getResourceAsStream("issue-5673.xml"), tempFilePath);
+        assertJunitFiles(3);
     }
 
     private void assertJunitFiles(int expectedJunitFilesCount) throws DocumentException {

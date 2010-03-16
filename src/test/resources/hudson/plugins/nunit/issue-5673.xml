@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="c:\build\workspace\dotnet-vizrt-win32\Data\Pilot\Tests\bin\Release\Vizrt.Data.Pilot.Tests.dll" total="1339" errors="3" failures="2" not-run="16" inconclusive="0" ignored="4" skipped="0" invalid="12" date="2010-02-17" time="18:47:34">
+  <environment nunit-version="2.5.3.9345" clr-version="2.0.50727.4200" os-version="Microsoft Windows NT 6.0.6002 Service Pack 2" platform="Win32NT" cwd="c:\build\workspace\dotnet-vizrt-win32" machine-name="BGOHUDSONTEST" user="builduser" user-domain="VIZRTINT" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite name="" executed="True" success="False" time="49.309" asserts="0">
+    <results>
+      <test-suite name="c:\build\workspace\dotnet-vizrt-win32\Utilities\Tests\bin\Release\Vizrt.Utilities.Tests.dll" executed="True" success="True" time="5.499" asserts="0">
+        <results>
+          <test-suite name="Vizrt" executed="True" success="True" time="5.448" asserts="0">
+            <results>
+              <test-suite name="Utilities" executed="True" success="True" time="5.351" asserts="0">
+                <results>
+                  <test-suite name="Tests" executed="True" success="True" time="5.331" asserts="0">
+                    <results>
+                      <test-suite name="TestByteStringParser&lt;T&gt;" executed="True" success="True" time="0.145" asserts="0">
+                        <results>
+                          <test-suite name="TestByteStringParser&lt;UnicodeEncoding&gt;" executed="True" success="True" time="0.041" asserts="0">
+                            <results>
+                              <test-suite name="TestMultipleStringsInOneBlock" executed="True" success="True" time="0.013" asserts="0">
+                                <results>
+                                  <test-case name="Vizrt.Utilities.Tests.TestByteStringParser&lt;UnicodeEncoding&gt;.TestMultipleStringsInOneBlock('紫')" executed="True" success="True" time="0.010" asserts="5" />
+                                  <test-case name="Vizrt.Utilities.Tests.TestByteStringParser&lt;UnicodeEncoding&gt;.TestMultipleStringsInOneBlock('\0')" executed="True" success="True" time="0.000" asserts="5" />
+                                  <test-case name="Vizrt.Utilities.Tests.TestByteStringParser&lt;UnicodeEncoding&gt;.TestMultipleStringsInOneBlock(',')" executed="True" success="True" time="0.000" asserts="5" />
+                                  <test-case name="Vizrt.Utilities.Tests.TestByteStringParser&lt;UnicodeEncoding&gt;.TestMultipleStringsInOneBlock('|')" executed="True" success="True" time="0.000" asserts="5" />
+                                  <test-case name="Vizrt.Utilities.Tests.TestByteStringParser&lt;UnicodeEncoding&gt;.TestMultipleStringsInOneBlock('/')" executed="True" success="True" time="0.000" asserts="5" />
+                                </results>
+                              </test-suite>
+                              <test-case name="Vizrt.Utilities.Tests.TestByteStringParser&lt;UnicodeEncoding&gt;.TestOneSimpleString" executed="True" success="True" time="0.002" asserts="2" />
+                              <test-case name="Vizrt.Utilities.Tests.TestByteStringParser&lt;UnicodeEncoding&gt;.TestParsingOnlyDeliminators" executed="True" success="True" time="0.001" asserts="1" />
+                              <test-case name="Vizrt.Utilities.Tests.TestByteStringParser&lt;UnicodeEncoding&gt;.TestStringComingInMultipleBlocks" executed="True" success="True" time="0.001" asserts="2" />
+                              <test-case name="Vizrt.Utilities.Tests.TestByteStringParser&lt;UnicodeEncoding&gt;.TestStringTakingOneBlockAndTheSeparatorTheNextBlock" executed="True" success="True" time="0.001" asserts="2" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite name="TestCollectionWrapper" executed="True" success="True" time="0.107" asserts="0">
+                        <results>
+                          <test-suite name="TestCollectionWrapper(ObservableCollection)" executed="True" success="True" time="0.088" asserts="0">
+                            <results>
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestAddToModel" executed="True" success="True" time="0.047" asserts="10" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestAddToView" executed="True" success="True" time="0.001" asserts="10" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestClearModel" executed="True" success="True" time="0.002" asserts="6" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestClearView" executed="True" success="True" time="0.002" asserts="6" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestCreate" executed="True" success="True" time="0.000" asserts="7" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestInsertInModel" executed="True" success="True" time="0.001" asserts="10" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestInsertInView" executed="True" success="True" time="0.001" asserts="10" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestLargeChangesInModel" executed="True" success="True" time="0.008" asserts="22" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestMoveInModel" executed="True" success="True" time="0.002" asserts="9" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestMoveInView" executed="True" success="True" time="0.000" asserts="9" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestRemoveFromModel" executed="True" success="True" time="0.017" asserts="8" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestRemoveFromView" executed="True" success="True" time="0.001" asserts="8" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestReplaceInModel" executed="True" success="True" time="0.001" asserts="9" />
+                              <test-case name="Vizrt.Utilities.Tests.TestCollectionWrapper(ObservableCollection).TestReplaceInView" executed="True" success="True" time="0.001" asserts="9" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

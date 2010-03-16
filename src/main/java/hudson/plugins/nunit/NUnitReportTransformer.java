@@ -31,7 +31,9 @@ import org.xml.sax.SAXException;
  */
 public class NUnitReportTransformer implements TestReportTransformer, Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final String ILLEGAL_FILE_CHARS_REGEX = "[\\*/:<>\\?\\|\\\\\";]+";
+
+	private static final long serialVersionUID = 1L;
     
     public static final String JUNIT_FILE_POSTFIX = ".xml";
     public static final String JUNIT_FILE_PREFIX = "TEST-";
@@ -101,7 +103,8 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
         for (int i = 0; i < elementsByTagName.getLength(); i++) {
             Element element = (Element) elementsByTagName.item(i);
             DOMSource source = new DOMSource(element);
-            File junitOutputFile = new File(junitOutputPath, JUNIT_FILE_PREFIX + element.getAttribute("name") + JUNIT_FILE_POSTFIX);
+            String filename = JUNIT_FILE_PREFIX + element.getAttribute("name").replaceAll(ILLEGAL_FILE_CHARS_REGEX, "_") + JUNIT_FILE_POSTFIX;
+			File junitOutputFile = new File(junitOutputPath, filename);
             FileOutputStream fileOutputStream = new FileOutputStream(junitOutputFile);
             try {
                 StreamResult result = new StreamResult(fileOutputStream);
