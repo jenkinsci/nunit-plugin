@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Transforms a NUnit report into seperate JUnit reports. The NUnit report can contain several test cases and the JUnit
- * report that is read by Hudson should only contain one. This class will split up one NUnit report into several JUnit
+ * report that is read by Jenkins should only contain one. This class will split up one NUnit report into several JUnit
  * files.
  * 
  */

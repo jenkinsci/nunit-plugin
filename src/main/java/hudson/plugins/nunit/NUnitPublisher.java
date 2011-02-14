@@ -32,7 +32,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
- * Class that records NUnit test reports into Hudson.
+ * Class that records NUnit test reports into Jenkins.
  * 
  * @author Erik Ramfelt
  */

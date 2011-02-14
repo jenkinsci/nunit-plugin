@@ -4,15 +4,15 @@
 	<parent>
 		<groupId>org.jvnet.hudson.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>1.323</version>
+		<version>1.377</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>nunit</artifactId>
 	<packaging>hpi</packaging>
 	<version>0.11-SNAPSHOT</version>
-	<name>Hudson NUnit plugin</name>
-	<url>http://wiki.hudson-ci.org/display/HUDSON/NUnit+Plugin</url>
+	<name>Jenkins NUnit plugin</name>
+	<url>http://wiki.jenkins-ci.org/display/JENKINS/NUnit+Plugin</url>
 
 	<developers>
 		<developer>
