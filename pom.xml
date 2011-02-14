@@ -10,7 +10,7 @@
 
 	<artifactId>nunit</artifactId>
 	<packaging>hpi</packaging>
-	<version>0.11-SNAPSHOT</version>
+	<version>0.11</version>
 	<name>Jenkins NUnit plugin</name>
 	<url>http://wiki.jenkins-ci.org/display/JENKINS/NUnit+Plugin</url>
 
@@ -44,4 +44,10 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+  <scm>
+    <connection>scm:svn:https://svn.jenkins-ci.org/tags/nunit-0.11</connection>
+    <developerConnection>scm:svn:https://svn.jenkins-ci.org/tags/nunit-0.11</developerConnection>
+    <url>http://fisheye.jenkins-ci.org/browse/Hudson/tags/nunit-0.11</url>
+  </scm>
 </project>
