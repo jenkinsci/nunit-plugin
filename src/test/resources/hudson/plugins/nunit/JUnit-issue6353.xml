@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<testsuites>
+  <testsuite name="MyTests" tests="3" time="119.608" failures="1" errors="0" skipped="1">
+    <testcase classname="MyTests" name="SuccessfulTest" time="1.0"/>
+    <testcase classname="MyTests" name="IgnoredTest">
+      <skipped message="Reason"/>
+    </testcase>
+    <testcase classname="MyTests" name="FailedTest" time="2.0">
+      <failure>
+MESSAGE:
+Reason
++++++++++++++++++++
+STACK TRACE:
+Here comes the stack trace</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

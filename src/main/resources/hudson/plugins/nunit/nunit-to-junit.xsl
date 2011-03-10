@@ -19,7 +19,7 @@
 						tests="{count(*/test-case)}" time="{@time}"
 						failures="{count(*/test-case/failure)}" errors="0"
 						skipped="{count(*/test-case[@executed='False'])}">
-						<xsl:for-each select="*/test-case[@time!='']">
+						<xsl:for-each select="*/test-case">
 							<xsl:variable name="testcaseName">
 								<xsl:choose>
 									<xsl:when test="contains(./@name, $assembly)">
@@ -32,15 +32,17 @@
 							</xsl:variable>
 						
 							<testcase classname="{$assembly}"
-								name="{$testcaseName}"
-								time="{@time}">
+								name="{$testcaseName}">
+                                <xsl:if test="@time!=''">
+                                   <xsl:attribute name="time"><xsl:value-of select="@time" /></xsl:attribute>
+                                </xsl:if>
 
 								<xsl:variable name="generalfailure"
 									select="./failure" />
 
 								<xsl:if test="./failure">
 									<xsl:variable name="failstack"
-										select="count(./failure/stack-trace/*) + count(./failure/stack-trace/text())" />
+				    						select="count(./failure/stack-trace/*) + count(./failure/stack-trace/text())" />
 									<failure>
 										<xsl:choose>
 											<xsl:when test="$failstack &gt; 0 or not($generalfailure)">
@@ -60,6 +62,11 @@ STACK TRACE:
 										</xsl:choose>
 									</failure>
 								</xsl:if>
+                                <xsl:if test="@executed='False'">
+                                    <skipped>
+                                    <xsl:attribute name="message"><xsl:value-of select="./reason/message"/></xsl:attribute>
+                                    </skipped>
+                                </xsl:if>
 				 			</testcase>
 						</xsl:for-each>
 					</testsuite>

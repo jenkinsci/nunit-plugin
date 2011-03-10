@@ -11,6 +11,7 @@ import org.custommonkey.xmlunit.Transform;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
+import org.jvnet.hudson.test.Bug;
 import org.xml.sax.InputSource;
 
 /**
@@ -76,6 +77,17 @@ public class NUnitToJUnitXslTest {
                         .getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-issue1077.xml"), myTransform);
+        assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
+    }
+
+    @Test
+    @Bug(6353)
+    public void testSkippedTests() throws Exception {
+        Transform myTransform = new Transform(
+                new InputSource(this.getClass().getResourceAsStream("NUnit-issue6353.xml")), new InputSource(this
+                        .getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
+
+        Diff myDiff = new Diff(readXmlAsString("JUnit-issue6353.xml"), myTransform);
         assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
     }
 
