@@ -199,7 +199,7 @@ public class NUnitPublisher extends Recorder implements Serializable {
                     throw new AbortException("No test report files were found. Configuration error?");
                 }
                 if (existingTestResults == null) {
-                    return new TestResult(buildTime, ds);
+                    return new TestResult(buildTime, ds, true);
                 } else {
                     existingTestResults.parse(buildTime, ds);
                     return existingTestResults;
