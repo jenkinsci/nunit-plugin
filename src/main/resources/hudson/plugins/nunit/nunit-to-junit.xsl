@@ -10,9 +10,22 @@
 			<xsl:for-each select="../..">
 				<xsl:variable name="firstTestName"
 					select="results//test-case[1]//@name" />
-				<xsl:variable name="assembly"
-					select="concat(substring-before($firstTestName, @name), @name)" />
-				
+                     
+                <xsl:variable name="assembly">
+                    <xsl:choose>
+                        <xsl:when test="substring($firstTestName, string-length($firstTestName)) = ')'">
+                            <xsl:value-of select="substring-before($firstTestName, concat('.', @name))"></xsl:value-of>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="concat(substring-before($firstTestName, @name), @name)" />
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <!--
+                <xsl:variable name="assembly"
+                    select="concat(substring-before($firstTestName, @name), @name)" />
+                -->
+
 				<!--  <redirect:write file="{$outputpath}/TEST-{$assembly}.xml">-->
 
 					<testsuite name="{$assembly}"
@@ -22,7 +35,7 @@
 						<xsl:for-each select="*/test-case">
 							<xsl:variable name="testcaseName">
 								<xsl:choose>
-									<xsl:when test="contains(./@name, $assembly)">
+									<xsl:when test="contains(./@name, concat($assembly,'.'))">
 										<xsl:value-of select="substring-after(./@name, concat($assembly,'.'))"/><!-- We either instantiate a "15" -->
 									</xsl:when>
 									<xsl:otherwise>

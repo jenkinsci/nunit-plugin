@@ -91,6 +91,17 @@ public class NUnitToJUnitXslTest {
         assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
     }
 
+    @Test
+    @Bug(5674)
+    public void testThatNameIsFilledOut() throws Exception {
+        Transform myTransform = new Transform(
+                new InputSource(this.getClass().getResourceAsStream("NUnit-issue5674.xml")), new InputSource(this
+                        .getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
+
+        Diff myDiff = new Diff(readXmlAsString("JUnit-issue5674.xml"), myTransform);
+        assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
+    }
+
     private String readXmlAsString(String resourceName) throws IOException {
         String xmlString = "";
 

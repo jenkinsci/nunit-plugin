@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<testsuites>
+  <testsuite name="GetBrowsersTest.BrowserNamesTest1" tests="3" time="0.035" failures="0" errors="0" skipped="0">
+    <testcase classname="GetBrowsersTest.BrowserNamesTest1" name="AnotherTest(&quot;IE&quot;)" time="0.023"/>
+    <testcase classname="GetBrowsersTest.BrowserNamesTest1" name="AnotherTest(&quot;FireFox&quot;)" time="0.001"/>
+    <testcase classname="GetBrowsersTest.BrowserNamesTest1" name="AnotherTest(&quot;Safari&quot;)" time="0.001"/>
+  </testsuite>
+  <testsuite name="GetBrowsersTest.BrowserNamesTest1" tests="3" time="0.007" failures="3" errors="0" skipped="0">
+    <testcase classname="GetBrowsersTest.BrowserNamesTest1" name="FailTest(&quot;IE&quot;)" time="0.005">
+      <failure>
+MESSAGE:
+
++++++++++++++++++++
+STACK TRACE:
+at GetBrowsersTest.BrowserNamesTest1.FailTest(String browser) in C:\Users\Samw\Documents\Visual Studio 2008\Projects\GetBrowsersTest\GetBrowsersTest\BrowserNamesTest1.cs:line 27
+</failure>
+    </testcase>
+    <testcase classname="GetBrowsersTest.BrowserNamesTest1" name="FailTest(&quot;FireFox&quot;)" time="0.001">
+      <failure>
+MESSAGE:
+
++++++++++++++++++++
+STACK TRACE:
+at GetBrowsersTest.BrowserNamesTest1.FailTest(String browser) in C:\Users\Samw\Documents\Visual Studio 2008\Projects\GetBrowsersTest\GetBrowsersTest\BrowserNamesTest1.cs:line 27
+</failure>
+    </testcase>
+    <testcase classname="GetBrowsersTest.BrowserNamesTest1" name="FailTest(&quot;Safari&quot;)" time="0.000">
+      <failure>
+MESSAGE:
+
++++++++++++++++++++
+STACK TRACE:
+at GetBrowsersTest.BrowserNamesTest1.FailTest(String browser) in C:\Users\Samw\Documents\Visual Studio 2008\Projects\GetBrowsersTest\GetBrowsersTest\BrowserNamesTest1.cs:line 27
+</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="GetBrowsersTest.BrowserNamesTest1" tests="3" time="0.001" failures="0" errors="0" skipped="0">
+    <testcase classname="GetBrowsersTest.BrowserNamesTest1" name="ShowBrowsers(&quot;IE&quot;)" time="0.001"/>
+    <testcase classname="GetBrowsersTest.BrowserNamesTest1" name="ShowBrowsers(&quot;FireFox&quot;)" time="0.000"/>
+    <testcase classname="GetBrowsersTest.BrowserNamesTest1" name="ShowBrowsers(&quot;Safari&quot;)" time="0.000"/>
+  </testsuite>
+</testsuites>
