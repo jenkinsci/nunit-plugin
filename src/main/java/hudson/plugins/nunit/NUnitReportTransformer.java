@@ -103,7 +103,7 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
         for (int i = 0; i < elementsByTagName.getLength(); i++) {
             Element element = (Element) elementsByTagName.item(i);
             DOMSource source = new DOMSource(element);
-            String filename = JUNIT_FILE_PREFIX + element.getAttribute("name").replaceAll(ILLEGAL_FILE_CHARS_REGEX, "_")  + System.currentTimeMillis() + JUNIT_FILE_POSTFIX;
+            String filename = JUNIT_FILE_PREFIX + element.getAttribute("name").replaceAll(ILLEGAL_FILE_CHARS_REGEX, "_")  + "_" + i + JUNIT_FILE_POSTFIX;
 			File junitOutputFile = new File(junitOutputPath, filename);
             FileOutputStream fileOutputStream = new FileOutputStream(junitOutputFile);
             try {
