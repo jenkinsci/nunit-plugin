@@ -11,16 +11,23 @@ import org.jvnet.hudson.test.recipes.LocalData;
 
 public class NUnitIntegrationTest extends HudsonTestCase {
 
-	@Bug(5673)
-	@LocalData
-	public void testIssue5673() throws Exception {
-		FreeStyleProject project = (FreeStyleProject) hudson.getItem("5673");
-		FreeStyleBuild build = project.scheduleBuild2(0).get();
-		assertBuildStatus(Result.UNSTABLE, build);
-		AbstractTestResultAction action = build.getAction(AbstractTestResultAction.class);
-		// For some reason the total count returned is 1338 but the number of tests
-		// displayed in Jenkins when run outside test is 1355 (which is correct)
-		// Very strange......
-		assertTrue("The number of test counts should be larger than 1330", action.getTotalCount() > 1330);
-	}
+    @Bug(5673)
+    @LocalData
+    public void testIssue5673() throws Exception {
+        FreeStyleProject project = (FreeStyleProject) hudson.getItem("5673");
+        FreeStyleBuild build = project.scheduleBuild2(0).get();
+        assertBuildStatus(Result.UNSTABLE, build);
+        AbstractTestResultAction action = build.getAction(AbstractTestResultAction.class);
+        assertEquals("The number of tests is not correct", 1355, action.getTotalCount());
+    }
+
+    @Bug(9246)
+    @LocalData
+    public void testIssue9246() throws Exception {
+        FreeStyleProject project = (FreeStyleProject) hudson.getItem("9246");
+        FreeStyleBuild build = project.scheduleBuild2(0).get();
+        assertBuildStatus(Result.UNSTABLE, build);
+        AbstractTestResultAction action = build.getAction(AbstractTestResultAction.class);
+        assertEquals("The number of tests is not correct", 5454, action.getTotalCount());
+    }
 }
