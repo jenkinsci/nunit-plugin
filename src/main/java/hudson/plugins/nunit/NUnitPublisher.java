@@ -64,15 +64,27 @@ public class NUnitPublisher extends Recorder implements Serializable {
     public String getTestResultsPattern() {
         return testResultsPattern;
     }
+    public void setTestResultsPattern(String pattern){
+        this.testResultsPattern = pattern;
+    }
 
+    public void setDebug(boolean b){
+        this.debug = b;
+    }
     public boolean getDebug() {
         return debug;
     }
 
+    public void setKeepJunitReports(boolean b){
+        this.keepJUnitReports = b;
+    }
     public boolean getKeepJunitReports() {
         return keepJUnitReports;
     }
 
+    public void setSkipJunitArchiver(boolean b){
+        this.skipJUnitArchiver = b;
+    }
     public boolean getSkipJunitArchiver() {
         return skipJUnitArchiver;
     }
@@ -235,14 +247,6 @@ public class NUnitPublisher extends Recorder implements Serializable {
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
             return true;
-        }
-
-        @Override
-        public Publisher newInstance(StaplerRequest req, JSONObject formData) throws FormException {
-            return new NUnitPublisher(req.getParameter("nunit_reports.pattern"), 
-                    (req.getParameter("nunit_reports.debug") != null), 
-                    (req.getParameter("nunit_reports.keepjunitreports") != null), 
-                    (req.getParameter("nunit_reports.skipjunitarchiver") != null));
         }
     }
 }
