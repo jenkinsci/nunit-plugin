@@ -29,6 +29,7 @@ import javax.xml.transform.TransformerException;
 import net.sf.json.JSONObject;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
@@ -50,6 +51,7 @@ public class NUnitPublisher extends Recorder implements Serializable {
     private boolean keepJUnitReports = false;
     private boolean skipJUnitArchiver = false;
 
+    @DataBoundConstructor
     public NUnitPublisher(String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver) {
         this.testResultsPattern = testResultsPattern;
         this.debug = debug;
