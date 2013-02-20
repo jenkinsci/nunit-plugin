@@ -95,7 +95,7 @@ public class NUnitPublisher extends Recorder implements Serializable {
         if (action == null) {
             return new TestResultProjectAction(project);
         } else {
-            return null;
+            return action;
         }
     }
 
