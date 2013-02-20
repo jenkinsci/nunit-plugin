@@ -75,7 +75,7 @@ public class NUnitPublisherTest {
         });
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml", false, false, true);
         Action projectAction = publisher.getProjectAction((AbstractProject)project);
-        assertNull("The action was not null", projectAction);
+        assertNotNull("The action was null", projectAction);
     }
 
     @Test
