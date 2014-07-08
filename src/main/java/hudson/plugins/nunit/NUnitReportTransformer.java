@@ -45,6 +45,7 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
     private transient Transformer nunitTransformer;
     private transient Transformer writerTransformer;
     private transient DocumentBuilder xmlDocumentBuilder;
+    private transient int transformCount;
 
     /**
      * Transform the nunit file into several junit files in the output path
@@ -97,13 +98,14 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
      */
     private void splitJUnitFile(File junitFile, File junitOutputPath) throws SAXException, IOException,
             TransformerException {
+        transformCount++;
         Document document = xmlDocumentBuilder.parse(junitFile);
 
         NodeList elementsByTagName = ((Element) document.getElementsByTagName("testsuites").item(0)).getElementsByTagName("testsuite");
         for (int i = 0; i < elementsByTagName.getLength(); i++) {
             Element element = (Element) elementsByTagName.item(i);
             DOMSource source = new DOMSource(element);
-            String filename = JUNIT_FILE_PREFIX + element.getAttribute("name").replaceAll(ILLEGAL_FILE_CHARS_REGEX, "_")  + "_" + i + JUNIT_FILE_POSTFIX;
+            String filename = JUNIT_FILE_PREFIX + element.getAttribute("name").replaceAll(ILLEGAL_FILE_CHARS_REGEX, "_")  + "_" + transformCount + "_" + i + JUNIT_FILE_POSTFIX;
 			File junitOutputFile = new File(junitOutputPath, filename);
             FileOutputStream fileOutputStream = new FileOutputStream(junitOutputFile);
             try {
