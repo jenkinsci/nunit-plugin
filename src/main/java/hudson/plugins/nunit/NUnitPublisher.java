@@ -166,7 +166,7 @@ public class NUnitPublisher extends Recorder implements Serializable {
                 action = existingAction;
                 action.setResult(result, listener);
             }
-            if(result.getPassCount()==0 && result.getFailCount()==0){
+            if(result.getPassCount()==0 && result.getFailCount()==0 && result.getSkipCount()==0){
                 throw new AbortException("None of the test reports contained any result");
             }
         } catch (AbortException e) {
