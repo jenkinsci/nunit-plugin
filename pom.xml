@@ -9,7 +9,7 @@
 
 	<artifactId>nunit</artifactId>
 	<packaging>hpi</packaging>
-	<version>0.16</version>
+	<version>0.17-SNAPSHOT</version>
 	<name>Jenkins NUnit plugin</name>
 	<url>http://wiki.jenkins-ci.org/display/JENKINS/NUnit+Plugin</url>
 
