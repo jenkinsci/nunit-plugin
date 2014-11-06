@@ -9,6 +9,11 @@
 	  Basedir of the fileset is &lt;a href='ws/'>the workspace root&lt;/a>.
 	">
     	<f:textbox value="${instance.testResultsPattern}" />
+    	<f:advanced>
+            <f:entry title="Fail the build if no test results are present" field="failIfNoResults">
+                <f:checkbox value="${instance.failIfNoResults}" checked="${instance.failIfNoResults}" default="true" />
+            </f:entry>
+        </f:advanced>
 	</f:entry>
 	<j:if test="${instance.debug}">
 		<f:entry title="Debug" field="debug">

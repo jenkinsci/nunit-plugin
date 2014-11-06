@@ -77,7 +77,7 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
 
     @Test
     public void testTransformOfTwoReports() throws Exception {
-        nunitArchiver = new NUnitArchiver(buildListener, "*.xml", transformer);
+        nunitArchiver = new NUnitArchiver(buildListener, "*.xml", transformer, true);
         workspace.createTextTempFile("nunit-report", ".xml", "content");
         workspace.createTextTempFile("nunit-report", ".xml", "content");
 
@@ -152,7 +152,7 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
                 one(buildListener).fatalError(with(any(String.class)));
             }
         });
-        nunitArchiver = new NUnitArchiver(buildListener, "*.xml", transformer);
+        nunitArchiver = new NUnitArchiver(buildListener, "*.xml", transformer, true);
         Boolean result = nunitArchiver.invoke(parentFile, virtualChannel);
         assertFalse("The archiver did not return false when it could not find any files", result);
     }

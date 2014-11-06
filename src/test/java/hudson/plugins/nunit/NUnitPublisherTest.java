@@ -8,6 +8,7 @@ import hudson.tasks.test.TestResultProjectAction;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
+
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -30,21 +31,21 @@ public class NUnitPublisherTest {
 
     @Test
     public void testGetTestResultsPattern() {
-        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", true, false, false);
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", true, false, false, true);
         assertEquals("The test results pattern is incorrect", publisher.getTestResultsPattern(), "**/*.xml");
     }
 
     @Test
     public void testGetDebug() {
-        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", true, false, false);
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", true, false, false, true);
         assertTrue("Debug is incorrect", publisher.getDebug());
-        publisher = new NUnitPublisher("**/*.xml", false, false, false);
+        publisher = new NUnitPublisher("**/*.xml", false, false, false, true);
         assertFalse("Debug is incorrect", publisher.getDebug());
     }
 
     @Test
     public void testDisabledDebug() {
-        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", false, true, true);
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", false, true, true, true);
         assertFalse("Debug is incorrect", publisher.getDebug());
         assertFalse("KeepJunitReports() is incorrect", publisher.getKeepJunitReports());
         assertFalse("SkipJunitArchiver() is incorrect", publisher.getSkipJunitArchiver());
@@ -52,17 +53,17 @@ public class NUnitPublisherTest {
 
     @Test
     public void testGetKeepJunitReports() {
-        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", true, true, false);
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", true, true, false, true);
         assertTrue("KeepJunitReports() is incorrect", publisher.getKeepJunitReports());
-        publisher = new NUnitPublisher("**/*.xml", true, false, false);
+        publisher = new NUnitPublisher("**/*.xml", true, false, false, true);
         assertFalse("KeepJunitReports() is incorrect", publisher.getKeepJunitReports());
     }
 
     @Test
     public void testGetSkipJunitArchiver() {
-        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", true, false, true);
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", true, false, true, true);
         assertTrue("SkipJunitArchiver() is incorrect", publisher.getSkipJunitArchiver());
-        publisher = new NUnitPublisher("**/*.xml", true, false, false);
+        publisher = new NUnitPublisher("**/*.xml", true, false, false, true);
         assertFalse("SkipJunitArchiver() is incorrect", publisher.getSkipJunitArchiver());
     }
 
@@ -73,8 +74,9 @@ public class NUnitPublisherTest {
                 one(project).getAction(with(equal(TestResultProjectAction.class))); will(returnValue(new TestResultProjectAction(project)));
             }
         });
-        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", false, false, true);
-        Action projectAction = publisher.getProjectAction((AbstractProject)project);
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", false, false, true, true);
+        @SuppressWarnings("rawtypes")
+		Action projectAction = publisher.getProjectAction((AbstractProject)project);
         assertNotNull("The action was null", projectAction);
     }
 
@@ -85,9 +87,17 @@ public class NUnitPublisherTest {
                 one(project).getAction(with(equal(TestResultProjectAction.class))); will(returnValue(null));
             }
         });
-        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", false, false, true);
-        Action projectAction = publisher.getProjectAction((AbstractProject)project);
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", false, false, true, true);
+        @SuppressWarnings("rawtypes")
+		Action projectAction = publisher.getProjectAction((AbstractProject)project);
         assertNotNull("The action was null", projectAction);
         assertEquals("The action type is incorrect", TestResultProjectAction.class, projectAction.getClass());
+    }
+    
+    public void testGetFailBuildIfNoResults() {
+    	NUnitPublisher publisher = new NUnitPublisher("**/*.xml", false, true, true, true);
+        assertTrue("Fail if no results is incorrect", publisher.getFailIfNoResults());
+        publisher = new NUnitPublisher("**/*.xml", false, true, true, false);
+        assertFalse("Fail if no results is incorrect", publisher.getFailIfNoResults());
     }
 }
