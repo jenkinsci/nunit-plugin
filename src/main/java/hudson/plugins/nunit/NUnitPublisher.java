@@ -1,6 +1,7 @@
 package hudson.plugins.nunit;
 
 import hudson.AbortException;
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath.FileCallable;
 import hudson.Launcher;
@@ -136,8 +137,11 @@ public class NUnitPublisher extends Recorder implements Serializable {
         }
         boolean result = true;
         try {
+            EnvVars env = build.getEnvironment(listener);
+            String resolvedTestResultsPattern = env.expand(testResultsPattern);
+
             listener.getLogger().println("Recording NUnit tests results");
-            NUnitArchiver transformer = new NUnitArchiver(listener, testResultsPattern, new NUnitReportTransformer(), failIfNoResults);
+            NUnitArchiver transformer = new NUnitArchiver(listener, resolvedTestResultsPattern, new NUnitReportTransformer(), failIfNoResults);
             result = build.getWorkspace().act(transformer);
 
             if (result) {
