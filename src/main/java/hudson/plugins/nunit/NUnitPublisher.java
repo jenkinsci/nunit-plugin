@@ -180,31 +180,23 @@ public class NUnitPublisher extends Recorder implements Serializable {
         TestResultAction existingAction = build.getAction(TestResultAction.class);
         TestResultAction action;
 
-        try {
-            final long buildTime = build.getTimestamp().getTimeInMillis();
+        final long buildTime = build.getTimestamp().getTimeInMillis();
 
-            TestResult existingTestResults = null;
-            if (existingAction != null) {
-                existingTestResults = existingAction.getResult();
-            }
-            TestResult result = getTestResult(junitFilePattern, build, existingTestResults, buildTime);
+        TestResult existingTestResults = null;
+        if (existingAction != null) {
+            existingTestResults = existingAction.getResult();
+        }
+        TestResult result = getTestResult(junitFilePattern, build, existingTestResults, buildTime);
 
-            if (existingAction == null) {
-                action = new TestResultAction(build, result, listener);
-            } else {
-                action = existingAction;
-                action.setResult(result, listener);
-            }
-            if(this.failIfNoResults && result.getPassCount()==0 && result.getFailCount()==0 && result.getSkipCount()==0){
-                throw new AbortException("None of the test reports contained any result");
-            }
-        } catch (AbortException e) {
-            if(build.getResult()==Result.FAILURE)
-                // most likely a build failed before it gets to the test phase.
-                // don't report confusing error message.
-                return true;
+        if (existingAction == null) {
+            action = new TestResultAction(build, result, listener);
+        } else {
+            action = existingAction;
+            action.setResult(result, listener);
+        }
 
-            listener.getLogger().println(e.getMessage());
+        if (this.failIfNoResults && result.getPassCount() == 0 && result.getFailCount() == 0 && result.getSkipCount() == 0) {
+            listener.getLogger().println("None of the test reports contained any result");
             build.setResult(Result.FAILURE);
             return true;
         }
@@ -213,7 +205,7 @@ public class NUnitPublisher extends Recorder implements Serializable {
             build.getActions().add(action);
         }
 
-        if(action.getResult().getFailCount()>0)
+        if (action.getResult().getFailCount() > 0)
             build.setResult(Result.UNSTABLE);
 
         return true;
