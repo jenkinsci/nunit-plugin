@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-run id="2" testcasecount="9" result="Passed" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="9" start-time="2015-04-12 04:34:40Z" end-time="2015-04-12 04:45:53Z" duration="672.994489">
+  <environment nunit-version="3.0.5560.36865" clr-version="4.0.30319.34209" os-version="Microsoft Windows NT 6.3.9600.0" platform="Win32NT" cwd="C:\Jenkins\workspace\Saucery3NUnit" machine-name="ANDREWS-LAPTOP" user="andrewg" user-domain="andrews-laptop" culture="en-AU" uiculture="en-US" />
+  <test-suite type="Assembly" id="1014" name="Saucery3Tester.dll" fullname="C:\Jenkins\workspace\Saucery3NUnit\NUnit\Version3\Saucery3Tester\bin\Release\Saucery3Tester.dll" runstate="Runnable" testcasecount="9" result="Passed" start-time="2015-04-12 04:34:40Z" end-time="2015-04-12 04:45:53Z" duration="672.909000" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="9">
+    <properties>
+      <property name="ParallelScope" value="Children" />
+      <property name="LevelOfParallelism" value="16" />
+      <property name="_PID" value="2808" />
+      <property name="_APPDOMAIN" value="test-domain-" />
+    </properties>
+    <test-suite type="TestSuite" id="1015" name="Saucery3Tester" fullname="Saucery3Tester" runstate="Runnable" testcasecount="9" result="Passed" start-time="2015-04-12 04:34:40Z" end-time="2015-04-12 04:45:53Z" duration="672.892000" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="9">
+      <test-suite type="SetUpFixture" id="1000" name="Tests" fullname="Saucery3Tester.Tests.GlobalSetup" classname="Saucery3Tester.Tests.GlobalSetup" runstate="Runnable" testcasecount="9" result="Passed" start-time="2015-04-12 04:34:40Z" end-time="2015-04-12 04:45:53Z" duration="672.889000" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="9">
+        <output>Testing on 3 platforms
+</output>
+        <test-suite type="TestFixture" id="1001" name="GuineaPigTests" fullname="Saucery3Tester.Tests.GuineaPigTests" classname="Saucery3Tester.Tests.GuineaPigTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2015-04-12 04:34:40Z" end-time="2015-04-12 04:45:53Z" duration="672.873000" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="9">
+          <test-suite type="ParameterizedMethod" id="1009" name="LinkWorks" fullname="Saucery3Tester.Tests.GuineaPigTests.LinkWorks" runstate="Runnable" testcasecount="3" result="Passed" start-time="2015-04-12 04:34:40Z" end-time="2015-04-12 04:39:10Z" duration="270.313000" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="3">
+            <test-case id="1006" name="LinkWorks(Saucery3.ValueSources.PlatformTestData)" fullname="Saucery3Tester.Tests.GuineaPigTests.LinkWorks(Saucery3.ValueSources.PlatformTestData)" methodname="LinkWorks" classname="Saucery3Tester.Tests.GuineaPigTests" runstate="Runnable" seed="575529885" result="Passed" start-time="2015-04-12 04:34:40Z" end-time="2015-04-12 04:37:31Z" duration="171.126000" asserts="1">
+              <output>Setting up LinkWorks_Mac 10.10_ipad_8.2 for Desktop on WebDriver
+SauceOnDemandSessionID=65e9d4d4851b4106aca484a562ec35a6 job-name=LinkWorks_Mac 10.10_ipad_8.2
+</output>
+            </test-case>
+            <test-case id="1007" name="LinkWorks(Saucery3.ValueSources.PlatformTestData)" fullname="Saucery3Tester.Tests.GuineaPigTests.LinkWorks(Saucery3.ValueSources.PlatformTestData)" methodname="LinkWorks" classname="Saucery3Tester.Tests.GuineaPigTests" runstate="Runnable" seed="637570426" result="Passed" start-time="2015-04-12 04:37:31Z" end-time="2015-04-12 04:38:56Z" duration="84.208000" asserts="1">
+              <output>Setting up LinkWorks_Mac 10.10_iphone_8.2 for Desktop on WebDriver
+SauceOnDemandSessionID=5122f84b6b9d4905ad61cffc2c41748b job-name=LinkWorks_Mac 10.10_iphone_8.2
+</output>
+            </test-case>
+            <test-case id="1008" name="LinkWorks(Saucery3.ValueSources.PlatformTestData)" fullname="Saucery3Tester.Tests.GuineaPigTests.LinkWorks(Saucery3.ValueSources.PlatformTestData)" methodname="LinkWorks" classname="Saucery3Tester.Tests.GuineaPigTests" runstate="Runnable" seed="1962395553" result="Passed" start-time="2015-04-12 04:38:56Z" end-time="2015-04-12 04:39:10Z" duration="14.958000" asserts="1">
+              <output>Setting up LinkWorks_Windows 2012_firefox_36 for Desktop on WebDriver
+SauceOnDemandSessionID=6cf5d2c0b5a34bba9673f974120ad7c5 job-name=LinkWorks_Windows 2012_firefox_36
+</output>
+            </test-case>
+          </test-suite>
+          <test-suite type="ParameterizedMethod" id="1005" name="PageTitle" fullname="Saucery3Tester.Tests.GuineaPigTests.PageTitle" runstate="Runnable" testcasecount="3" result="Passed" start-time="2015-04-12 04:39:10Z" end-time="2015-04-12 04:42:14Z" duration="183.505000" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="3">
+            <test-case id="1002" name="PageTitle(Saucery3.ValueSources.PlatformTestData)" fullname="Saucery3Tester.Tests.GuineaPigTests.PageTitle(Saucery3.ValueSources.PlatformTestData)" methodname="PageTitle" classname="Saucery3Tester.Tests.GuineaPigTests" runstate="Runnable" seed="1998102471" result="Passed" start-time="2015-04-12 04:39:10Z" end-time="2015-04-12 04:40:42Z" duration="91.159000" asserts="1">
+              <output>Setting up PageTitle_Mac 10.10_ipad_8.2 for Desktop on WebDriver
+SauceOnDemandSessionID=b4c45e57e1be4a4e80b463134f244db9 job-name=PageTitle_Mac 10.10_ipad_8.2
+</output>
+            </test-case>
+            <test-case id="1003" name="PageTitle(Saucery3.ValueSources.PlatformTestData)" fullname="Saucery3Tester.Tests.GuineaPigTests.PageTitle(Saucery3.ValueSources.PlatformTestData)" methodname="PageTitle" classname="Saucery3Tester.Tests.GuineaPigTests" runstate="Runnable" seed="539698045" result="Passed" start-time="2015-04-12 04:40:42Z" end-time="2015-04-12 04:42:00Z" duration="78.860000" asserts="1">
+              <output>Setting up PageTitle_Mac 10.10_iphone_8.2 for Desktop on WebDriver
+SauceOnDemandSessionID=f383db2ee196421b8479730ffdce095c job-name=PageTitle_Mac 10.10_iphone_8.2
+</output>
+            </test-case>
+            <test-case id="1004" name="PageTitle(Saucery3.ValueSources.PlatformTestData)" fullname="Saucery3Tester.Tests.GuineaPigTests.PageTitle(Saucery3.ValueSources.PlatformTestData)" methodname="PageTitle" classname="Saucery3Tester.Tests.GuineaPigTests" runstate="Runnable" seed="1270996999" result="Passed" start-time="2015-04-12 04:42:00Z" end-time="2015-04-12 04:42:14Z" duration="13.486000" asserts="1">
+              <output>Setting up PageTitle_Windows 2012_firefox_36 for Desktop on WebDriver
+SauceOnDemandSessionID=d1f32a58ca5c4d669e5d1e5c856e0898 job-name=PageTitle_Windows 2012_firefox_36
+</output>
+            </test-case>
+          </test-suite>
+          <test-suite type="ParameterizedMethod" id="1013" name="UserAgentPresent" fullname="Saucery3Tester.Tests.GuineaPigTests.UserAgentPresent" runstate="Runnable" testcasecount="3" result="Passed" start-time="2015-04-12 04:42:14Z" end-time="2015-04-12 04:45:53Z" duration="218.670000" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="3">
+            <test-case id="1010" name="UserAgentPresent(Saucery3.ValueSources.PlatformTestData)" fullname="Saucery3Tester.Tests.GuineaPigTests.UserAgentPresent(Saucery3.ValueSources.PlatformTestData)" methodname="UserAgentPresent" classname="Saucery3Tester.Tests.GuineaPigTests" runstate="Runnable" seed="1836759380" result="Passed" start-time="2015-04-12 04:42:14Z" end-time="2015-04-12 04:44:25Z" duration="130.692000" asserts="1">
+              <output>Setting up UserAgentPresent_Mac 10.10_ipad_8.2 for Desktop on WebDriver
+SauceOnDemandSessionID=ffaae1e450ba49bdb9080d7656f94201 job-name=UserAgentPresent_Mac 10.10_ipad_8.2
+</output>
+            </test-case>
+            <test-case id="1011" name="UserAgentPresent(Saucery3.ValueSources.PlatformTestData)" fullname="Saucery3Tester.Tests.GuineaPigTests.UserAgentPresent(Saucery3.ValueSources.PlatformTestData)" methodname="UserAgentPresent" classname="Saucery3Tester.Tests.GuineaPigTests" runstate="Runnable" seed="1920514096" result="Passed" start-time="2015-04-12 04:44:25Z" end-time="2015-04-12 04:45:40Z" duration="75.795000" asserts="1">
+              <output>Setting up UserAgentPresent_Mac 10.10_iphone_8.2 for Desktop on WebDriver
+SauceOnDemandSessionID=aac322d61fec4589ab74a0b2957a5e84 job-name=UserAgentPresent_Mac 10.10_iphone_8.2
+</output>
+            </test-case>
+            <test-case id="1012" name="UserAgentPresent(Saucery3.ValueSources.PlatformTestData)" fullname="Saucery3Tester.Tests.GuineaPigTests.UserAgentPresent(Saucery3.ValueSources.PlatformTestData)" methodname="UserAgentPresent" classname="Saucery3Tester.Tests.GuineaPigTests" runstate="Runnable" seed="1253529002" result="Passed" start-time="2015-04-12 04:45:40Z" end-time="2015-04-12 04:45:53Z" duration="12.181000" asserts="1">
+              <output>Setting up UserAgentPresent_Windows 2012_firefox_36 for Desktop on WebDriver
+SauceOnDemandSessionID=4a769cf9cbab48d6a852b5d928177883 job-name=UserAgentPresent_Windows 2012_firefox_36
+</output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

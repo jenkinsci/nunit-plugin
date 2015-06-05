@@ -57,6 +57,13 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
         assertJunitFiles(3);
     }
 
+    @Bug(27906)
+    @Test
+    public void testNUnit3Beta1() throws Exception {
+        transformer.transform(this.getClass().getResourceAsStream("issue-27906.xml"), tempFilePath);
+        assertJunitFiles(3);
+    }
+
     private void assertJunitFiles(int expectedJunitFilesCount) throws DocumentException {
         File[] listFiles = tempFilePath.listFiles(this);
         Assert.assertEquals("The number of junit files are incorrect.", expectedJunitFilesCount, listFiles.length);
