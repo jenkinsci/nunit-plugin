@@ -5,6 +5,7 @@ import hudson.Util;
 import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
 import hudson.util.IOException2;
+import jenkins.security.Roles;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +17,8 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.jenkinsci.remoting.RoleChecker;
+import org.jenkinsci.remoting.RoleSensitive;
 import org.xml.sax.SAXException;
 
 /**
@@ -101,5 +104,10 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializab
         	}
         }
         return nunitFiles;
+    }
+
+    @Override
+    public void checkRoles(RoleChecker roleChecker) throws SecurityException {
+        roleChecker.check((RoleSensitive) this, Roles.MASTER);
     }
 }
