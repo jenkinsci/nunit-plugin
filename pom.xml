@@ -50,6 +50,13 @@
 	</build>
 
 	<dependencies>
+        <!-- junit-plugin -->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>junit</artifactId>
+            <version>1.13</version>
+        </dependency>
+        <!-- testing -->
 		<dependency>
 			<groupId>org.jmock</groupId>
 			<artifactId>jmock-junit4</artifactId>
