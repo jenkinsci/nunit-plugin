@@ -1,12 +1,5 @@
 package hudson.plugins.nunit;
 
-import hudson.FilePath;
-import hudson.Util;
-import hudson.model.BuildListener;
-import hudson.remoting.VirtualChannel;
-import hudson.util.IOException2;
-import jenkins.security.Roles;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,6 +13,12 @@ import org.apache.tools.ant.types.FileSet;
 import org.jenkinsci.remoting.RoleChecker;
 import org.jenkinsci.remoting.RoleSensitive;
 import org.xml.sax.SAXException;
+
+import hudson.FilePath;
+import hudson.Util;
+import hudson.model.BuildListener;
+import hudson.remoting.VirtualChannel;
+import jenkins.security.Roles;
 
 /**
  * Class responsible for transforming NUnit to JUnit files and then run them all through the JUnit result archiver.
@@ -65,13 +64,13 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializab
                 try {
                     unitReportTransformer.transform(fileStream, junitOutputPath);
                 } catch (TransformerException te) {
-                    throw new IOException2(
+                    throw new IOException(
                             "Could not transform the NUnit report. Please report this issue to the plugin author", te);
                 } catch (SAXException se) {
-                    throw new IOException2(
+                    throw new IOException(
                             "Could not transform the NUnit report. Please report this issue to the plugin author", se);
                 } catch (ParserConfigurationException pce) {
-                    throw new IOException2(
+                    throw new IOException(
                             "Could not initalize the XML parser. Please report this issue to the plugin author", pce);
                 } finally {
                     fileStream.close();
