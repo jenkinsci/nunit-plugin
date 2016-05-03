@@ -1,25 +1,5 @@
 package hudson.plugins.nunit;
 
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath.FileCallable;
-import hudson.Launcher;
-import hudson.Util;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.Result;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.remoting.VirtualChannel;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.BuildStepMonitor;
-import hudson.tasks.Publisher;
-import hudson.tasks.Recorder;
-import hudson.tasks.junit.TestResult;
-import hudson.tasks.junit.TestResultAction;
-import hudson.tasks.test.TestResultProjectAction;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -29,7 +9,30 @@ import javax.xml.transform.TransformerException;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.jenkinsci.remoting.RoleChecker;
+import org.jenkinsci.remoting.RoleSensitive;
 import org.kohsuke.stapler.DataBoundConstructor;
+
+import hudson.AbortException;
+import hudson.EnvVars;
+import hudson.Extension;
+import hudson.FilePath.FileCallable;
+import hudson.Launcher;
+import hudson.Util;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.Action;
+import hudson.model.BuildListener;
+import hudson.model.Result;
+import hudson.remoting.VirtualChannel;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
+import hudson.tasks.Publisher;
+import hudson.tasks.Recorder;
+import hudson.tasks.junit.TestResult;
+import hudson.tasks.junit.TestResultAction;
+import hudson.tasks.test.TestResultProjectAction;
+import jenkins.security.Roles;
 
 /**
  * Class that records NUnit test reports into Jenkins.
@@ -245,6 +248,14 @@ public class NUnitPublisher extends Recorder implements Serializable {
                     existingTestResults.parse(buildTime, ds);
                     return existingTestResults;
                 }
+            }
+
+			/**
+			 * {@inheritDoc}
+			 */
+            public void checkRoles(RoleChecker roleChecker) throws SecurityException {
+                // It is all right to run nunit-plugin on master or slave.
+                roleChecker.check((RoleSensitive) this, Roles.MASTER);
             }
         });
         return result;
