@@ -8,6 +8,7 @@ import java.io.Serializable;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import hudson.model.TaskListener;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.jenkinsci.remoting.RoleChecker;
@@ -32,7 +33,7 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializab
     public static final String JUNIT_REPORTS_PATH = "temporary-junit-reports";
 
     // Build related objects
-    private final BuildListener listener;
+    private final TaskListener listener;
     private final String testResultsPattern;
 
     private TestReportTransformer unitReportTransformer;
@@ -44,7 +45,7 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializab
     	this(listener, testResults, unitReportTransformer, true);
     }
     
-    public NUnitArchiver(BuildListener listener, String testResults, TestReportTransformer unitReportTransformer, Boolean failIfNoResults) throws TransformerException {
+    public NUnitArchiver(TaskListener listener, String testResults, TestReportTransformer unitReportTransformer, Boolean failIfNoResults) throws TransformerException {
         this.listener = listener;
         this.testResultsPattern = testResults;
         this.unitReportTransformer = unitReportTransformer;
