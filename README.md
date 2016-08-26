@@ -1,5 +1,7 @@
-NUnit Plugin [![Build Status](https://buildhive.cloudbees.com/job/jenkinsci/job/nunit-plugin/badge/icon)](https://buildhive.cloudbees.com/job/jenkinsci/job/nunit-plugin/)
+NUnit Plugin
 ============
+
+[![Build Status](https://jenkins.ci.cloudbees.com/buildStatus/icon?job=plugins/nunit-plugin)](https://jenkins.ci.cloudbees.com/job/plugins/job/nunit-plugin/)
 
 This plugin allows you to publish [NUnit](http://www.nunit.org/) test results.
 
