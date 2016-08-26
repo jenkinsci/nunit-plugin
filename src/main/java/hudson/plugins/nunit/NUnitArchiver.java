@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 import hudson.FilePath;
 import hudson.Util;
 import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.VirtualChannel;
 import jenkins.security.Roles;
 
@@ -32,7 +33,7 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializab
     public static final String JUNIT_REPORTS_PATH = "temporary-junit-reports";
 
     // Build related objects
-    private final BuildListener listener;
+    private final TaskListener listener;
     private final String testResultsPattern;
 
     private TestReportTransformer unitReportTransformer;
@@ -44,7 +45,7 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializab
     	this(listener, testResults, unitReportTransformer, true);
     }
     
-    public NUnitArchiver(BuildListener listener, String testResults, TestReportTransformer unitReportTransformer, Boolean failIfNoResults) throws TransformerException {
+    public NUnitArchiver(TaskListener listener, String testResults, TestReportTransformer unitReportTransformer, Boolean failIfNoResults) throws TransformerException {
         this.listener = listener;
         this.testResultsPattern = testResults;
         this.unitReportTransformer = unitReportTransformer;
