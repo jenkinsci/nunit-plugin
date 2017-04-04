@@ -3,3 +3,6 @@
 .project
 work/
 target/
+
+.idea/
+*.iml
