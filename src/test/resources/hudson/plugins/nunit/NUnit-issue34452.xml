@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite errors="0" failures="0" name="RES.Coordinate.Calculation.Test.TurkeyTest" skipped="1" tests="1" time="">
+    <testcase classname="RES.Coordinate.Calculation.Test.TurkeyTest" name="ED1950_to_WGS84(&quot;T1&quot;,556351,4611739,27.67626007d,41.65371627d)">
+        <skipped message=""/>
+    </testcase>
+</testsuite>

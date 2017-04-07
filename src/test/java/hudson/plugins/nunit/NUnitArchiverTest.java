@@ -1,51 +1,40 @@
 package hudson.plugins.nunit;
 
-import org.jmock.Mockery;
-import org.jmock.Expectations;
-import org.jmock.lib.legacy.ClassImposteriser;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 
+import hudson.Launcher;
+import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
+import hudson.model.FreeStyleBuild;
+import hudson.model.FreeStyleProject;
 import hudson.remoting.VirtualChannel;
 
+import hudson.util.StreamTaskListener;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.TestBuilder;
 
-public class NUnitArchiverTest extends AbstractWorkspaceTest {
+public class NUnitArchiverTest {
 
-    private BuildListener buildListener;
-    private Mockery context;
-    private Mockery classContext;
+    @Rule
+    public JenkinsRule j = new JenkinsRule();
+
+    private StreamTaskListener buildListener;
     private TestReportTransformer transformer;
     private NUnitArchiver nunitArchiver;
     private VirtualChannel virtualChannel;
 
     @Before
     public void setUp() throws Exception {
-        super.createWorkspace();
-
-        context = new Mockery();
-        classContext = new Mockery() {
-            {
-                setImposteriser(ClassImposteriser.INSTANCE);
-            }
-        };
-
-        buildListener = classContext.mock(BuildListener.class);
-
-        transformer = context.mock(TestReportTransformer.class);
-        virtualChannel = context.mock(VirtualChannel.class);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        super.deleteWorkspace();
+        buildListener = StreamTaskListener.fromStdout();
+        transformer = mock(TestReportTransformer.class);
+        virtualChannel = mock(VirtualChannel.class);
     }
 
     /*@Test
@@ -77,24 +66,19 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
 
     @Test
     public void testTransformOfTwoReports() throws Exception {
-        nunitArchiver = new NUnitArchiver(buildListener, "*.xml", transformer, true);
-        workspace.createTextTempFile("nunit-report", ".xml", "content");
-        workspace.createTextTempFile("nunit-report", ".xml", "content");
-
-        context.checking(new Expectations() {
-            {
-                exactly(2).of(transformer).transform(with(any(InputStream.class)), with(any(File.class)));
+        FreeStyleProject prj = j.createFreeStyleProject("foo");
+        prj.getBuildersList().add(new TestBuilder() {
+            @Override
+            public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+                build.getWorkspace().createTextTempFile("nunit-report", ".xml", "content");
+                build.getWorkspace().createTextTempFile("nunit-report", ".xml", "content");
+                return true;
             }
         });
-        classContext.checking(new Expectations() {
-            {
-                ignoring(buildListener).getLogger();
-                will(returnValue(new PrintStream(new ByteArrayOutputStream())));
-            }
-        });
-        nunitArchiver.invoke(parentFile, virtualChannel);
-
-        context.assertIsSatisfied();
+        FreeStyleBuild b = prj.scheduleBuild2(0).get();
+        nunitArchiver = new NUnitArchiver(b.getWorkspace().getRemote(), buildListener, "*.xml", transformer, true);
+        assertTrue("Error during archiver call", nunitArchiver.call());
+        assertEquals( "Should have processed two files", 2, nunitArchiver.getFileCount());
     }
 /*
     @Test
@@ -145,15 +129,10 @@ public class NUnitArchiverTest extends AbstractWorkspaceTest {
 
     @Test
     public void testNoNUnitReports() throws Exception {
-        classContext.checking(new Expectations() {
-            {
-                ignoring(buildListener).getLogger();
-                will(returnValue(new PrintStream(new ByteArrayOutputStream())));
-                one(buildListener).fatalError(with(any(String.class)));
-            }
-        });
-        nunitArchiver = new NUnitArchiver(buildListener, "*.xml", transformer, true);
-        Boolean result = nunitArchiver.invoke(parentFile, virtualChannel);
-        assertFalse("The archiver did not return false when it could not find any files", result);
+        FreeStyleProject prj = j.createFreeStyleProject("foo");
+        FreeStyleBuild b = prj.scheduleBuild2(0).get();
+
+        nunitArchiver = new NUnitArchiver(b.getWorkspace().getRemote(), StreamTaskListener.fromStdout(), "*.xml", transformer, true);
+        assertFalse("The archiver did not return false when it could not find any files", nunitArchiver.call());
     }
 }

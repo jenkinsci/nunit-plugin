@@ -8,6 +8,7 @@ import java.io.Serializable;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import jenkins.security.MasterToSlaveCallable;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.jenkinsci.remoting.RoleChecker;
@@ -26,44 +27,40 @@ import jenkins.security.Roles;
  * 
  * @author Erik Ramfelt
  */
-public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializable {
+public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
 
     private static final long serialVersionUID = 1L;
 
     public static final String JUNIT_REPORTS_PATH = "temporary-junit-reports";
 
-    // Build related objects
+    private final String root;
     private final TaskListener listener;
     private final String testResultsPattern;
+    private final TestReportTransformer unitReportTransformer;
+    private final boolean failIfNoResults;
 
-    private TestReportTransformer unitReportTransformer;
-    
-    private final Boolean failIfNoResults;
+    private int fileCount;
 
-    @Deprecated
-    public NUnitArchiver(BuildListener listener, String testResults, TestReportTransformer unitReportTransformer) throws TransformerException {
-    	this(listener, testResults, unitReportTransformer, true);
-    }
-    
-    public NUnitArchiver(TaskListener listener, String testResults, TestReportTransformer unitReportTransformer, Boolean failIfNoResults) throws TransformerException {
+    public NUnitArchiver(String root, TaskListener listener, String testResultsPatter, TestReportTransformer unitReportTransformer, boolean failIfNoResults) {
+        this.root = root;
         this.listener = listener;
-        this.testResultsPattern = testResults;
+        this.testResultsPattern = testResultsPatter;
         this.unitReportTransformer = unitReportTransformer;
         this.failIfNoResults = failIfNoResults;
     }
 
     /** {@inheritDoc} */
-    public Boolean invoke(File ws, VirtualChannel channel) throws IOException {
-        Boolean retValue = Boolean.TRUE;
-        String[] nunitFiles = findNUnitReports(ws);
+    public Boolean call() throws IOException {
+        boolean retValue = true;
+        String[] nunitFiles = findNUnitReports(new File(root));
         if (nunitFiles.length > 0) {
-            File junitOutputPath = new File(ws, JUNIT_REPORTS_PATH);
+            File junitOutputPath = new File(root, JUNIT_REPORTS_PATH);
             junitOutputPath.mkdirs();
     
             for (String nunitFileName : nunitFiles) {
-                FileInputStream fileStream = new FileInputStream(new File(ws, nunitFileName));
-                try {
+                try(FileInputStream fileStream = new FileInputStream(new File(root, nunitFileName))) {
                     unitReportTransformer.transform(fileStream, junitOutputPath);
+                    fileCount++;
                 } catch (TransformerException te) {
                     throw new IOException(
                             "Could not transform the NUnit report. Please report this issue to the plugin author", te);
@@ -72,16 +69,18 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializab
                             "Could not transform the NUnit report. Please report this issue to the plugin author", se);
                 } catch (ParserConfigurationException pce) {
                     throw new IOException(
-                            "Could not initalize the XML parser. Please report this issue to the plugin author", pce);
-                } finally {
-                    fileStream.close();
+                            "Could not initialize the XML parser. Please report this issue to the plugin author", pce);
                 }
             }
         } else if(this.failIfNoResults) {
-            retValue = Boolean.FALSE;
+            retValue = false;
         }
 
         return retValue;
+    }
+
+    int getFileCount() {
+        return fileCount;
     }
 
     /**
@@ -91,7 +90,7 @@ public class NUnitArchiver implements FilePath.FileCallable<Boolean>, Serializab
      * @return an array of strings
      */
     private String[] findNUnitReports(File parentPath) {
-        FileSet fs = Util.createFileSet(parentPath,testResultsPattern);
+        FileSet fs = Util.createFileSet(parentPath, testResultsPattern);
         DirectoryScanner ds = fs.getDirectoryScanner();
 
         String[] nunitFiles = ds.getIncludedFiles();

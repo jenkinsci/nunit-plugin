@@ -5,13 +5,13 @@ import hudson.model.FreeStyleProject;
 import hudson.model.Result;
 import hudson.tasks.test.AbstractTestResultAction;
 
-import org.jvnet.hudson.test.Bug;
 import org.jvnet.hudson.test.HudsonTestCase;
+import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.recipes.LocalData;
 
 public class NUnitIntegrationTest extends HudsonTestCase {
 
-    @Bug(5673)
+    @Issue("JENKINS-5673")
     @LocalData
     public void testIssue5673() throws Exception {
         FreeStyleProject project = (FreeStyleProject) hudson.getItem("5673");
@@ -21,7 +21,7 @@ public class NUnitIntegrationTest extends HudsonTestCase {
         assertEquals("The number of tests is not correct", 1355, action.getTotalCount());
     }
 
-    @Bug(9246)
+    @Issue("JENKINS-9246")
     @LocalData
     public void testIssue9246() throws Exception {
         FreeStyleProject project = (FreeStyleProject) hudson.getItem("9246");
@@ -31,7 +31,7 @@ public class NUnitIntegrationTest extends HudsonTestCase {
         assertEquals("The number of tests is not correct", 5454, action.getTotalCount());
     }
 
-    @Bug(7072)
+    @Issue("JENKINS-7072")
     @LocalData
     public void testIssue7072() throws Exception {
         FreeStyleProject project = (FreeStyleProject) hudson.getItem("7072");

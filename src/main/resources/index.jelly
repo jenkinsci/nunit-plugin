@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <div>
   This plugin transforms <a href="http://www.nunit.org/">NUnit</a> test reports
   so they can be recorded by Jenkins' JUnit features.

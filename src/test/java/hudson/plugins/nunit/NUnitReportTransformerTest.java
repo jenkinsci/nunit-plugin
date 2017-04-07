@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvnet.hudson.test.Bug;
+import org.jvnet.hudson.test.Issue;
 
 public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements FilenameFilter {
 
@@ -50,7 +50,7 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
         assertJunitFiles(2);
     }
 
-    @Bug(5673)
+    @Issue("JENKINS-5673")
     @Test
     public void testFilenameDoesNotContainInvalidChars() throws Exception {
         transformer.transform(this.getClass().getResourceAsStream("issue-5673.xml"), tempFilePath);

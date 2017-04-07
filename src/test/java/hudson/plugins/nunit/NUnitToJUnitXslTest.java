@@ -11,7 +11,7 @@ import org.custommonkey.xmlunit.Transform;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
-import org.jvnet.hudson.test.Bug;
+import org.jvnet.hudson.test.Issue;
 import org.xml.sax.InputSource;
 
 /**
@@ -81,7 +81,7 @@ public class NUnitToJUnitXslTest {
     }
 
     @Test
-    @Bug(6353)
+    @Issue("JENKINS-6353")
     public void testSkippedTests() throws Exception {
         Transform myTransform = new Transform(
                 new InputSource(this.getClass().getResourceAsStream("NUnit-issue6353.xml")), new InputSource(this
@@ -92,7 +92,7 @@ public class NUnitToJUnitXslTest {
     }
 
     @Test
-    @Bug(5674)
+    @Issue("JENKINS-5674")
     public void testThatNameIsFilledOut() throws Exception {
         Transform myTransform = new Transform(
                 new InputSource(this.getClass().getResourceAsStream("NUnit-issue5674.xml")), new InputSource(this
