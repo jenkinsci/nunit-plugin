@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -10,7 +9,7 @@
 
     <artifactId>nunit</artifactId>
     <packaging>hpi</packaging>
-    <version>0.19-SNAPSHOT</version>
+    <version>0.19</version>
     <name>Jenkins NUnit plugin</name>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/NUnit+Plugin</url>
 
@@ -39,7 +38,7 @@
         <connection>scm:git:ssh://github.com/jenkinsci/nunit-plugin.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/nunit-plugin.git</developerConnection>
         <url>https://svn.jenkins-ci.org/trunk/hudson/plugins/nunit/</url>
-        <tag>HEAD</tag>
+        <tag>nunit-0.19</tag>
     </scm>
 
     <build>
