@@ -41,9 +41,11 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
 
     private static final String TEMP_JUNIT_FILE_STR = "temp-junit.xml";
     public static final String NUNIT_TO_JUNIT_XSLFILE_STR = "nunit-to-junit.xsl";
+    public static final String NUNIT3_TO_JUNIT_XSLFILE_STR = "nunit3-junit.xslt";
 
     private transient boolean xslIsInitialized;
     private transient Transformer nunitTransformer;
+    private transient Transformer nunit3Transformer;
     private transient Transformer writerTransformer;
     private transient DocumentBuilder xmlDocumentBuilder;
     private transient int transformCount;
@@ -63,10 +65,11 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
         
         initialize();
         
+        Document nunitDocument = xmlDocumentBuilder.parse(nunitFileStream);
         File junitTargetFile = new File(junitOutputPath, TEMP_JUNIT_FILE_STR);
         FileOutputStream fileOutputStream = new FileOutputStream(junitTargetFile);
         try {
-            nunitTransformer.transform(new StreamSource(nunitFileStream), new StreamResult(fileOutputStream));
+            getNunitTransformer(nunitDocument).transform(new DOMSource(nunitDocument), new StreamResult(fileOutputStream));
         } finally {
             fileOutputStream.close();
         }
@@ -79,6 +82,7 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
         if (!xslIsInitialized) {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             nunitTransformer = transformerFactory.newTransformer(new StreamSource(this.getClass().getResourceAsStream(NUNIT_TO_JUNIT_XSLFILE_STR)));
+            nunit3Transformer = transformerFactory.newTransformer(new StreamSource(this.getClass().getResourceAsStream(NUNIT3_TO_JUNIT_XSLFILE_STR)));
             writerTransformer = transformerFactory.newTransformer();
     
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -86,6 +90,13 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
             
             xslIsInitialized = true;
         }
+    }
+
+    private Transformer getNunitTransformer(Document nunitDocument) {
+        if ("test-run".equals(nunitDocument.getDocumentElement().getNodeName())) {
+            return nunit3Transformer;
+        }
+        return nunitTransformer;
     }
 
     /**
