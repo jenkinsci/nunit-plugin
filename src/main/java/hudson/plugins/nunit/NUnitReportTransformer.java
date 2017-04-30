@@ -18,6 +18,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.input.BOMInputStream;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -66,7 +67,8 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
         File junitTargetFile = new File(junitOutputPath, TEMP_JUNIT_FILE_STR);
         FileOutputStream fileOutputStream = new FileOutputStream(junitTargetFile);
         try {
-            nunitTransformer.transform(new StreamSource(nunitFileStream), new StreamResult(fileOutputStream));
+            BOMInputStream is = new BOMInputStream(nunitFileStream);
+            nunitTransformer.transform(new StreamSource(is), new StreamResult(fileOutputStream));
         } finally {
             fileOutputStream.close();
         }

@@ -69,6 +69,13 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
         }
     }
 
+    @Issue("JENKINS-33493")
+    @Test
+    public void testXmlWithBOM() throws Exception {
+        transformer.transform(getClass().getResourceAsStream("NUnit-issue33493.xml"), tempFilePath);
+        assertJunitFiles(2);
+    }
+
     public boolean accept(File dir, String name) {
         return name.startsWith(NUnitReportTransformer.JUNIT_FILE_PREFIX);
     }
