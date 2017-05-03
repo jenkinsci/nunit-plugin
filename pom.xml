@@ -9,7 +9,7 @@
 
     <artifactId>nunit</artifactId>
     <packaging>hpi</packaging>
-    <version>0.20-SNAPSHOT</version>
+    <version>0.20</version>
     <name>Jenkins NUnit plugin</name>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/NUnit+Plugin</url>
 
@@ -38,7 +38,7 @@
         <connection>scm:git:ssh://github.com/jenkinsci/nunit-plugin.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/nunit-plugin.git</developerConnection>
         <url>https://svn.jenkins-ci.org/trunk/hudson/plugins/nunit/</url>
-        <tag>HEAD</tag>
+        <tag>nunit-0.20</tag>
     </scm>
 
     <build>
