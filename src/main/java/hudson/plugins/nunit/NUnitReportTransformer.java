@@ -42,7 +42,7 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
     public static final String JUNIT_FILE_POSTFIX = ".xml";
     public static final String JUNIT_FILE_PREFIX = "TEST-";
 
-    private static final int MAX_PATH_WINDOWS = 260;
+    private static final int MAX_PATH = 260;
     private static final String TEMP_JUNIT_FILE_STR = "temp-junit.xml";
     public static final String NUNIT_TO_JUNIT_XSLFILE_STR = "nunit-to-junit.xsl";
 
@@ -117,8 +117,8 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
                 File junitOutputFile = new File(junitOutputPath, filename);
 
                 // check for really long file names
-				if(junitOutputFile.toString().length() >= MAX_PATH_WINDOWS && Functions.isWindows()) {
-	                int maxMiddleLength = MAX_PATH_WINDOWS - JUNIT_FILE_PREFIX.length() - fileNamePostfix.length() - junitOutputPath.toString().length();
+				if(junitOutputFile.toString().length() >= MAX_PATH) {
+	                int maxMiddleLength = MAX_PATH - JUNIT_FILE_PREFIX.length() - fileNamePostfix.length() - junitOutputPath.toString().length();
 	                filename = JUNIT_FILE_PREFIX + StringUtils.left(element.getAttribute("name").replaceAll(ILLEGAL_FILE_CHARS_REGEX, "_"), maxMiddleLength) + fileNamePostfix;
 	                junitOutputFile = new File(junitOutputPath, filename);
 	            }
