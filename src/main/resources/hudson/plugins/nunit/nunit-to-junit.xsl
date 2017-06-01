@@ -85,7 +85,6 @@ STACK TRACE:
 				 			</testcase>
 						</xsl:for-each>
 					</testsuite>
-				<!--  </redirect:write>-->
 			</xsl:for-each>
 		</xsl:for-each>
 		</testsuites>

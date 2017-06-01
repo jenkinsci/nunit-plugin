@@ -19,6 +19,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.input.BOMInputStream;
+import hudson.Functions;
+import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -40,6 +42,7 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
     public static final String JUNIT_FILE_POSTFIX = ".xml";
     public static final String JUNIT_FILE_PREFIX = "TEST-";
 
+    private static final int MAX_PATH_WINDOWS = 260;
     private static final String TEMP_JUNIT_FILE_STR = "temp-junit.xml";
     public static final String NUNIT_TO_JUNIT_XSLFILE_STR = "nunit-to-junit.xsl";
 
@@ -67,7 +70,7 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
         File junitTargetFile = new File(junitOutputPath, TEMP_JUNIT_FILE_STR);
         FileOutputStream fileOutputStream = new FileOutputStream(junitTargetFile);
         try {
-            BOMInputStream is = new BOMInputStream(nunitFileStream);
+            InputStream is = new InvalidXmlInputStream(new BOMInputStream(nunitFileStream), '?');
             nunitTransformer.transform(new StreamSource(is), new StreamResult(fileOutputStream));
         } finally {
             fileOutputStream.close();
@@ -109,8 +112,16 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
             for (int i = 0; i < elementsByTagName.getLength(); i++) {
                 Element element = (Element) elementsByTagName.item(i);
                 DOMSource source = new DOMSource(element);
-                String filename = JUNIT_FILE_PREFIX + element.getAttribute("name").replaceAll(ILLEGAL_FILE_CHARS_REGEX, "_") + "_" + transformCount + "_" + i + JUNIT_FILE_POSTFIX;
+                String fileNamePostfix = "_" + transformCount + "_" + i + JUNIT_FILE_POSTFIX;
+                String filename = JUNIT_FILE_PREFIX + element.getAttribute("name").replaceAll(ILLEGAL_FILE_CHARS_REGEX, "_") + fileNamePostfix;
                 File junitOutputFile = new File(junitOutputPath, filename);
+
+                // check for really long file names
+				if(junitOutputFile.toString().length() >= MAX_PATH_WINDOWS && Functions.isWindows()) {
+	                int maxMiddleLength = MAX_PATH_WINDOWS - JUNIT_FILE_PREFIX.length() - fileNamePostfix.length() - junitOutputPath.toString().length();
+	                filename = JUNIT_FILE_PREFIX + StringUtils.left(element.getAttribute("name").replaceAll(ILLEGAL_FILE_CHARS_REGEX, "_"), maxMiddleLength) + fileNamePostfix;
+	                junitOutputFile = new File(junitOutputPath, filename);
+	            }
                 FileOutputStream fileOutputStream = new FileOutputStream(junitOutputFile);
                 try {
                     StreamResult result = new StreamResult(fileOutputStream);

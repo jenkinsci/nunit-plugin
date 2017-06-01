@@ -57,12 +57,26 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
         assertJunitFiles(3);
     }
 
+    @Issue("JENKINS-44315")
+    @Test
+    public void testIssue44315() throws Exception {
+        transformer.transform(getClass().getResourceAsStream("NUnit-issue44315.xml"), tempFilePath);
+        assertJunitFiles(195);
+    }
+
+    @Issue("JENKINS-44527")
+    @Test
+    public void testIssue44527() throws Exception {
+        transformer.transform(getClass().getResourceAsStream("NUnit-issue44527.xml"), tempFilePath);
+        assertJunitFiles(144);
+    }
+
     private void assertJunitFiles(int expectedJunitFilesCount) throws DocumentException {
         File[] listFiles = tempFilePath.listFiles(this);
         Assert.assertEquals("The number of junit files are incorrect.", expectedJunitFilesCount, listFiles.length);
         for (File file : listFiles) {
             Document result = new SAXReader().read(file);
-            Assert.assertNotNull("The XML wasnt parsed", result);
+            Assert.assertNotNull("The XML wasn't parsed", result);
             org.dom4j.Element root = result.getRootElement();
             Assert.assertNotNull("There is no root in the XML", root);
             Assert.assertEquals("The name is not correct", "testsuite", root.getName());
@@ -73,6 +87,13 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
     @Test
     public void testXmlWithBOM() throws Exception {
         transformer.transform(getClass().getResourceAsStream("NUnit-issue33493.xml"), tempFilePath);
+        assertJunitFiles(2);
+    }
+
+    @Issue("JENKINS-17521")
+    @Test
+    public void testInvalidXmlCharacters() throws Exception {
+        transformer.transform(getClass().getResourceAsStream("NUnit-issue17521.xml"), tempFilePath);
         assertJunitFiles(2);
     }
 

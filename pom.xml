@@ -11,6 +11,7 @@
     <packaging>hpi</packaging>
     <version>0.21-SNAPSHOT</version>
     <name>Jenkins NUnit plugin</name>
+	<description>Allows handling NUnit results similar to how JUnit results are handled</description>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/NUnit+Plugin</url>
 
     <properties>
@@ -105,14 +106,14 @@
     <repositories>
         <repository>
             <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
+            <url>https://repo.jenkins-ci.org/public/</url>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
             <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
+            <url>https://repo.jenkins-ci.org/public/</url>
         </pluginRepository>
     </pluginRepositories>
 </project>  
