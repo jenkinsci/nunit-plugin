@@ -33,7 +33,7 @@
 					<testsuite name="{$assembly}"
 						tests="{count(*/test-case)}" time="{@time}"
 						failures="{count(*/test-case/failure)}" errors="0"
-						skipped="{count(*/test-case[@executed='False'])}">
+						skipped="{count(*/test-case[@executed='False' or @result='Inconclusive'])}">
 						<xsl:for-each select="*/test-case">
 							<xsl:variable name="testcaseName">
 								<xsl:choose>
@@ -77,7 +77,7 @@ STACK TRACE:
 										</xsl:choose>
 									</failure>
 								</xsl:if>
-                                <xsl:if test="@executed='False'">
+                                <xsl:if test="@executed='False' or @result='Inconclusive'">
                                     <skipped>
                                     <xsl:attribute name="message"><xsl:value-of select="./reason/message"/></xsl:attribute>
                                     </skipped>
@@ -99,7 +99,7 @@ STACK TRACE:
 
 	<xsl:template match="test-suite">
 		<xsl:if test="test-case">
-			<testsuite tests="{@testcasecount}" time="{@duration}" errors="{@testcasecount - @passed - @skipped - @failed}" failures="{@failed}" skipped="{@skipped}" timestamp="{@start-time}">
+			<testsuite tests="{@testcasecount}" time="{@duration}" errors="{@testcasecount - @passed - @skipped - @failed - @inconclusive}" failures="{@failed}" skipped="{@skipped + @inconclusive}" timestamp="{@start-time}">
 				<xsl:attribute name="name">
 					<xsl:for-each select="ancestor-or-self::test-suite/@name">
 						<xsl:value-of select="concat(., '.')"/>
@@ -116,7 +116,7 @@ STACK TRACE:
 
 	<xsl:template match="test-case">
 		<testcase name="{@name}" assertions="{@asserts}" time="{@duration}" status="{@result}" classname="{@classname}">
-			<xsl:if test="@runstate = 'Skipped' or @runstate = 'Ignored'">
+			<xsl:if test="@runstate = 'Skipped' or @runstate = 'Ignored' or @runstate='Inconclusive'">
 				<skipped/>
 			</xsl:if>
 
