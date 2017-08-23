@@ -40,6 +40,6 @@ public class NUnitIntegrationTest extends HudsonTestCase {
         AbstractTestResultAction action = build.getAction(AbstractTestResultAction.class);
         assertEquals("The number of tests is not correct", 3003, action.getTotalCount());
         assertEquals("The number of failed tests is not correct", 96, action.getFailCount());
-        assertEquals("The number of skipped tests is not correct", 21, action.getSkipCount());
+        assertEquals("The number of skipped tests is not correct", 34, action.getSkipCount());
     }
 }
