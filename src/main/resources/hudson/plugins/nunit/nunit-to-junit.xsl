@@ -11,7 +11,7 @@
 	
 			<xsl:for-each select="../..">
 				<xsl:variable name="firstTestName"
-					select="results//test-case[1]//@name" />
+					select="results/test-case[1]/@name" />
                      
                 <xsl:variable name="assembly">
                     <xsl:choose>
