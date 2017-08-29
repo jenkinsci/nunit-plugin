@@ -115,7 +115,7 @@ STACK TRACE:
 	</xsl:template>
 
 	<xsl:template match="test-case">
-		<testcase name="{@name}" assertions="{@asserts}" time="{@duration}" status="{@result}" classname="{@classname}">
+		<testcase name="{@name}" assertions="{@asserts}" time="{@duration}" status="{@result}" classname="{@fullname}">
 			<xsl:if test="@runstate = 'Skipped' or @runstate = 'Ignored' or @runstate='Inconclusive'">
 				<skipped/>
 			</xsl:if>
