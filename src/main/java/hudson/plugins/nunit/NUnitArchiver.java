@@ -41,10 +41,10 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
 
     private int fileCount;
 
-    public NUnitArchiver(String root, TaskListener listener, String testResultsPatter, TestReportTransformer unitReportTransformer, boolean failIfNoResults) {
+    public NUnitArchiver(String root, TaskListener listener, String testResultsPattern, TestReportTransformer unitReportTransformer, boolean failIfNoResults) {
         this.root = root;
         this.listener = listener;
-        this.testResultsPattern = testResultsPatter;
+        this.testResultsPattern = testResultsPattern;
         this.unitReportTransformer = unitReportTransformer;
         this.failIfNoResults = failIfNoResults;
     }
@@ -103,10 +103,5 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
         	}
         }
         return nunitFiles;
-    }
-
-    @Override
-    public void checkRoles(RoleChecker roleChecker) throws SecurityException {
-        roleChecker.check((RoleSensitive) this, Roles.MASTER);
     }
 }

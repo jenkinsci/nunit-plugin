@@ -1,0 +1,402 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\MSLync\IWS\Genesyslab.Lync.Test.dll" total="35" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2017-06-21" time="13:07:41">
+  <environment nunit-version="3.5.0.0" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="C:\MSLync\IWS" machine-name="UK-SFB-QA180" user="Administrator" user-domain="UKSFB" />
+  <culture-info current-culture="en-GB" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="C:\MSLync\IWS\Genesyslab.Lync.Test.dll" executed="True" result="Success" success="True" time="2027.558" asserts="101">
+    <properties>
+      <property name="_PID" value="5100" />
+      <property name="_APPDOMAIN" value="domain-" />
+    </properties>
+    <results>
+      <test-suite type="TestSuite" name="Genesyslab" executed="True" result="Success" success="True" time="2027.536" asserts="101">
+        <results>
+          <test-suite type="TestSuite" name="Lync" executed="True" result="Success" success="True" time="2027.534" asserts="101">
+            <results>
+              <test-suite type="TestSuite" name="Test" executed="True" result="Success" success="True" time="2027.532" asserts="101">
+                <results>
+                  <test-suite type="TestFixture" name="ErrorScenariosTestGroup" executed="True" result="Success" success="True" time="146.359" asserts="4">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.ErrorScenariosTestGroup.Test001_Call_Busy_RemoteLyncClient01_From_TestAgent" description="WPLYNC-287 - Call a Busy DN from TestAgent" executed="True" result="Success" success="True" time="25.843" asserts="0">
+                        <categories>
+                          <category name="ErrorScenarios" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                          <property name="Description" value="WPLYNC-287 - Call a Busy DN from TestAgent" />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="HATestGroup" executed="True" result="Success" success="True" time="180.566" asserts="6">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.HATestGroup.Test002_Switch_ToBackup_LyncTServer_DuringCall" executed="True" result="Success" success="True" time="19.999" asserts="0">
+                        <categories>
+                          <category name="HASwitchTSever" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.HATestGroup.Test007_StopBackup_InboundIMCall_Start_Backup_SwitchOver_SST_Check_MyHistory" description="WPLYNC-768: Stop Backup. Inbound IM call to TestAgent. Start Backup. Switchover. SST to another agent. Check My History." executed="True" result="Success" success="True" time="93.127" asserts="2">
+                        <categories>
+                          <category name="HASwitchTSever" />
+                        </categories>
+                        <properties>
+                          <property name="Author" value="Liem Than" />
+                          <property name="Description" value="WPLYNC-768: Stop Backup. Inbound IM call to TestAgent. Start Backup. Switchover. SST to another agent. Check My History." />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="ImTranscriptTestGroup" executed="True" result="Success" success="True" time="243.940" asserts="29">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.ImTranscriptTestGroup.T011_ImTranscript_IM_call_from_UnMonLyncClient_To_TestAgent_CheckDuration" description="IM Call from UnMonLyncClient to Test Agent, Check MyHistory, Duration should not be 0s" executed="True" result="Success" success="True" time="23.067" asserts="1">
+                        <categories>
+                          <category name="IMTransactions" />
+                          <category name="IMCall" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="IM Call from UnMonLyncClient to Test Agent, Check MyHistory, Duration should not be 0s" />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.ImTranscriptTestGroup.T016_IMTranscript_UnMonLyncClient_To_TestAgent_SST_To_AnotherAgent_CheckHistoryStatus" description="WPLYNC-642. IM Inbound Call from UnMonLyncClient to Test Agent, SST to another IWS Agent, Check History status." executed="True" result="Success" success="True" time="61.341" asserts="3">
+                        <categories>
+                          <category name="IMCall" />
+                          <category name="IMTransactions" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="WPLYNC-642. IM Inbound Call from UnMonLyncClient to Test Agent, SST to another IWS Agent, Check History status." />
+                          <property name="Author" value="Liem Than" />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.ImTranscriptTestGroup.T026_ImTranscript_IM_call_from_UnMonLyncClient_To_IWS1_SST_IWS2_CheckMsgDuplication" description="WPLYNC-777:IM Call from UnMonLyncClient to iws1, SST to TestAgent, FinalDone TestAgent, Check MsgDuplication" executed="True" result="Success" success="True" time="27.055" asserts="1">
+                        <categories>
+                          <category name="IMTransactions" />
+                          <category name="IMCall" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                          <property name="Description" value="WPLYNC-777:IM Call from UnMonLyncClient to iws1, SST to TestAgent, FinalDone TestAgent, Check MsgDuplication" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.ImTranscriptTestGroup.Test001_ImTranscript_AnswerImCall_ManualUcsInteraction" executed="True" result="Success" success="True" time="15.285" asserts="5">
+                        <categories>
+                          <category name="IMTransactions" />
+                          <category name="IMCall" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.ImTranscriptTestGroup.Test006_ImTranscript_AnswerImCall_Transfer" executed="True" result="Success" success="True" time="18.875" asserts="5">
+                        <categories>
+                          <category name="IMCall" />
+                          <category name="IMTransactions" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.ImTranscriptTestGroup.Test021_ImTranscript_AnswerImCall_Conf4" description="WPLYNC-732: Conf - duplicated IM" executed="True" result="Success" success="True" time="25.198" asserts="9">
+                        <categories>
+                          <category name="IMTransactions" />
+                          <category name="IMCall" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="WPLYNC-732: Conf - duplicated IM" />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="LyncAutoAnswerGroup" executed="True" result="Success" success="True" time="77.204" asserts="5">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.LyncAutoAnswerGroup.Test001_AutoAnswerTLIBVoiceCall" description="Make a TLIB call into IWS. The call should be auto answered by IWS." executed="True" result="Success" success="True" time="14.594" asserts="1">
+                        <categories>
+                          <category name="VoiceCall" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                          <property name="Description" value="Make a TLIB call into IWS. The call should be auto answered by IWS." />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="LyncClientTestGroup" executed="True" result="Success" success="True" time="84.827" asserts="4">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.LyncClientTestGroup.Test004_WriteTextToLogFileThreeTimes" executed="True" result="Success" success="True" time="22.009" asserts="0">
+                        <categories>
+                          <category name="NoCalls" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="LyncImTestGroup" executed="True" result="Success" success="True" time="252.053" asserts="11">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.LyncImTestGroup.Test003_MakeImCall_To_AnotherIWSAgent" executed="True" result="Success" success="True" time="21.241" asserts="0">
+                        <categories>
+                          <category name="IMCall" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncImTestGroup.Test008_EscalationImToVoiceFromRemote" executed="True" result="Success" success="True" time="12.651" asserts="2">
+                        <categories>
+                          <category name="VoiceIM" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncImTestGroup.Test013_OneStepTransferIMWithVoiceToRemote" description="WPLYNC-321 IWS1 makes voice to IWS2. Escalate to add IM. Single step transfer to IWS3" executed="True" result="Success" success="True" time="22.865" asserts="2">
+                        <categories>
+                          <category name="VoiceIMSingleStepTransfer" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="WPLYNC-321 IWS1 makes voice to IWS2. Escalate to add IM. Single step transfer to IWS3" />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncImTestGroup.Test020_EscalationImToVoiceFromLocal_OneStepConference" description="WPLYNC-385 - IMtoVoice Escalation, OneStepConference, Check InteractionPartyState" executed="True" result="Success" success="True" time="20.180" asserts="3">
+                        <categories>
+                          <category name="VoiceIM" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                          <property name="Description" value="WPLYNC-385 - IMtoVoice Escalation, OneStepConference, Check InteractionPartyState" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncImTestGroup.Test025_EscalationImToVoiceFromLyncClient_Toast_Not_Shown" description="WPLYNC-563:Escalation IM to Voice call check toast is not shown." executed="True" result="Success" success="True" time="11.963" asserts="0">
+                        <categories>
+                          <category name="VoiceIM" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                          <property name="Description" value="WPLYNC-563:Escalation IM to Voice call check toast is not shown." />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncImTestGroup.Test030_IMCallFromTestAgent_To_MonLyncClient_AddVideo" description="IM call from TestAgent to Monitored Lync Client. Escalation to Video." executed="True" result="Success" success="True" time="44.783" asserts="0">
+                        <categories>
+                          <category name="IMVideo" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="IM call from TestAgent to Monitored Lync Client. Escalation to Video." />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncImTestGroup.Test035_InboundIMVideo_TestAgent_SSC_MonDN_DeleteFromConfMonDN" description="Automation task wplync-670:When one participant is deleted from the voice+Im conference - only voice deleted, but IM conference is still present " executed="True" result="Success" success="True" time="85.430" asserts="0">
+                        <categories>
+                          <category name="VoiceIM" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="Automation task wplync-670:When one participant is deleted from the voice+Im conference - only voice deleted, but IM conference is still present " />
+                          <property name="Author" value="Hema" />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="LyncUiTestGroup" executed="True" result="Success" success="True" time="64.310" asserts="4">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.LyncUiTestGroup.Test003_EscalationVoiceToImFromLocal" executed="True" result="Success" success="True" time="15.256" asserts="0">
+                        <categories>
+                          <category name="Lync Ui" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="LyncVideoTestGroup" executed="True" result="Success" success="True" time="184.289" asserts="6">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.LyncVideoTestGroup.Test001_Incoming_VideoCall" description="Video call from Lync Video Client(Monitored) to IWS, checking outgoing video on Lync Video Client(Monitored), starting video on IWS, all video streams checking" executed="True" result="Success" success="True" time="36.266" asserts="0">
+                        <categories>
+                          <category name="VideoCall" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="Video call from Lync Video Client(Monitored) to IWS, checking outgoing video on Lync Video Client(Monitored), starting video on IWS, all video streams checking" />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncVideoTestGroup.Test006_VideoCallFromUnMonitoredDN_To_TestAgent_Complete_Conference_To_Second_IWS" description="WPLYNC-478, WPLYNC-605 - Video call from UnMonitored DN to TestAgent. Complete conference from IWS1 to IWS2" executed="True" result="Success" success="True" time="111.893" asserts="2">
+                        <categories>
+                          <category name="VideoCall" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                          <property name="Description" value="WPLYNC-478, WPLYNC-605 - Video call from UnMonitored DN to TestAgent. Complete conference from IWS1 to IWS2" />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="LyncVoiceTestGroup" executed="True" result="Success" success="True" time="231.011" asserts="7">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.LyncVoiceTestGroup.T001_TLIBVoiceMonLyncClient_To_TestAgent" description="TLIB Voice call from monitored Lync Client to Test Agent." executed="True" result="Success" success="True" time="16.421" asserts="0">
+                        <categories>
+                          <category name="VoiceCall" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="TLIB Voice call from monitored Lync Client to Test Agent." />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncVoiceTestGroup.T006_TLIBVoiceMonLyncClient_To_MonLyncClient_2StepC_To_TestAgent" description="TLIB Voice call from monitored Lync Client 1 to monitored Lync Client 2. Two Step Conference from Lync Client 2 to Test Agent." executed="True" result="Success" success="True" time="24.436" asserts="0">
+                        <categories>
+                          <category name="VoiceTwoStepConference" />
+                          <category name="MinimumTestToRun" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                          <property name="Description" value="TLIB Voice call from monitored Lync Client 1 to monitored Lync Client 2. Two Step Conference from Lync Client 2 to Test Agent." />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncVoiceTestGroup.T016_TLIBVoiceMonLyncClient_To_MonLyncClient_AddIm_2StepC_MonLyncClient_To_TestAgent" description="WPLYNC-366 - TLIB Voice call from monitored Lync Client 1 to monitored Lync Client 2. Escalation to IM from Lync Client 1 to Lync Client 2. TwoStepConference from Lync Client 2 to Test Agent." executed="True" result="Success" success="True" time="17.473" asserts="0">
+                        <categories>
+                          <category name="VoiceIM" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="WPLYNC-366 - TLIB Voice call from monitored Lync Client 1 to monitored Lync Client 2. Escalation to IM from Lync Client 1 to Lync Client 2. TwoStepConference from Lync Client 2 to Test Agent." />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncVoiceTestGroup.T021_TLIBVoiceTestAgent_To_UnMonLyncClient" description="TLIB Voice call from Test Agent to unmonitored Lync Client." executed="True" result="Success" success="True" time="12.229" asserts="0">
+                        <categories>
+                          <category name="VoiceCall" />
+                          <category name="MinimumTestToRun" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="TLIB Voice call from Test Agent to unmonitored Lync Client." />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncVoiceTestGroup.T026_TLIBVoiceTestAgent_To_UnMonLyncClient_AddVideo" description="TLIB Voice call from Test Agent to unmonitored Lync Client. Escalation to Video." executed="True" result="Success" success="True" time="23.220" asserts="0">
+                        <categories>
+                          <category name="VoiceVideo" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="TLIB Voice call from Test Agent to unmonitored Lync Client. Escalation to Video." />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncVoiceTestGroup.T031_LyncVoiceMonLyncClient_To_TestAgent_Via_RoutePoint_Hold_Retrieve" description="TLIB Voice call from monitored Lync Client to Test Agent via monitored Route Point. Press Hold and waiting for corresponding Event. Press Resume and waiting for corresponding Event." executed="True" result="Success" success="True" time="26.034" asserts="3">
+                        <categories>
+                          <category name="VoiceHold" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="TLIB Voice call from monitored Lync Client to Test Agent via monitored Route Point. Press Hold and waiting for corresponding Event. Press Resume and waiting for corresponding Event." />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncVoiceTestGroup.T036_LyncVoiceMonLyncClient_To_MonLyncClient_EscalateIM_SST_To_TestAgent" description="Lync-1643:Voice Call from MonClient to MonClient_EscalateIM_SST_To_TestAgent" executed="True" result="Success" success="True" time="14.084" asserts="0">
+                        <categories>
+                          <category name="VoiceIM" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="Lync-1643:Voice Call from MonClient to MonClient_EscalateIM_SST_To_TestAgent" />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.LyncVoiceTestGroup.Test011_TLIBVoiceMonLyncClient_To_MonLyncClient_2StepT_MonLyncClient_To_TestAgent" description="TLIB Voice call from monitored Lync Client 1 to monitored Lync Client 2. Two Step Transfer from monitored Lync Client 2." executed="True" result="Success" success="True" time="24.647" asserts="0">
+                        <categories>
+                          <category name="VoiceTwoStepTransfer" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                          <property name="Description" value="TLIB Voice call from monitored Lync Client 1 to monitored Lync Client 2. Two Step Transfer from monitored Lync Client 2." />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="MultipleCallsHybridTestGroup" executed="True" result="Success" success="True" time="65.812" asserts="4">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.MultipleCallsHybridTestGroup.T002_EpiPhoneVoiceSip_To_TestAgent" description="EPIPhone Sip Voice call to Test Agent." executed="True" result="Success" success="True" time="13.723" asserts="0">
+                        <categories>
+                          <category name="VoiceCall" />
+                        </categories>
+                        <properties>
+                          <property name="Author" value="Sunil Bhanderi" />
+                          <property name="Timeout" value="300000" />
+                          <property name="Description" value="EPIPhone Sip Voice call to Test Agent." />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="MultipleCallsTestGroup" executed="True" result="Success" success="True" time="240.923" asserts="8">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.MultipleCallsTestGroup.T010_Multiple_Voice_calls_to_Agent_SST_first_call_and_2ST_second_call_to_different_agents" description="WPLYNC-942 UnmDN1 make Voice call to TestAgent, answer, UnmDN2 make Voice call to TestAgent, answer, SST first call to Agent2, 2ST second call to Agent3 and ensure both calls transfer correctly" executed="True" result="Success" success="True" time="179.610" asserts="4">
+                        <categories>
+                          <category name="MultipleCalls" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="WPLYNC-942 UnmDN1 make Voice call to TestAgent, answer, UnmDN2 make Voice call to TestAgent, answer, SST first call to Agent2, 2ST second call to Agent3 and ensure both calls transfer correctly" />
+                          <property name="Timeout" value="300000" />
+                          <property name="Author" value="Tim" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.MultipleCallsTestGroup.Test004_UnmDN1_Audio_TestAgent_Via_RoutePoint_UnmDN2_Audio_TestAgent_Via_RoutePoint" description="WPLYNC-802- Make 2 voice calls, check that they are correctly established." executed="True" result="Success" success="True" time="20.926" asserts="0">
+                        <categories>
+                          <category name="MultipleCalls" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                          <property name="Description" value="WPLYNC-802- Make 2 voice calls, check that they are correctly established." />
+                          <property name="Author" value="Tim" />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="SupervisorTestGroup" executed="True" result="Success" success="True" time="162.470" asserts="6">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.SupervisorTestGroup.Test005_SupervisorMonitoring_LyncClient01_CoachViaIM" description="WPLYNC-338 - SupervisorgMonitoring_LyncClient01_CoachViaIM" executed="True" result="Success" success="True" time="26.960" asserts="0">
+                        <categories>
+                          <category name="VoiceSupervision" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                          <property name="Description" value="WPLYNC-338 - SupervisorgMonitoring_LyncClient01_CoachViaIM" />
+                        </properties>
+                      </test-case>
+                      <test-case name="Genesyslab.Lync.Test.SupervisorTestGroup.Test010_Supervisor_CoachNextInteractionButton_FromTeamCommunicator" description="wplync-794: Supervisor - Select Coach Button, check interaction " executed="True" result="Success" success="True" time="62.257" asserts="2">
+                        <categories>
+                          <category name="VoiceSupervision" />
+                        </categories>
+                        <properties>
+                          <property name="Timeout" value="300000" />
+                          <property name="Author" value="Hema" />
+                          <property name="Description" value="wplync-794: Supervisor - Select Coach Button, check interaction " />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="VoiceTranscriptTestGroup" executed="True" result="Success" success="True" time="93.733" asserts="7">
+                    <results>
+                      <test-case name="Genesyslab.Lync.Test.VoiceTranscriptTestGroup.T001_LyncVoiceUnMonLyncClient_To_TestAgent_Via_RoutePoint" description="This is an example of how to use the APIs for case data within interaction, and &quot;My History&quot; tab field" executed="True" result="Success" success="True" time="59.237" asserts="2">
+                        <categories>
+                          <category name="VoiceTransactions" />
+                          <category name="VoiceCall" />
+                        </categories>
+                        <properties>
+                          <property name="Description" value="This is an example of how to use the APIs for case data within interaction, and &quot;My History&quot; tab field" />
+                          <property name="Timeout" value="300000" />
+                        </properties>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

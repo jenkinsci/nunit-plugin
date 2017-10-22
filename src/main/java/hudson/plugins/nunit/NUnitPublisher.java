@@ -58,6 +58,7 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
     private boolean debug = false;
     private boolean keepJUnitReports = false;
     private boolean skipJUnitArchiver = false;
+    private Double healthScaleFactor;
     
     /**
      * <p>Flag that when set, <strong>marks the build as failed if there are
@@ -124,6 +125,14 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
         }
     }
 
+    public double getHealthScaleFactor() {
+        return healthScaleFactor == null ? 1.0 : healthScaleFactor;
+    }
+    @DataBoundSetter
+    public void setHealthScaleFactor(double healthScaleFactor) {
+        this.healthScaleFactor = Math.max(0.0, healthScaleFactor);
+    }
+
     public boolean getSkipJUnitArchiver() {
         return skipJUnitArchiver;
     }
@@ -185,6 +194,8 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
             action.setResult(result, listener);
         }
 
+        action.setHealthScaleFactor(getHealthScaleFactor());
+
         if (this.failIfNoResults && result.getPassCount() == 0 && result.getFailCount() == 0 && result.getSkipCount() == 0) {
             listener.getLogger().println("None of the test reports contained any result");
             build.setResult(Result.FAILURE);
@@ -192,11 +203,12 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
         }
 
         if (existingAction == null) {
-            build.getActions().add(action);
+            build.addAction(action);
         }
 
-        if (action.getResult().getFailCount() > 0)
+        if (action.getResult().getFailCount() > 0) {
             build.setResult(Result.UNSTABLE);
+        }
 
         return true;
     }
@@ -225,7 +237,7 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
                 if(files.length==0) {
                 	if (failIfNoResults) {
 	                    // no test result. Most likely a configuration error or fatal problem
-	                    throw new AbortException("No test report files were found. Configuration error?");
+	                    throw new AbortException("No test report files were found or the NUnit input XML file contained no tests.");
                 	} else {
                 		return new TestResult();
                 	}
@@ -280,8 +292,12 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
                 // this should only happen if failIfNoResults is true and there are no result files, see NUnitArchiver.
                 run.setResult(Result.FAILURE);
             }
-
+        } catch(AbortException e) {
+            // this is used internally to signal issues, so we just rethrow instead of letting the IOException
+            // catch it below.
+            throw e;
         } catch (IOException e) {
+            listener.getLogger().println("Error in NUnit processing: " + e.getMessage());
             throw new AbortException("Could not read the XSL XML file. Please report this issue to the plugin author");
         }
     }

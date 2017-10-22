@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-run id="2" testcasecount="1356" result="Passed" total="1356" passed="1356" failed="0" inconclusive="0" skipped="0" asserts="10736" engine-version="3.6.1.0" clr-version="4.0.30319.42000" start-time="2017-06-15 00:59:23Z" end-time="2017-06-15 01:10:24Z" duration="660.111883">
+  <command-line><![CDATA["C:/JenkinsTools/NUnit.ConsoleRunner.3.6.1/tools/nunit3-console.exe" Sources\listoftests.nunit -result=TestResults\nunit-result.xml]]></command-line>
+  <test-suite type="Assembly" id="7-1634" name="MyCompany.SolutionKit.Desktop.UnitTests.dll" fullname="C:\Jenkins\workspace\sONE.NB.Build\Tests\Desktop\UnitTests\MyCompany.SolutionKit.Desktop.UnitTests.dll" runstate="Runnable" testcasecount="566" result="Passed" start-time="2017-06-15 00:59:39Z" end-time="2017-06-15 00:59:52Z" duration="12.846796" total="566" passed="566" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="1469">
+    <environment framework-version="3.7.1.0" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 6.3.9600.0" platform="Win32NT" cwd="C:\Jenkins\workspace\sONE.NB.Build" machine-name="SONE-SV" user="SYSTEM" user-domain="WORKGROUP" culture="en-US" uiculture="en-US" os-architecture="x64" />
+    <settings>
+      <setting name="DisposeRunners" value="True" />
+      <setting name="WorkDirectory" value="C:\Jenkins\workspace\sONE.NB.Build" />
+      <setting name="BasePath" value="C:\Jenkins\workspace\sONE.NB.Build\Sources\..\Tests" />
+      <setting name="ImageRuntimeVersion" value="4.0.30319" />
+      <setting name="ImageTargetFrameworkName" value=".NETFramework,Version=v4.6" />
+      <setting name="ImageRequiresX86" value="False" />
+      <setting name="ImageRequiresDefaultAppDomainAssemblyResolver" value="False" />
+      <setting name="NumberOfTestWorkers" value="4" />
+    </settings>
+    <properties>
+      <property name="_PID" value="6356" />
+      <property name="_APPDOMAIN" value="domain-a3da3e57-MyCompany.SolutionKit.Desktop.UnitTests.dll" />
+    </properties>
+    <test-suite type="TestSuite" id="7-1635" name="MyCompany" fullname="MyCompany" runstate="Runnable" testcasecount="566" result="Passed" start-time="2017-06-15 00:59:39Z" end-time="2017-06-15 00:59:52Z" duration="12.830236" total="566" passed="566" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="1469">
+      <test-suite type="TestSuite" id="7-1636" name="SolutionKit" fullname="MyCompany.SolutionKit" runstate="Runnable" testcasecount="566" result="Passed" start-time="2017-06-15 00:59:39Z" end-time="2017-06-15 00:59:52Z" duration="12.826259" total="566" passed="566" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="1469">
+        <test-suite type="TestSuite" id="7-1637" name="Desktop" fullname="MyCompany.SolutionKit.Desktop" runstate="Runnable" testcasecount="566" result="Passed" start-time="2017-06-15 00:59:39Z" end-time="2017-06-15 00:59:52Z" duration="12.822242" total="566" passed="566" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="1469">
+          <test-suite type="TestSuite" id="7-1638" name="UnitTests" fullname="MyCompany.SolutionKit.Desktop.UnitTests" runstate="Runnable" testcasecount="566" result="Passed" start-time="2017-06-15 00:59:39Z" end-time="2017-06-15 00:59:52Z" duration="12.818212" total="566" passed="566" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="1469">
+            <test-suite type="TestSuite" id="7-1645" name="Modules" fullname="MyCompany.SolutionKit.Desktop.UnitTests.Modules" runstate="Runnable" testcasecount="499" result="Passed" start-time="2017-06-15 00:59:40Z" end-time="2017-06-15 00:59:50Z" duration="9.965081" total="499" passed="499" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="1165">
+              <test-suite type="TestSuite" id="7-1656" name="OrganizationalUnits" fullname="MyCompany.SolutionKit.Desktop.UnitTests.Modules.OrganizationalUnits" runstate="Runnable" testcasecount="84" result="Passed" start-time="2017-06-15 00:59:47Z" end-time="2017-06-15 00:59:48Z" duration="1.028363" total="84" passed="84" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="189">
+                <test-suite type="TestFixture" id="7-1237" name="OrganizationalUnitMasterViewModelTests" fullname="MyCompany.SolutionKit.Desktop.UnitTests.Modules.OrganizationalUnits.OrganizationalUnitMasterViewModelTests" classname="MyCompany.SolutionKit.Desktop.UnitTests.Modules.OrganizationalUnits.OrganizationalUnitMasterViewModelTests" runstate="Runnable" testcasecount="27" result="Passed" start-time="2017-06-15 00:59:47Z" end-time="2017-06-15 00:59:47Z" duration="0.305512" total="27" passed="27" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="43">
+                  <test-suite type="ParameterizedMethod" id="7-1265" name="DeleteOrganizationalUnitCommand_Throwing_of_exception_during_deletion_Displays_error_messageBox" fullname="MyCompany.SolutionKit.Desktop.UnitTests.Modules.OrganizationalUnits.OrganizationalUnitMasterViewModelTests.DeleteOrganizationalUnitCommand_Throwing_of_exception_during_deletion_Displays_error_messageBox" classname="MyCompany.SolutionKit.Desktop.UnitTests.Modules.OrganizationalUnits.OrganizationalUnitMasterViewModelTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2017-06-15 00:59:47Z" end-time="2017-06-15 00:59:47Z" duration="0.032957" total="3" passed="3" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="9">
+                    <test-case id="7-1262" name="DeleteOrganizationalUnitCommand_Throwing_of_exception_during_deletion_Displays_error_messageBox(MyCompany.Framework.Shared.Exceptions.EndUserException)" fullname="MyCompany.SolutionKit.Desktop.UnitTests.Modules.OrganizationalUnits.OrganizationalUnitMasterViewModelTests.DeleteOrganizationalUnitCommand_Throwing_of_exception_during_deletion_Displays_error_messageBox(MyCompany.Framework.Shared.Exceptions.EndUserException)" methodname="DeleteOrganizationalUnitCommand_Throwing_of_exception_during_deletion_Displays_error_messageBox" classname="MyCompany.SolutionKit.Desktop.UnitTests.Modules.OrganizationalUnits.OrganizationalUnitMasterViewModelTests" runstate="Runnable" seed="195788007" result="Passed" start-time="2017-06-15 00:59:47Z" end-time="2017-06-15 00:59:47Z" duration="0.011910" asserts="3" />
+                  </test-suite>
+               </test-suite>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

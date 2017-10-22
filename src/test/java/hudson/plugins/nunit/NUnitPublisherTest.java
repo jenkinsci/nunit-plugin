@@ -1,14 +1,9 @@
 package hudson.plugins.nunit;
 
 import hudson.Launcher;
-import hudson.model.Action;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
-import hudson.model.Project;
-import hudson.model.FreeStyleBuild;
-import hudson.model.FreeStyleProject;
-import hudson.model.Result;
+import hudson.model.*;
+import hudson.slaves.DumbSlave;
+import hudson.tasks.junit.TestResultAction;
 import hudson.tasks.test.TestResultProjectAction;
 
 import static org.junit.Assert.*;
@@ -147,5 +142,51 @@ public class NUnitPublisherTest {
         prj.getPublishersList().add(publisher);
         FreeStyleBuild b = prj.scheduleBuild2(0).get();
         j.assertBuildStatus(Result.SUCCESS, b);
+    }
+
+    @Test
+    public void testAgent() throws Exception {
+        Slave agent = j.createOnlineSlave();
+        FreeStyleProject prj = j.createFreeStyleProject("foo");
+        prj.setAssignedNode(agent);
+
+        prj.getBuildersList().add(new TestBuilder() {
+            @Override
+            public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+                build.getWorkspace().child("nunit.xml").copyFrom(this.getClass().getResourceAsStream("NUnit-issue44315-3.xml"));
+                return true;
+            }
+        });
+
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
+        publisher.setKeepJUnitReports(true);
+
+        prj.getPublishersList().add(publisher);
+        FreeStyleBuild b = prj.scheduleBuild2(0).get();
+        j.assertBuildStatus(Result.SUCCESS, b);
+    }
+
+    @Test
+    public void testHealthScaleFactor() throws Exception {
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
+        publisher.setHealthScaleFactor(5.0);
+        FreeStyleProject prj = j.createFreeStyleProject("foo");
+        prj.getBuildersList().add(new TestBuilder() {
+            @Override
+            public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+                build.getWorkspace().child("nunit.xml").copyFrom(this.getClass().getResourceAsStream("NUnit-healthReport.xml"));
+                return true;
+            }
+        });
+
+        prj.getPublishersList().add(publisher);
+        FreeStyleBuild b = prj.scheduleBuild2(0).get();
+        j.assertBuildStatus(Result.UNSTABLE, b);
+        TestResultAction a = b.getAction(TestResultAction.class);
+        assertNotNull(a);
+        assertEquals( 5.0, a.getHealthScaleFactor(), 0.01);
+        HealthReport r = a.getBuildHealth();
+        assertNotNull(r);
+        assertEquals(50, r.getScore());
     }
 }

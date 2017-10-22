@@ -10,20 +10,21 @@
 	  Basedir of the fileset is &lt;a href='ws/'>the workspace root&lt;/a>.
 	">
     	<f:textbox value="${instance.testResultsPattern}" />
-    	<f:advanced>
-            <f:entry title="Fail the build if no test results are present" field="failIfNoResults">
-                <f:checkbox value="${instance.failIfNoResults}" checked="${instance.failIfNoResults}" default="true" />
-            </f:entry>
-        </f:advanced>
 	</f:entry>
+    <f:entry title="${%Fail the build if no test results are present}" field="failIfNoResults">
+        <f:checkbox value="${instance.failIfNoResults}" checked="${instance.failIfNoResults}" default="true" />
+    </f:entry>
+	<f:entry field="healthScaleFactor" title="${%Health report amplification factor}">
+        <f:number default="1.0" min="0" step="0.1" size="10"/>
+    </f:entry>
 	<j:if test="${instance.debug}">
-		<f:entry title="Debug" field="debug">
+		<f:entry title="${%Debug}" field="debug">
 			<f:checkbox checked="${instance.debug}"/>
 		</f:entry>
-		<f:entry title="Keep JUnit report files" field="keepJunitReports">
+		<f:entry title="${%Keep JUnit report files}" field="keepJunitReports">
 			<f:checkbox checked="${instance.keepJunitReports}"/>
 		</f:entry>
-		<f:entry title="Skip JUnit archiving" field="skipJunitArchiver">
+		<f:entry title="${%Skip JUnit archiving}" field="skipJunitArchiver">
 			<f:checkbox checked="${instance.skipJunitArchiver}"/>
 		</f:entry>
 	</j:if>

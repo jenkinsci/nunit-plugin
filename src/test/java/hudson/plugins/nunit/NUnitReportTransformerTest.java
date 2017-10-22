@@ -64,6 +64,19 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
         assertJunitFiles(195);
     }
 
+
+    @Test
+    public void testIssue44315_2() throws Exception {
+        transformer.transform(getClass().getResourceAsStream("NUnit-issue44315-2.xml"), tempFilePath);
+        assertJunitFiles(1);
+    }
+
+    @Test
+    public void testIssue44315_3() throws Exception {
+        transformer.transform(getClass().getResourceAsStream("NUnit-issue44315-3.xml"), tempFilePath);
+        assertJunitFiles(13);
+    }
+
     @Issue("JENKINS-44527")
     @Test
     public void testIssue44527() throws Exception {
