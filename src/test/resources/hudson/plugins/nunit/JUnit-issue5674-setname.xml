@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<testsuites>
+  <testsuite name="Sample.Tests.SampleTests" tests="3" time="0.017" failures="0" errors="0" skipped="0">
+    <testcase classname="Sample.Tests.SampleTests" name="first input" time="0.010"/>
+    <testcase classname="Sample.Tests.SampleTests" name="second input" time="0.000"/>
+    <testcase classname="Sample.Tests.SampleTests" name="third input" time="0.000"/>
+  </testsuite>
+</testsuites>

@@ -1,11 +1,5 @@
 package hudson.plugins.nunit;
 
-import static org.junit.Assert.*;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Transform;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -13,6 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.hudson.test.Issue;
 import org.xml.sax.InputSource;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for the XSL transformation
@@ -99,6 +99,17 @@ public class NUnitToJUnitXslTest {
                         .getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-issue5674.xml"), myTransform);
+        assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
+    }
+
+    @Test
+    @Issue("JENKINS-5674")
+    public void namedTestsAreProperlyParsed() throws Exception {
+        Transform myTransform = new Transform(
+            new InputSource(this.getClass().getResourceAsStream("NUnit-issue5674-setname.xml")), new InputSource(this
+            .getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
+
+        Diff myDiff = new Diff(readXmlAsString("JUnit-issue5674-setname.xml"), myTransform);
         assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
     }
 
