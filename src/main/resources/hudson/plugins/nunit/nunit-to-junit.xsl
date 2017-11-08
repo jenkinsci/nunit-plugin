@@ -3,50 +3,66 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output method="xml" indent="yes" />
 
-
 	<!-- NUnit2 results format -->
 	<xsl:template match="/test-results">
 	<testsuites>
 		<xsl:for-each select="test-suite//results//test-case[1]">
-	
+
 			<xsl:for-each select="../..">
 				<xsl:variable name="firstTestName"
 					select="results/test-case[1]/@name" />
-                     
-                <xsl:variable name="assembly">
-                    <xsl:choose>
-                        <xsl:when test="substring($firstTestName, string-length($firstTestName)) = ')'">
-                            <xsl:value-of select="substring-before($firstTestName, concat('.', @name))"></xsl:value-of>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="concat(substring-before($firstTestName, @name), @name)" />
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:variable>
+					<xsl:variable name="testFixtureName">
+					<xsl:choose>
+						<!-- we have a classic method name -->
+						<xsl:when test="substring($firstTestName, string-length($firstTestName)) = ')'">
+							<xsl:value-of select="substring-before($firstTestName, concat('.', @name))"></xsl:value-of>
+						</xsl:when>
+
+						<!-- we have either a custom name, or a test name -->
+						<xsl:otherwise>
+							<xsl:variable name="testMethodName">
+								<xsl:call-template name="lastIndexOf">
+									<xsl:with-param name="string" select="$firstTestName" />
+									<xsl:with-param name="char"  select="'.'" />
+								</xsl:call-template>
+							</xsl:variable>
+
+							<xsl:choose>
+								<!-- If we didn't find any dot, it means we have just the test name -->
+								<xsl:when test="$testMethodName=$firstTestName">
+									<xsl:value-of select="concat(substring-before($firstTestName, @name), @name)" />
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="substring-before($firstTestName, concat('.', $testMethodName))" />
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
                 <!--
-                <xsl:variable name="assembly"
+                <xsl:variable name="testFixtureName"
                     select="concat(substring-before($firstTestName, @name), @name)" />
                 -->
 
-				<!--  <redirect:write file="{$outputpath}/TEST-{$assembly}.xml">-->
+				<!--  <redirect:write file="{$outputpath}/TEST-{$testFixtureName}.xml">-->
 
-					<testsuite name="{$assembly}"
+					<testsuite name="{$testFixtureName}"
 						tests="{count(*/test-case)}" time="{@time}"
 						failures="{count(*/test-case/failure)}" errors="0"
 						skipped="{count(*/test-case[@executed='False' or @result='Inconclusive'])}">
 						<xsl:for-each select="*/test-case">
 							<xsl:variable name="testcaseName">
 								<xsl:choose>
-									<xsl:when test="contains(./@name, concat($assembly,'.'))">
-										<xsl:value-of select="substring-after(./@name, concat($assembly,'.'))"/><!-- We either instantiate a "15" -->
+									<xsl:when test="contains(./@name, concat($testFixtureName,'.'))">
+										<xsl:value-of select="substring-after(./@name, concat($testFixtureName,'.'))"/><!-- We either instantiate a "15" -->
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:value-of select="./@name"/><!-- ...or a "20" -->
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:variable>
-						
-							<testcase classname="{$assembly}"
+
+							<testcase classname="{$testFixtureName}"
 								name="{$testcaseName}">
                                 <xsl:if test="@time!=''">
                                    <xsl:attribute name="time"><xsl:value-of select="@time" /></xsl:attribute>
@@ -152,4 +168,25 @@ STACK TRACE:
 
 	<xsl:template match="properties"/>
 
+	<!-- source: https://www.oxygenxml.com/archives/xsl-list/200102/msg00838.html -->
+	<xsl:template name="lastIndexOf">
+		<!-- declare that it takes two parameters - the string and the char -->
+		<xsl:param name="string" />
+		<xsl:param name="char" />
+
+		<xsl:choose>
+			<!-- if the string contains the character... -->
+			<xsl:when test="contains($string, $char)">
+				<xsl:call-template name="lastIndexOf">
+					<xsl:with-param name="string"
+									select="substring-after($string, $char)" />
+					<xsl:with-param name="char" select="$char" />
+				</xsl:call-template>
+			</xsl:when>
+
+			<xsl:otherwise>
+				<xsl:value-of select="$string" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 </xsl:stylesheet>

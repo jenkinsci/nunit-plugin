@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="" total="3" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2017-11-06" time="09:40:49">
+  <environment nunit-version="1.0.0.0" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 10.0.15063.0" platform="Win32NT" cwd="F:\" machine-name="10" user="t" user-domain="U" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="F:\test.dll" executed="True" result="Success" success="True" time="0.027" asserts="3">
+    <properties>
+      <property name="_PID" value="14568" />
+      <property name="_APPDOMAIN" value="test-domain-" />
+    </properties>
+    <results>
+      <test-suite type="TestSuite" name="Sample" executed="True" result="Success" success="True" time="0.021" asserts="3">
+        <results>
+          <test-suite type="TestSuite" name="Tests" executed="True" result="Success" success="True" time="0.021" asserts="3">
+            <results>
+              <test-suite type="TestFixture" name="SampleTests" executed="True" result="Success" success="True" time="0.019" asserts="3">
+                <results>
+                  <test-suite type="ParameterizedMethod" name="NamedTestCaseData" executed="True" result="Success" success="True" time="0.017" asserts="3">
+                    <results>
+                      <test-case name="Sample.Tests.SampleTests.first input" executed="True" result="Success" success="True" time="0.010" asserts="1" />
+                      <test-case name="Sample.Tests.SampleTests.second input" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                      <test-case name="Sample.Tests.SampleTests.third input" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
