@@ -1,25 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites time="141.921831" disabled="7" failures="0" tests="1316">
-    <testsuite timestamp="" skipped="NaN" failures="" errors="NaN" time="" tests="" name="ComputerSha256HashAndCompareWithExpectedResult.">
-        <system-out><![CDATA[This
-is
-some
-output at the test-suite level]]></system-out>
-        <testcase classname="NameSpace.TestIntegration.TestCurveData" status="Passed" time="81.975050" assertions="709785" name="TestAllRawCurveData">
-            <system-out><![CDATA[Connecting to Database
-Project Filename : C:\data\\DataDir\DataFile.dat
-Licence Server : ***
-Author : Demo
-Well subset :
-Checking 2369 log ids
+<testsuites time="17.849036" disabled="0" failures="0" tests="3">
+    <testsuite timestamp="2017-12-15 18:14:36Z" skipped="0" failures="0" errors="0" time="11.630328" tests="2"
+               name="testrunner.exe.NS.IP.Wombat.TestIntegration.TestGetData.">
+        <testcase classname="NS.APP.Wombat.TestIntegration.TestGetData" status="Passed" time="11.129426"
+                  assertions="205141" name="TestAllRawData">
+            <system-out><![CDATA[Connecting to Wombat Database
+    Project Filename : C:\Data\example.dat
+    Licence Server   : LICSERVER
+    Author           : AUTHOR
+    Subset      :
+Checking 241 log ids
 ]]></system-out>
         </testcase>
-        <testcase classname="" status="Success" time="" assertions="1" name="Base.Tests.CryptUtilsTests.ComputerSha256HashAndCompareWithExpectedResult(&quot;Horst&quot;,&quot;17B3359247428B9855DSFRGFDGDG44FD&quot;)"/>
-        <testcase classname="" status="Success" time="" assertions="1" name="Base.Tests.CryptUtilsTests.ComputerSha256HashAndCompareWithExpectedResult(&quot;Hugo&quot;,&quot;D74C8E69A60EASDFDSSDEW62DC8FFD&quot;)"/>
-        <testcase classname="" status="Success" time="" assertions="1" name="Base.Tests.CryptUtilsTests.ComputerSha256HashAndCompareWithExpectedResult(&quot;GeheimesPasswort!&quot;,&quot;1B44CF4HDVBFLFB456780A82835F62D46B7&quot;)"/>
-        <testcase classname="" status="Success" time="" assertions="4" name="Base.Tests.CryptUtilsTests.ComputesSaltAndPasswordHashCorrectly"/>
-        <testcase classname="" status="Success" time="" assertions="1" name="Base.Tests.CryptUtilsTests.ComputesSaltAndPasswordHashFromDifferentTasksCorrectly"/>
-        <testcase classname="" status="Success" time="" assertions="1" name="Base.Tests.CryptUtilsTests.ComputesSaltAndPasswordHashFromDifferentThreadsCorrectly"/>
-        <testcase classname="" status="Success" time="" assertions="15" name="Base.Tests.CryptUtilsTests.EncyrptAndDecryptWindows"/>
+        <testcase classname="NS.APP.Wombat.TestIntegration.TestGetData" status="Passed" time="0.482340"
+                  assertions="20921" name="TestFirst10RawData">
+            <system-out><![CDATA[Connecting to Wombat Database
+    Project Filename : C:\Data\example.dat
+    Licence Server   : LICSERVER
+    Author           : AUTHOR
+    Subset      :
+Checking 10 log ids
+]]></system-out>
+        </testcase>
     </testsuite>
+    <testsuite timestamp="2017-12-15 18:14:48Z" skipped="0" failures="0" errors="0" time="6.196414" tests="1"
+               name="testrunner.exe.NS.IP.Wombat.TestIntegration.TestGetCurveInfo.">
+        <testcase classname="NS.APP.Wombat.TestIntegration.TestGetCurveInfo" status="Passed" time="6.195858"
+                  assertions="482" name="TestAllInfo">
+            <system-out><![CDATA[Connecting to Wombat Database
+    Project Filename : C:\Data\example.dat
+    Licence Server   : LICSERVER
+    Author           : AUTHOR
+    Subset      :
+]]></system-out>
+        </testcase>
+    </testsuite>
+
+
 </testsuites>
