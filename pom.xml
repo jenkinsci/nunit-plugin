@@ -9,7 +9,7 @@
 
     <artifactId>nunit</artifactId>
     <packaging>hpi</packaging>
-    <version>0.22-SNAPSHOT</version>
+    <version>0.23-SNAPSHOT</version>
     <name>Jenkins NUnit plugin</name>
 	<description>Allows handling NUnit results similar to how JUnit results are handled</description>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/NUnit+Plugin</url>
