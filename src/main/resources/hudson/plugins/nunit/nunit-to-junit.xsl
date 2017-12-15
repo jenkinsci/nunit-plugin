@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<xsl:output method="xml" indent="yes" />
+	<xsl:output method="xml" indent="yes" cdata-section-elements="system-out system-err" />
 
 	<!-- NUnit2 results format -->
 	<xsl:template match="/test-results">
@@ -121,6 +121,9 @@ STACK TRACE:
 						<xsl:value-of select="concat(., '.')"/>
 					</xsl:for-each>
 				</xsl:attribute>
+                <xsl:if test="output">
+                    <xsl:apply-templates select="output" />
+                </xsl:if>
 				<xsl:apply-templates select="test-case"/>
 			</testsuite>
 			<xsl:apply-templates select="test-suite"/>
@@ -145,7 +148,7 @@ STACK TRACE:
 
 	<xsl:template match="output">
 		<system-out>
-			<xsl:value-of select="output"/>
+			<xsl:copy-of select="./text()" />
 		</system-out>
 	</xsl:template>
 
@@ -165,6 +168,7 @@ STACK TRACE:
 	</xsl:template>
 
 	<xsl:template match="test-suite/reason"/>
+
 
 	<xsl:template match="properties"/>
 

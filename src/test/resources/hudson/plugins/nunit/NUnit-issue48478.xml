@@ -1,0 +1,42 @@
+<test-run id="2" testcasecount="1316" result="Skipped" label="Ignored" total="1316" passed="1309" failed="0"
+          inconclusive="0" skipped="7" asserts="13614" engine-version="3.6.1.0" clr-version="4.0.30319.42000"
+          start-time="2017-05-17 13:50:19Z" end-time="2017-05-17 13:52:41Z" duration="141.921831">
+    <test-suite type="ParameterizedTest" name="ComputerSha256HashAndCompareWithExpectedResult" executed="True"
+                result="Success" success="True" time="0.011" asserts="0">
+        <output><![CDATA[This
+is
+some
+output at the test-suite level]]></output>
+        <test-case id="1002" name="TestAllRawCurveData"
+                   fullname="NameSpace.TestIntegration.TestCurveData.TestAllRawCurveData"
+                   methodname="TestAllRawCurveData" classname="NameSpace.TestIntegration.TestCurveData"
+                   runstate="Runnable" seed="1869335963" result="Passed" start-time="2017-12-11 08:50:28Z"
+                   end-time="2017-12-11 08:51:50Z" duration="81.975050" asserts="709785">
+            <output><![CDATA[Connecting to Database
+Project Filename : C:\data\\DataDir\DataFile.dat
+Licence Server : ***
+Author : Demo
+Well subset :
+Checking 2369 log ids
+]]></output>
+        </test-case>
+        <test-case
+                name="Base.Tests.CryptUtilsTests.ComputerSha256HashAndCompareWithExpectedResult(&quot;Horst&quot;,&quot;17B3359247428B9855DSFRGFDGDG44FD&quot;)"
+                executed="True" result="Success" success="True" time="0.000" asserts="1"/>
+        <test-case
+                name="Base.Tests.CryptUtilsTests.ComputerSha256HashAndCompareWithExpectedResult(&quot;Hugo&quot;,&quot;D74C8E69A60EASDFDSSDEW62DC8FFD&quot;)"
+                executed="True" result="Success" success="True" time="0.000" asserts="1"/>
+        <test-case
+                name="Base.Tests.CryptUtilsTests.ComputerSha256HashAndCompareWithExpectedResult(&quot;GeheimesPasswort!&quot;,&quot;1B44CF4HDVBFLFB456780A82835F62D46B7&quot;)"
+                executed="True" result="Success" success="True" time="0.000" asserts="1"/>
+
+        <test-case name="Base.Tests.CryptUtilsTests.ComputesSaltAndPasswordHashCorrectly" executed="True"
+                   result="Success" success="True" time="0.003" asserts="4"/>
+        <test-case name="Base.Tests.CryptUtilsTests.ComputesSaltAndPasswordHashFromDifferentTasksCorrectly"
+                   executed="True" result="Success" success="True" time="0.258" asserts="1"/>
+        <test-case name="Base.Tests.CryptUtilsTests.ComputesSaltAndPasswordHashFromDifferentThreadsCorrectly"
+                   executed="True" result="Success" success="True" time="0.106" asserts="1"/>
+        <test-case name="Base.Tests.CryptUtilsTests.EncyrptAndDecryptWindows" executed="True" result="Success"
+                   success="True" time="0.176" asserts="15"/>
+    </test-suite>
+</test-run>

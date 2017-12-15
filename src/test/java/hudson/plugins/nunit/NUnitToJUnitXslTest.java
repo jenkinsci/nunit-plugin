@@ -25,6 +25,7 @@ public class NUnitToJUnitXslTest {
         XMLUnit.setIgnoreWhitespace(true);
         XMLUnit.setNormalizeWhitespace(true);
         XMLUnit.setIgnoreComments(true);
+        XMLUnit.setIgnoreDiffBetweenTextAndCDATA(true);
     }
 
     @Test
@@ -77,6 +78,17 @@ public class NUnitToJUnitXslTest {
                         .getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-issue1077.xml"), myTransform);
+        assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
+    }
+
+    @Test
+    @Issue("JENKINS-48478")
+    public void testTransformedIssue48478() throws Exception {
+        Transform myTransform = new Transform(
+                new InputSource(this.getClass().getResourceAsStream("NUnit-issue48478.xml")), new InputSource(this
+                .getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
+
+        Diff myDiff = new Diff(readXmlAsString("JUnit-issue48478.xml"), myTransform);
         assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
     }
 

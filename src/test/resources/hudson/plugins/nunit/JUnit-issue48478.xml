@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites time="141.921831" disabled="7" failures="0" tests="1316">
+    <testsuite timestamp="" skipped="NaN" failures="" errors="NaN" time="" tests="" name="ComputerSha256HashAndCompareWithExpectedResult.">
+        <system-out><![CDATA[This
+is
+some
+output at the test-suite level]]></system-out>
+        <testcase classname="NameSpace.TestIntegration.TestCurveData" status="Passed" time="81.975050" assertions="709785" name="TestAllRawCurveData">
+            <system-out><![CDATA[Connecting to Database
+Project Filename : C:\data\\DataDir\DataFile.dat
+Licence Server : ***
+Author : Demo
+Well subset :
+Checking 2369 log ids
+]]></system-out>
+        </testcase>
+        <testcase classname="" status="Success" time="" assertions="1" name="Base.Tests.CryptUtilsTests.ComputerSha256HashAndCompareWithExpectedResult(&quot;Horst&quot;,&quot;17B3359247428B9855DSFRGFDGDG44FD&quot;)"/>
+        <testcase classname="" status="Success" time="" assertions="1" name="Base.Tests.CryptUtilsTests.ComputerSha256HashAndCompareWithExpectedResult(&quot;Hugo&quot;,&quot;D74C8E69A60EASDFDSSDEW62DC8FFD&quot;)"/>
+        <testcase classname="" status="Success" time="" assertions="1" name="Base.Tests.CryptUtilsTests.ComputerSha256HashAndCompareWithExpectedResult(&quot;GeheimesPasswort!&quot;,&quot;1B44CF4HDVBFLFB456780A82835F62D46B7&quot;)"/>
+        <testcase classname="" status="Success" time="" assertions="4" name="Base.Tests.CryptUtilsTests.ComputesSaltAndPasswordHashCorrectly"/>
+        <testcase classname="" status="Success" time="" assertions="1" name="Base.Tests.CryptUtilsTests.ComputesSaltAndPasswordHashFromDifferentTasksCorrectly"/>
+        <testcase classname="" status="Success" time="" assertions="1" name="Base.Tests.CryptUtilsTests.ComputesSaltAndPasswordHashFromDifferentThreadsCorrectly"/>
+        <testcase classname="" status="Success" time="" assertions="15" name="Base.Tests.CryptUtilsTests.EncyrptAndDecryptWindows"/>
+    </testsuite>
+</testsuites>
