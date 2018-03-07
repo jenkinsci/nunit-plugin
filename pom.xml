@@ -9,7 +9,7 @@
 
     <artifactId>nunit</artifactId>
     <packaging>hpi</packaging>
-    <version>0.23-SNAPSHOT</version>
+    <version>0.23</version>
     <name>Jenkins NUnit plugin</name>
 	<description>Allows handling NUnit results similar to how JUnit results are handled</description>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/NUnit+Plugin</url>
@@ -39,7 +39,7 @@
         <connection>scm:git:ssh://github.com/jenkinsci/nunit-plugin.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/nunit-plugin.git</developerConnection>
         <url>https://svn.jenkins-ci.org/trunk/hudson/plugins/nunit/</url>
-        <tag>HEAD</tag>
+        <tag>nunit-0.23</tag>
     </scm>
 
     <build>
