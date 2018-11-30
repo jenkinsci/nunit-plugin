@@ -189,4 +189,43 @@ public class NUnitPublisherTest {
         assertNotNull(r);
         assertEquals(50, r.getScore());
     }
+
+    @Test
+    public void testFailIfTestsFail() throws Exception {
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
+        publisher.setKeepJUnitReports(true);
+        publisher.setFailIfNoResults(false);
+        publisher.setFailedTestsFailBuild(true);
+        FreeStyleProject prj = j.createFreeStyleProject("foo");
+        prj.getBuildersList().add(new TestBuilder() {
+            @Override
+            public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+                build.getWorkspace().child("nunit.xml").copyFrom(this.getClass().getResourceAsStream("NUnit-failure.xml"));
+                return true;
+            }
+        });
+
+        prj.getPublishersList().add(publisher);
+        FreeStyleBuild b = prj.scheduleBuild2(0).get();
+        j.assertBuildStatus(Result.FAILURE, b);
+    }
+
+    @Test
+    public void testUnstableIfTestsFail() throws Exception {
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
+        publisher.setKeepJUnitReports(true);
+        publisher.setFailIfNoResults(false);
+        FreeStyleProject prj = j.createFreeStyleProject("foo");
+        prj.getBuildersList().add(new TestBuilder() {
+            @Override
+            public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+                build.getWorkspace().child("nunit.xml").copyFrom(this.getClass().getResourceAsStream("NUnit-failure.xml"));
+                return true;
+            }
+        });
+
+        prj.getPublishersList().add(publisher);
+        FreeStyleBuild b = prj.scheduleBuild2(0).get();
+        j.assertBuildStatus(Result.UNSTABLE, b);
+    }
 }

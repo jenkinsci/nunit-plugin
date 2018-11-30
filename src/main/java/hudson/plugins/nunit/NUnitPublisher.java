@@ -68,13 +68,22 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
      */
     private boolean failIfNoResults;
 
+    /**
+     * <p>Flag that when set, <strong>marks the build as failed if any tests
+     * fail</strong>.</p>
+     *
+     * <p>Defaults to <code>false</code>.</p>
+     */
+    private boolean failedTestsFailBuild;
+
     @Deprecated
     public NUnitPublisher(String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver) {
-    	this(testResultsPattern, debug, keepJUnitReports, skipJUnitArchiver, Boolean.TRUE);
+    	this(testResultsPattern, debug, keepJUnitReports, skipJUnitArchiver, Boolean.TRUE, Boolean.FALSE);
     }
     
     @Deprecated
-    public NUnitPublisher(String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver, Boolean failIfNoResults) {
+    public NUnitPublisher(String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver,
+                          Boolean failIfNoResults, Boolean failedTestsFailBuild) {
         this.testResultsPattern = testResultsPattern;
         this.debug = debug;
         if (this.debug) {
@@ -82,6 +91,7 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
             this.skipJUnitArchiver = skipJUnitArchiver;
         }
         this.failIfNoResults = BooleanUtils.toBooleanDefaultIfNull(failIfNoResults, Boolean.TRUE);
+        this.failedTestsFailBuild = BooleanUtils.toBooleanDefaultIfNull(failedTestsFailBuild, Boolean.FALSE);
     }
 
     @DataBoundConstructor
@@ -96,7 +106,8 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
 			debug, 
 			keepJUnitReports, 
 			skipJUnitArchiver, 
-			BooleanUtils.toBooleanDefaultIfNull(failIfNoResults, Boolean.TRUE));
+			BooleanUtils.toBooleanDefaultIfNull(failIfNoResults, Boolean.TRUE),
+            BooleanUtils.toBooleanDefaultIfNull(failedTestsFailBuild, Boolean.FALSE));
     }
 
     public String getTestResultsPattern() {
@@ -149,6 +160,14 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
 	@DataBoundSetter
     public void setFailIfNoResults(boolean failIfNoResults) {
         this.failIfNoResults = failIfNoResults;
+    }
+
+    public boolean getFailedTestsFailBuild() {
+        return failedTestsFailBuild;
+    }
+    @DataBoundSetter
+    public void setFailedTestsFailBuild(boolean failedTestsFailBuild) {
+        this.failedTestsFailBuild = failedTestsFailBuild;
     }
 
     @Override
@@ -207,7 +226,12 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
         }
 
         if (action.getResult().getFailCount() > 0) {
-            build.setResult(Result.UNSTABLE);
+            if(failedTestsFailBuild) {
+                build.setResult(Result.FAILURE);
+            }
+            else {
+                build.setResult(Result.UNSTABLE);
+            }
         }
 
         return true;
