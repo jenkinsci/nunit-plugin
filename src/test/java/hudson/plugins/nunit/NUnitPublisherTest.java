@@ -192,9 +192,10 @@ public class NUnitPublisherTest {
 
     @Test
     public void testFailIfTestsFail() throws Exception {
-        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", Boolean.TRUE);
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
         publisher.setKeepJUnitReports(true);
         publisher.setFailIfNoResults(false);
+        publisher.setFailedTestsFailBuild(true);
         FreeStyleProject prj = j.createFreeStyleProject("foo");
         prj.getBuildersList().add(new TestBuilder() {
             @Override
@@ -211,7 +212,7 @@ public class NUnitPublisherTest {
 
     @Test
     public void testUnstableIfTestsFail() throws Exception {
-        NUnitPublisher publisher = new NUnitPublisher("**/*.xml", Boolean.FALSE);
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
         publisher.setKeepJUnitReports(true);
         publisher.setFailIfNoResults(false);
         FreeStyleProject prj = j.createFreeStyleProject("foo");

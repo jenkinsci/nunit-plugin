@@ -94,17 +94,10 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
         this.failedTestsFailBuild = BooleanUtils.toBooleanDefaultIfNull(failedTestsFailBuild, Boolean.FALSE);
     }
 
-    @Deprecated
-    public NUnitPublisher(String testResultsPattern) {
-        this(testResultsPattern, Boolean.FALSE);
-    }
-
-
     @DataBoundConstructor
-    public NUnitPublisher(String testResultsPattern, boolean failedTestsFailBuild) {
+    public NUnitPublisher(String testResultsPattern) {
         this.testResultsPattern = testResultsPattern;
         this.failIfNoResults = true;
-        this.failedTestsFailBuild = failedTestsFailBuild;
     }
     
     public Object readResolve() {
