@@ -42,7 +42,7 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
     public static final String JUNIT_FILE_POSTFIX = ".xml";
     public static final String JUNIT_FILE_PREFIX = "TEST-";
 
-    private static final int MAX_PATH = 260;
+    private static final int MAX_PATH = 256;
     private static final String TEMP_JUNIT_FILE_STR = "temp-junit.xml";
     public static final String NUNIT_TO_JUNIT_XSLFILE_STR = "nunit-to-junit.xsl";
 
