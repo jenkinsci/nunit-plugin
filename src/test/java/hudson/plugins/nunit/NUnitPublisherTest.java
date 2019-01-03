@@ -3,6 +3,7 @@ package hudson.plugins.nunit;
 import hudson.Launcher;
 import hudson.model.*;
 import hudson.slaves.DumbSlave;
+import hudson.tasks.Publisher;
 import hudson.tasks.junit.TestResultAction;
 import hudson.tasks.test.TestResultProjectAction;
 
@@ -10,6 +11,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import hudson.util.DescribableList;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.Issue;
@@ -227,5 +230,26 @@ public class NUnitPublisherTest {
         prj.getPublishersList().add(publisher);
         FreeStyleBuild b = prj.scheduleBuild2(0).get();
         j.assertBuildStatus(Result.UNSTABLE, b);
+    }
+
+    @Test
+    public void testDoNotOverwriteResultsIfThereAreNoFilesDuringNextPublishments() throws Exception {
+        NUnitPublisher publisherWithCorrectPattern = new NUnitPublisher("nunit.xml");
+        NUnitPublisher publisherWithIncorrectPattern = new NUnitPublisher("nunit2.xml");
+        publisherWithIncorrectPattern.setFailIfNoResults(false);
+        FreeStyleProject freeStyleProject = j.createFreeStyleProject("foo");
+        freeStyleProject.getBuildersList().add(new TestBuilder() {
+            @Override
+            public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+                build.getWorkspace().child("nunit.xml").copyFrom(this.getClass().getResourceAsStream("NUnit.xml"));
+                return true;
+            }
+        });
+        DescribableList<Publisher,Descriptor<Publisher>> publishersList = freeStyleProject.getPublishersList();
+        publishersList.add(publisherWithCorrectPattern);
+        publishersList.add(publisherWithIncorrectPattern);
+        FreeStyleBuild build = freeStyleProject.scheduleBuild2(0).get();
+        TestResultAction existingAction = build.getAction(TestResultAction.class);
+        Assert.assertTrue(existingAction.getTotalCount() == 4);
     }
 }
