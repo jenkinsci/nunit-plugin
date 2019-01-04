@@ -72,7 +72,7 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
                             "Could not initialize the XML parser. Please report this issue to the plugin author", pce);
                 }
             }
-        } else if(this.failIfNoResults) {
+        } else {
             retValue = false;
         }
 

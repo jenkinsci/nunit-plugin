@@ -313,8 +313,10 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
                     ws.child(NUnitArchiver.JUNIT_REPORTS_PATH).deleteRecursive();
                 }
             } else {
-                // this should only happen if failIfNoResults is true and there are no result files, see NUnitArchiver.
-                run.setResult(Result.FAILURE);
+                if (this.getFailIfNoResults()) {
+                    // this should only happen if failIfNoResults is true and there are no result files, see NUnitArchiver.
+                    run.setResult(Result.FAILURE);
+                }
             }
         } catch(AbortException e) {
             // this is used internally to signal issues, so we just rethrow instead of letting the IOException
