@@ -135,11 +135,12 @@ STACK TRACE:
 
 	<xsl:template match="test-case">
 		<xsl:variable name="newStatus">
-			 <xsl:call-template name="string-replace-all">
-					<xsl:with-param name="text" select="@result" />
-					<xsl:with-param name="replace" select="'Warning'" />
-					<xsl:with-param name="by" select="'Fail'" />
-				</xsl:call-template>
+			<!-- source: https://stackoverflow.com/a/10528912 -->
+			<xsl:call-template name="string-replace-all">
+				<xsl:with-param name="text" select="@result" />
+				<xsl:with-param name="replace" select="'Warning'" />
+				<xsl:with-param name="by" select="'Fail'" />
+			</xsl:call-template>
 		</xsl:variable>
 		<testcase name="{@name}" assertions="{@asserts}" time="{@duration}" status="{$newStatus}" classname="{@classname}">
 			<xsl:if test="@runstate = 'Skipped' or @runstate = 'Ignored' or @runstate='Inconclusive'">
@@ -211,6 +212,7 @@ This test case was reported as a "Warning" in NUnit, but converted to "Fail" by 
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- source: https://stackoverflow.com/a/10528912 -->
 	<xsl:template name="string-replace-all">
 		<xsl:param name="text" />
 		<xsl:param name="replace" />
@@ -230,7 +232,4 @@ This test case was reported as a "Warning" in NUnit, but converted to "Fail" by 
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
-
-
 </xsl:stylesheet>
