@@ -108,7 +108,7 @@ STACK TRACE:
 
 	<!-- NUnit3 results format -->
 	<xsl:template match="/test-run">
-		<testsuites tests="{@testcasecount}" failures="{@failed }" disabled="{@skipped}" time="{@duration}">
+		<testsuites tests="{@testcasecount}" failures="{@failed + count(//test-case[@result='Warning']) }" disabled="{@skipped}" time="{@duration}">
 			<xsl:apply-templates/>
 		</testsuites>
 	</xsl:template>
@@ -156,9 +156,7 @@ STACK TRACE:
 	<xsl:template match="output">
 		<system-out>
 			<xsl:copy-of select="./text()" />
-			<xsl:if test="../@result ='Warning'">
-			This test case was reported as a "Warning" in NUnit, but converted to "Fail" by Jenkins NUnuit Plugin
-			</xsl:if>
+			
 		</system-out>
 	</xsl:template>
 
@@ -174,7 +172,16 @@ STACK TRACE:
 	<xsl:template match="test-suite/failure"/>
 
 	<xsl:template match="test-case/reason">
-		<skipped message="{./message}"/>
+		 <xsl:choose>
+    		<xsl:when test="../@result ='Warning'">
+				<failure message="{./message}">
+This test case was reported as a "Warning" in NUnit, but converted to "Fail" by Jenkins NUnuit Plugin
+				</failure>
+			</xsl:when>
+			<xsl:otherwise>
+				<skipped message="{./message}"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="test-suite/reason"/>
