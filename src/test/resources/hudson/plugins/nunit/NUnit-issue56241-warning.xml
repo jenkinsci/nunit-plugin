@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-run id="2" testcasecount="1" result="Warning" total="0" passed="0" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.9.0.0" clr-version="4.0.30319.42000" start-time="2019-02-22 18:30:28Z" end-time="2019-02-22 18:30:29Z" duration="0.864052">
+  <command-line><![CDATA["C:\ProgramData\chocolatey\lib\nunit-console-runner\tools\nunit3-console.exe" .\UnitTestProject1.dll]]></command-line>
+  <test-suite type="Assembly" id="0-1002" name="UnitTestProject1.dll" fullname="UnitTestProject1.dll" runstate="Runnable" testcasecount="1" result="Warning" site="Child" start-time="2019-02-22 18:30:29Z" end-time="2019-02-22 18:30:29Z" duration="0.154658" total="0" passed="0" failed="0" warnings="1" inconclusive="0" skipped="0" asserts="0">
+    <environment framework-version="3.11.0.0" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 10.0.17763.0" platform="Win32NT" cwd="C:\Users\user\source\repos\UnitTestProject1\bin\Debug" machine-name="machine.name" user="user" user-domain="domain" culture="en-US" uiculture="en-US" os-architecture="x64" />
+    <settings>
+      <setting name="DisposeRunners" value="True" />
+      <setting name="WorkDirectory" value="C:\Users\user\source\repos\UnitTestProject1\bin\Debug" />
+      <setting name="ImageRuntimeVersion" value="4.0.30319" />
+      <setting name="ImageTargetFrameworkName" value=".NETFramework,Version=v4.6.1" />
+      <setting name="ImageRequiresX86" value="False" />
+      <setting name="ImageRequiresDefaultAppDomainAssemblyResolver" value="False" />
+      <setting name="NumberOfTestWorkers" value="16" />
+    </settings>
+    <properties>
+      <property name="_PID" value="2412" />
+      <property name="_APPDOMAIN" value="domain-" />
+    </properties>
+    <reason>
+      <message><![CDATA[One or more child tests had warnings]]></message>
+    </reason>
+    <test-suite type="TestSuite" id="0-1003" name="UnitTestProject1" fullname="UnitTestProject1" runstate="Runnable" testcasecount="1" result="Warning" site="Child" start-time="2019-02-22 18:30:29Z" end-time="2019-02-22 18:30:29Z" duration="0.127092" total="0" passed="0" failed="0" warnings="1" inconclusive="0" skipped="0" asserts="0">
+      <reason>
+        <message><![CDATA[One or more child tests had warnings]]></message>
+      </reason>
+      <test-suite type="TestFixture" id="0-1000" name="UnitTest1" fullname="UnitTestProject1.UnitTest1" classname="UnitTestProject1.UnitTest1" runstate="Runnable" testcasecount="1" result="Warning" site="Child" start-time="2019-02-22 18:30:29Z" end-time="2019-02-22 18:30:29Z" duration="0.119439" total="0" passed="0" failed="0" warnings="1" inconclusive="0" skipped="0" asserts="0">
+        <reason>
+          <message><![CDATA[One or more child tests had warnings]]></message>
+        </reason>
+        <test-case id="0-1001" name="TestMethod1" fullname="UnitTestProject1.UnitTest1.TestMethod1" methodname="TestMethod1" classname="UnitTestProject1.UnitTest1" runstate="Runnable" seed="2044112344" result="Warning" start-time="2019-02-22 18:30:29Z" end-time="2019-02-22 18:30:29Z" duration="0.102436" asserts="0">
+          <reason>
+            <message><![CDATA[Example Warning Messages]]></message>
+          </reason>
+          <assertions>
+            <assertion result="Warning">
+              <message><![CDATA[Example Warning Messages]]></message>
+              <stack-trace><![CDATA[   at UnitTestProject1.UnitTest1.TestMethod1() in C:\Users\user\source\repos\UnitTestProject1\UnitTest1.cs:line 31
+]]></stack-trace>
+            </assertion>
+          </assertions>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
