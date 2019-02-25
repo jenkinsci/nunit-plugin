@@ -1,6 +1,7 @@
 package hudson.plugins.nunit;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,10 +45,13 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
 
     private static final int MAX_PATH = 255;
     private static final String TEMP_JUNIT_FILE_STR = "temp-junit.xml";
+    private static final String TEMP_XUNIT_WARNING_TO_FAIL_FILE_STR = "temp-xunit-warnings-to-fail.xml";
+    public static final String NUNIT_WARN_TO_NUNIT_FAIL_XSLFILE_STR = "nunit-warn-to-fail.xsl";
     public static final String NUNIT_TO_JUNIT_XSLFILE_STR = "nunit-to-junit.xsl";
 
     private transient boolean xslIsInitialized;
     private transient Transformer nunitTransformer;
+    private transient Transformer nunitWarningToFailTransformer;
     private transient Transformer writerTransformer;
     private transient DocumentBuilder xmlDocumentBuilder;
     private transient int transformCount;
@@ -62,18 +66,56 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
      * @throws SAXException
      * @throws ParserConfigurationException 
      */
+    @Deprecated
     public void transform(InputStream nunitFileStream, File junitOutputPath) throws IOException, TransformerException,
+            SAXException, ParserConfigurationException {
+            
+        transform(nunitFileStream,junitOutputPath, false);
+    }
+
+    /**
+     * Transform the nunit file into several junit files in the output path
+     * 
+     * @param nunitFileStream the nunit file stream to transform
+     * @param junitOutputPath the output path to put all junit files
+     * @param convertNUnitWarningsToFailures Convert NUnit Warnings to Failures 
+     * @throws IOException thrown if there was any problem with the transform.
+     * @throws TransformerException
+     * @throws SAXException
+     * @throws ParserConfigurationException 
+     */
+    public void transform(InputStream nunitFileStream, File junitOutputPath, boolean convertNUnitWarningsToFailures) throws IOException, TransformerException,
             SAXException, ParserConfigurationException {
         
         initialize();
         
         File junitTargetFile = new File(junitOutputPath, TEMP_JUNIT_FILE_STR);
         FileOutputStream fileOutputStream = new FileOutputStream(junitTargetFile);
+        FileOutputStream tempNunitFileOutputStream = null;
+        InputStream is;
         try {
-            InputStream is = new InvalidXmlInputStream(new BOMInputStream(nunitFileStream), '?');
+            if (convertNUnitWarningsToFailures)
+            {
+                // Transform NUnit warnings to failures first, if requested.
+                File tempNUnitWarningsToFail = new File(junitOutputPath, TEMP_XUNIT_WARNING_TO_FAIL_FILE_STR);
+                tempNunitFileOutputStream = new FileOutputStream(tempNUnitWarningsToFail);
+                InputStream nunitIs = new InvalidXmlInputStream(new BOMInputStream(nunitFileStream), '?');
+                nunitWarningToFailTransformer.transform(new StreamSource(nunitIs), new StreamResult(tempNunitFileOutputStream));
+                FileInputStream fileStream = new FileInputStream(tempNUnitWarningsToFail);
+                is = new InvalidXmlInputStream(new BOMInputStream(fileStream), '?');
+               
+            }
+            else {
+                // Read the NUnit report "as-is" without first transforming warnings to failures
+                is = new InvalidXmlInputStream(new BOMInputStream(nunitFileStream), '?');
+            }
             nunitTransformer.transform(new StreamSource(is), new StreamResult(fileOutputStream));
         } finally {
             fileOutputStream.close();
+            if (tempNunitFileOutputStream != null) {
+                tempNunitFileOutputStream.close();
+            }
+            
         }
         splitJUnitFile(junitTargetFile, junitOutputPath);
         junitTargetFile.delete();
@@ -83,6 +125,7 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
             ParserConfigurationException {
         if (!xslIsInitialized) {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            nunitWarningToFailTransformer = transformerFactory.newTransformer(new StreamSource(this.getClass().getResourceAsStream(NUNIT_WARN_TO_NUNIT_FAIL_XSLFILE_STR)));
             nunitTransformer = transformerFactory.newTransformer(new StreamSource(this.getClass().getResourceAsStream(NUNIT_TO_JUNIT_XSLFILE_STR)));
             writerTransformer = transformerFactory.newTransformer();
     

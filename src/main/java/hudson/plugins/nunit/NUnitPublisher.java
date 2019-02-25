@@ -3,6 +3,7 @@ package hudson.plugins.nunit;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.xml.transform.TransformerException;
@@ -36,6 +37,7 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
+import hudson.tasks.junit.CaseResult;
 import hudson.tasks.junit.TestResult;
 import hudson.tasks.junit.TestResultAction;
 import hudson.tasks.test.TestResultProjectAction;
@@ -76,14 +78,40 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
      */
     private boolean failedTestsFailBuild;
 
+    /**
+     * <p>Configuration value specifying how to handle NUnit warnings.  
+     * Since there is no direct mapping from NUNit's 'Warning' result to a JUnit result, 
+     * we need a way to handle the behavior</p>
+     * <ul>
+     *  <li> skipped - (Default) NUnit warnings are interpreted as "skipped."  
+     *  This is the default behavior in plugin version 0.24 
+     *  </li>
+     *  <li> unstable - NUnuit warnings are counted as failures; however, 
+     *  any count (even exceeding healthScaleFactor) will mark the build as UNSTABLE,
+     *  and will not cause the build to fail even if failedTestsFailBuild is set to true
+     *  </li>
+     *  <li> softfail - NUnuit warnings are counted as failures. 
+     *  A warning count below the healthScaleFactor will mark the build as UNSTABLE, 
+     *  but a A warning above healthScaleFactor will mark the buld FAILURE.
+     *  Warnings will not cause the build to fail if failedTestsFailBuild is set to true
+     *  </li>
+     *  <li> normalfail - NUnit warnings are counted as failures, and will be subject to 
+     *  the configuration of failedTestsFailBuild and healthScaleFactor to determine whether 
+     *  the build is UNSTABLE or FAILURE
+     *  </li>
+     * </ul>
+     * <p>Defaults to <code>skip</code>.</p>
+     */
+    private String warningNUnitTestResultHanlingBehavior;
+
     @Deprecated
     public NUnitPublisher(String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver) {
-    	this(testResultsPattern, debug, keepJUnitReports, skipJUnitArchiver, Boolean.TRUE, Boolean.FALSE);
+    	this(testResultsPattern, debug, keepJUnitReports, skipJUnitArchiver, Boolean.TRUE, Boolean.FALSE, "skipped");
     }
     
     @Deprecated
     public NUnitPublisher(String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver,
-                          Boolean failIfNoResults, Boolean failedTestsFailBuild) {
+                          Boolean failIfNoResults, Boolean failedTestsFailBuild, String warningNUnitTestResultHanlingBehavior) {
         this.testResultsPattern = testResultsPattern;
         this.debug = debug;
         if (this.debug) {
@@ -92,12 +120,14 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
         }
         this.failIfNoResults = BooleanUtils.toBooleanDefaultIfNull(failIfNoResults, Boolean.TRUE);
         this.failedTestsFailBuild = BooleanUtils.toBooleanDefaultIfNull(failedTestsFailBuild, Boolean.FALSE);
+        this.warningNUnitTestResultHanlingBehavior = warningNUnitTestResultHanlingBehavior;
     }
 
     @DataBoundConstructor
     public NUnitPublisher(String testResultsPattern) {
         this.testResultsPattern = testResultsPattern;
         this.failIfNoResults = true;
+        this.warningNUnitTestResultHanlingBehavior = "skipped";
     }
     
     public Object readResolve() {
@@ -107,7 +137,10 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
 			keepJUnitReports, 
 			skipJUnitArchiver, 
 			BooleanUtils.toBooleanDefaultIfNull(failIfNoResults, Boolean.TRUE),
-            BooleanUtils.toBooleanDefaultIfNull(failedTestsFailBuild, Boolean.FALSE));
+            BooleanUtils.toBooleanDefaultIfNull(failedTestsFailBuild, Boolean.FALSE),
+            "skipped"
+            );
+            
     }
 
     public String getTestResultsPattern() {
@@ -170,6 +203,11 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
         this.failedTestsFailBuild = failedTestsFailBuild;
     }
 
+    @DataBoundSetter
+    public void setWarningNUnitTestResultHanlingBehavior(String warningNUnitTestResultHanlingBehavior) {
+        this.warningNUnitTestResultHanlingBehavior = warningNUnitTestResultHanlingBehavior;
+    }
+
     @Override
     public Action getProjectAction(AbstractProject<?,?> project) {
         TestResultProjectAction action = project.getAction(TestResultProjectAction.class);
@@ -182,6 +220,19 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
 
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.NONE;
+    }
+
+    private int getCountTestsConvertedFromWarnings(TestResultAction action) {
+        List<CaseResult> failedTests = action.getResult().getFailedTests();
+        int testsConvertedFromWarnings = 0;
+        for(CaseResult test : failedTests) {
+            String convertedFromWarningToken = "This test case was reported as a \"Warning\" in NUnit, but converted to \"Fail\" by Jenkins NUnuit Plugin";
+            if (test.getErrorDetails().contains(convertedFromWarningToken))
+            {
+                testsConvertedFromWarnings++;
+            }
+        }
+        return testsConvertedFromWarnings; 
     }
 
     /**
@@ -225,13 +276,32 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
             build.addAction(action);
         }
 
+
         if (action.getResult().getFailCount() > 0) {
-            if(failedTestsFailBuild) {
-                build.setResult(Result.FAILURE);
-            }
+
+            int testsConvertedFromWarnings = getCountTestsConvertedFromWarnings(action);
+            listener.getLogger().println("Fail count was " + Integer.toString(action.getResult().getFailCount()) + ".  Converted from warnings: " + Integer.toString(testsConvertedFromWarnings));
+            
+            if(action.getResult().getFailCount() - testsConvertedFromWarnings == 0 ) {
+                // all failures were from warnings:
+                if (warningNUnitTestResultHanlingBehavior.equals("normalfail") && failedTestsFailBuild ){
+                    build.setResult(Result.FAILURE);
+                }
+                else if (warningNUnitTestResultHanlingBehavior.equals("softfail")) {
+                     build.setResult(Result.UNSTABLE);
+                }
+            } 
             else {
-                build.setResult(Result.UNSTABLE);
+                // at least one failure resulted from a non-warning case.
+                if(failedTestsFailBuild ) {
+                    build.setResult(Result.FAILURE);
+                }
+                else {
+                    build.setResult(Result.UNSTABLE);
+                }
             }
+            
+         
         }
 
         return true;
@@ -296,7 +366,7 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
             String resolvedTestResultsPattern = env.expand(testResultsPattern);
 
             listener.getLogger().println("Recording NUnit tests results");
-            NUnitArchiver transformer = new NUnitArchiver(ws.getRemote(), listener, resolvedTestResultsPattern, new NUnitReportTransformer(), failIfNoResults);
+            NUnitArchiver transformer = new NUnitArchiver(ws.getRemote(), listener, resolvedTestResultsPattern, new NUnitReportTransformer(), failIfNoResults, warningNUnitTestResultHanlingBehavior);
             result = ws.act(transformer);
 
             if (result) {

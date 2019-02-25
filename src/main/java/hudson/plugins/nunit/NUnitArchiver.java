@@ -38,6 +38,7 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
     private final String testResultsPattern;
     private final TestReportTransformer unitReportTransformer;
     private final boolean failIfNoResults;
+    private final String warningNUnitTestResultHanlingBehavior;
 
     private int fileCount;
 
@@ -47,6 +48,16 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
         this.testResultsPattern = testResultsPattern;
         this.unitReportTransformer = unitReportTransformer;
         this.failIfNoResults = failIfNoResults;
+        this.warningNUnitTestResultHanlingBehavior = "skipped";
+    }
+
+    public NUnitArchiver(String root, TaskListener listener, String testResultsPattern, TestReportTransformer unitReportTransformer, boolean failIfNoResults, String warningNUnitTestResultHanlingBehavior) {
+        this.root = root;
+        this.listener = listener;
+        this.testResultsPattern = testResultsPattern;
+        this.unitReportTransformer = unitReportTransformer;
+        this.failIfNoResults = failIfNoResults;
+        this.warningNUnitTestResultHanlingBehavior = warningNUnitTestResultHanlingBehavior;
     }
 
     /** {@inheritDoc} */
@@ -59,7 +70,9 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
     
             for (String nunitFileName : nunitFiles) {
                 try(FileInputStream fileStream = new FileInputStream(new File(root, nunitFileName))) {
-                    unitReportTransformer.transform(fileStream, junitOutputPath);
+                    boolean shouldTransformWarningsToFails = ! warningNUnitTestResultHanlingBehavior.equals("skipped");
+                    listener.getLogger().println("Transforming :" + nunitFileName + "; shouldTransformWarningsToFails:" + Boolean.toString(shouldTransformWarningsToFails));
+                    unitReportTransformer.transform(fileStream, junitOutputPath, shouldTransformWarningsToFails);
                     fileCount++;
                 } catch (TransformerException te) {
                     throw new IOException(
