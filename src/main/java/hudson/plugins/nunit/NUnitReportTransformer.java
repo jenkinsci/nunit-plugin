@@ -91,13 +91,14 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
         
         File junitTargetFile = new File(junitOutputPath, TEMP_JUNIT_FILE_STR);
         FileOutputStream fileOutputStream = new FileOutputStream(junitTargetFile);
+        FileOutputStream tempNunitFileOutputStream = null;
         InputStream is;
         try {
             if (convertNUnitWarningsToFailures)
             {
                 // Transform NUnit warnings to failures first, if requested.
                 File tempNUnitWarningsToFail = new File(junitOutputPath, TEMP_XUNIT_WARNING_TO_FAIL_FILE_STR);
-                FileOutputStream tempNunitFileOutputStream = new FileOutputStream(tempNUnitWarningsToFail);
+                tempNunitFileOutputStream = new FileOutputStream(tempNUnitWarningsToFail);
                 InputStream nunitIs = new InvalidXmlInputStream(new BOMInputStream(nunitFileStream), '?');
                 nunitWarningToFailTransformer.transform(new StreamSource(nunitIs), new StreamResult(tempNunitFileOutputStream));
                 FileInputStream fileStream = new FileInputStream(tempNUnitWarningsToFail);
@@ -111,6 +112,10 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
             nunitTransformer.transform(new StreamSource(is), new StreamResult(fileOutputStream));
         } finally {
             fileOutputStream.close();
+            if (tempNunitFileOutputStream != null) {
+                tempNunitFileOutputStream.close();
+            }
+            
         }
         splitJUnitFile(junitTargetFile, junitOutputPath);
         junitTargetFile.delete();
