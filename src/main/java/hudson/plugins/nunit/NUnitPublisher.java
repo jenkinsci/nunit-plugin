@@ -3,6 +3,7 @@ package hudson.plugins.nunit;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.xml.transform.TransformerException;
@@ -36,6 +37,7 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
+import hudson.tasks.junit.CaseResult;
 import hudson.tasks.junit.TestResult;
 import hudson.tasks.junit.TestResultAction;
 import hudson.tasks.test.TestResultProjectAction;
@@ -220,6 +222,19 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
         return BuildStepMonitor.NONE;
     }
 
+    private int getCountTestsConvertedFromWarnings(TestResultAction action) {
+        List<CaseResult> failedTests = action.getResult().getFailedTests();
+        int testsConvertedFromWarnings = 0;
+        for(CaseResult test : failedTests) {
+            String convertedFromWarningToken = "This test case was reported as a \"Warning\" in NUnit, but converted to \"Fail\" by Jenkins NUnuit Plugin";
+            if (test.getErrorDetails().contains(convertedFromWarningToken))
+            {
+                testsConvertedFromWarnings++;
+            }
+        }
+        return testsConvertedFromWarnings; 
+    }
+
     /**
      * Record the test results into the current build.
      * @param junitFilePattern
@@ -262,15 +277,31 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
         }
 
 
-
-
         if (action.getResult().getFailCount() > 0) {
-            if(failedTestsFailBuild) {
-                build.setResult(Result.FAILURE);
-            }
+
+            int testsConvertedFromWarnings = getCountTestsConvertedFromWarnings(action);
+            listener.getLogger().println("Fail count was " + Integer.toString(action.getResult().getFailCount()) + ".  Converted from warnings: " + Integer.toString(testsConvertedFromWarnings));
+            
+            if(action.getResult().getFailCount() - testsConvertedFromWarnings == 0 ) {
+                // all failures were from warnings:
+                if (warningNUnitTestResultHanlingBehavior.equals("normalfail") && failedTestsFailBuild ){
+                    build.setResult(Result.FAILURE);
+                }
+                else if (warningNUnitTestResultHanlingBehavior.equals("softfail")) {
+                     build.setResult(Result.UNSTABLE);
+                }
+            } 
             else {
-                build.setResult(Result.UNSTABLE);
+                // at least one failure resulted from a non-warning case.
+                if(failedTestsFailBuild ) {
+                    build.setResult(Result.FAILURE);
+                }
+                else {
+                    build.setResult(Result.UNSTABLE);
+                }
             }
+            
+         
         }
 
         return true;
