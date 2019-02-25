@@ -12,28 +12,28 @@
 	</xsl:template>
 
 	<!-- update the total count for test-suite to include the sum of all pass + fail + warnings -->
-	<xsl:template match="test-suite/@total">
+	<xsl:template match="test-suite/@total|test-run/@total">
         <xsl:attribute name="total">
 			<xsl:value-of select="count(//assertion[@result = 'Failed'])+count(//assertion[@result = 'Warning'])+count(//assertion[@result = 'Pass'])"/>
 		</xsl:attribute>
     </xsl:template>
 
 	<!-- update the failed count for test-suite to include the sum of all fail + warnings -->
-	<xsl:template match="test-suite/@failed">
+	<xsl:template match="test-suite/@failed|test-run/@failed">
         <xsl:attribute name="failed">
 			<xsl:value-of select="count(//assertion[@result = 'Failed'])+count(//assertion[@result = 'Warning'])"/>
 		</xsl:attribute>
     </xsl:template>
 
 	<!-- update the warnings count for test-suite to 0 since we're converting all warnings to failures (with a comment) -->
-	<xsl:template match="test-suite/@warnings">
+	<xsl:template match="test-suite/@warnings|test-run/@warnings">
         <xsl:attribute name="warnings">
 			<xsl:value-of select="0"/>
 		</xsl:attribute>
     </xsl:template>
 
 	<!-- probably don't really need this, but do it anyway -->
-	<xsl:template match="test-suite/@passed">
+	<xsl:template match="test-suite/@passed|test-run/@passed">
         <xsl:attribute name="passed">
 			<xsl:value-of select="count(//assertion[@result = 'Passed'])"/>
 		</xsl:attribute>
