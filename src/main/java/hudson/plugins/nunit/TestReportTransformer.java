@@ -22,4 +22,15 @@ public interface TestReportTransformer {
      */
     void transform(InputStream nunitFileStream, File junitOutputPath) throws IOException, TransformerException,
             SAXException, ParserConfigurationException;
+
+    /**
+     * Transforms the nunit file stream to junit files in the specified output path
+     * 
+     * @param nunitFileStream nunit report file stream
+     * @param junitOutputPath the output path to store junit reports to
+     * @param convertNUnitWarningsToFailures Convert NUnit Warnings to Failures 
+     * @throws ParserConfigurationException 
+     */
+    void transform(InputStream nunitFileStream, File junitOutputPath, boolean convertNUnitWarningsToFailures) throws IOException, TransformerException,
+            SAXException, ParserConfigurationException;
 }
