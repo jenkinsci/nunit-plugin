@@ -108,14 +108,14 @@ STACK TRACE:
 
 	<!-- NUnit3 results format -->
 	<xsl:template match="/test-run">
-		<testsuites tests="{@testcasecount}" failures="{@failed + count(//test-case[@result='Warning']) }" disabled="{@skipped}" time="{@duration}">
+		<testsuites tests="{@testcasecount}" failures="{@failed}" disabled="{@skipped}" time="{@duration}">
 			<xsl:apply-templates/>
 		</testsuites>
 	</xsl:template>
 
 	<xsl:template match="test-suite">
 		<xsl:if test="test-case">
-			<testsuite tests="{@testcasecount}" time="{@duration}" errors="{@testcasecount - @passed - @skipped - @failed - @inconclusive - @warnings}" failures="{@failed + @warnings}" skipped="{@skipped + @inconclusive}" timestamp="{@start-time}">
+			<testsuite tests="{@testcasecount}" time="{@duration}" errors="{@testcasecount - @passed - @skipped - @failed - @inconclusive}" failures="{@failed}" skipped="{@skipped + @inconclusive}" timestamp="{@start-time}">
 				<xsl:attribute name="name">
 					<xsl:for-each select="ancestor-or-self::test-suite/@name">
 						<xsl:value-of select="concat(., '.')"/>
@@ -134,15 +134,7 @@ STACK TRACE:
 	</xsl:template>
 
 	<xsl:template match="test-case">
-		<xsl:variable name="newStatus">
-			<!-- source: https://stackoverflow.com/a/10528912 -->
-			<xsl:call-template name="string-replace-all">
-				<xsl:with-param name="text" select="@result" />
-				<xsl:with-param name="replace" select="'Warning'" />
-				<xsl:with-param name="by" select="'Fail'" />
-			</xsl:call-template>
-		</xsl:variable>
-		<testcase name="{@name}" assertions="{@asserts}" time="{@duration}" status="{$newStatus}" classname="{@classname}">
+		<testcase name="{@name}" assertions="{@asserts}" time="{@duration}" status="{@result}" classname="{@classname}">
 			<xsl:if test="@runstate = 'Skipped' or @runstate = 'Ignored' or @runstate='Inconclusive'">
 				<skipped/>
 			</xsl:if>
@@ -157,7 +149,6 @@ STACK TRACE:
 	<xsl:template match="output">
 		<system-out>
 			<xsl:copy-of select="./text()" />
-			
 		</system-out>
 	</xsl:template>
 
@@ -173,16 +164,7 @@ STACK TRACE:
 	<xsl:template match="test-suite/failure"/>
 
 	<xsl:template match="test-case/reason">
-		 <xsl:choose>
-    		<xsl:when test="../@result ='Warning'">
-				<failure message="{./message}">
-This test case was reported as a "Warning" in NUnit, but converted to "Fail" by Jenkins NUnuit Plugin
-				</failure>
-			</xsl:when>
-			<xsl:otherwise>
-				<skipped message="{./message}"/>
-			</xsl:otherwise>
-		</xsl:choose>
+		<skipped message="{./message}"/>
 	</xsl:template>
 
 	<xsl:template match="test-suite/reason"/>
@@ -208,27 +190,6 @@ This test case was reported as a "Warning" in NUnit, but converted to "Fail" by 
 
 			<xsl:otherwise>
 				<xsl:value-of select="$string" />
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<!-- source: https://stackoverflow.com/a/10528912 -->
-	<xsl:template name="string-replace-all">
-		<xsl:param name="text" />
-		<xsl:param name="replace" />
-		<xsl:param name="by" />
-		<xsl:choose>
-			<xsl:when test="contains($text, $replace)">
-			<xsl:value-of select="substring-before($text,$replace)" />
-			<xsl:value-of select="$by" />
-			<xsl:call-template name="string-replace-all">
-				<xsl:with-param name="text" select="substring-after($text,$replace)" />
-				<xsl:with-param name="replace" select="$replace" />
-				<xsl:with-param name="by" select="$by" />
-			</xsl:call-template>
-			</xsl:when>
-			<xsl:otherwise>
-			<xsl:value-of select="$text" />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
