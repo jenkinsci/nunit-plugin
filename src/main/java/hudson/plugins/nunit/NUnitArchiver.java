@@ -3,7 +3,6 @@ package hudson.plugins.nunit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.Serializable;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -11,17 +10,11 @@ import javax.xml.transform.TransformerException;
 import jenkins.security.MasterToSlaveCallable;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
-import org.jenkinsci.remoting.RoleChecker;
-import org.jenkinsci.remoting.RoleSensitive;
+
 import org.xml.sax.SAXException;
 
-import hudson.FilePath;
 import hudson.Util;
-import hudson.model.BuildListener;
 import hudson.model.TaskListener;
-import hudson.remoting.VirtualChannel;
-import jenkins.security.Roles;
-
 /**
  * Class responsible for transforming NUnit to JUnit files and then run them all through the JUnit result archiver.
  * 
@@ -31,9 +24,8 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String JUNIT_REPORTS_PATH = "temporary-junit-reports";
-
     private final String root;
+    private final String junitDirectoryName;
     private final TaskListener listener;
     private final String testResultsPattern;
     private final TestReportTransformer unitReportTransformer;
@@ -41,8 +33,9 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
 
     private int fileCount;
 
-    public NUnitArchiver(String root, TaskListener listener, String testResultsPattern, TestReportTransformer unitReportTransformer, boolean failIfNoResults) {
+    public NUnitArchiver(String root, String junitDirectoryName, TaskListener listener, String testResultsPattern, TestReportTransformer unitReportTransformer, boolean failIfNoResults) {
         this.root = root;
+        this.junitDirectoryName = junitDirectoryName;
         this.listener = listener;
         this.testResultsPattern = testResultsPattern;
         this.unitReportTransformer = unitReportTransformer;
@@ -54,7 +47,7 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
         boolean retValue = true;
         String[] nunitFiles = findNUnitReports(new File(root));
         if (nunitFiles.length > 0) {
-            File junitOutputPath = new File(root, JUNIT_REPORTS_PATH);
+            File junitOutputPath = new File(root, junitDirectoryName);
             junitOutputPath.mkdirs();
     
             for (String nunitFileName : nunitFiles) {

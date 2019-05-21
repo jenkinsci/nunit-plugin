@@ -1,5 +1,6 @@
 package hudson.plugins.nunit;
 
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.*;
 import hudson.slaves.DumbSlave;
@@ -12,6 +13,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import hudson.util.DescribableList;
+import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
+import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -251,5 +255,29 @@ public class NUnitPublisherTest {
         FreeStyleBuild build = freeStyleProject.scheduleBuild2(0).get();
         TestResultAction existingAction = build.getAction(TestResultAction.class);
         Assert.assertTrue(existingAction.getTotalCount() == 4);
+    }
+
+    @Test
+    public void parallelPublishing() throws Exception {
+        WorkflowJob job = j.createProject(WorkflowJob.class, "parallelInStage");
+        FilePath ws = j.jenkins.getWorkspaceFor(job);
+
+        FilePath testFile = ws.child("first-result.xml");
+        testFile.copyFrom(this.getClass().getResourceAsStream("NUnit-correct.xml"));
+        FilePath secondTestFile = ws.child("second-result.xml");
+        secondTestFile.copyFrom(this.getClass().getResourceAsStream("NUnit-correct2.xml"));
+        FilePath thirdTestFile = ws.child("third-result.xml");
+        thirdTestFile.copyFrom(this.getClass().getResourceAsStream("NUnit-correct3.xml"));
+
+        job.setDefinition(new CpsFlowDefinition("node {\n" +
+                "    parallel(a: { step([$class: 'NUnitPublisher', testResultsPattern: 'first-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false]) },\n" +
+                "             b: { step([$class: 'NUnitPublisher', testResultsPattern: 'second-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false]) },\n" +
+                "             c: { step([$class: 'NUnitPublisher', testResultsPattern: 'third-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false]) })\n" +
+                "}\n", true
+        ));
+        WorkflowRun r = j.waitForCompletion(job.scheduleBuild2(0).waitForStart());
+        TestResultAction action = r.getAction(TestResultAction.class);
+        assertNotNull(action);
+        assertEquals(28 + 218 + 22, action.getTotalCount());
     }
 }

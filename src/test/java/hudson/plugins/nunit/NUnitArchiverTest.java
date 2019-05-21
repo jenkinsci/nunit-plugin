@@ -76,7 +76,7 @@ public class NUnitArchiverTest {
             }
         });
         FreeStyleBuild b = prj.scheduleBuild2(0).get();
-        nunitArchiver = new NUnitArchiver(b.getWorkspace().getRemote(), buildListener, "*.xml", transformer, true);
+        nunitArchiver = new NUnitArchiver(b.getWorkspace().getRemote(), "tempJunitReports", buildListener, "*.xml", transformer, true);
         assertTrue("Error during archiver call", nunitArchiver.call());
         assertEquals( "Should have processed two files", 2, nunitArchiver.getFileCount());
     }
@@ -132,7 +132,7 @@ public class NUnitArchiverTest {
         FreeStyleProject prj = j.createFreeStyleProject("foo");
         FreeStyleBuild b = prj.scheduleBuild2(0).get();
 
-        nunitArchiver = new NUnitArchiver(b.getWorkspace().getRemote(), StreamTaskListener.fromStdout(), "*.xml", transformer, true);
+        nunitArchiver = new NUnitArchiver(b.getWorkspace().getRemote(), "tempJunitReports",StreamTaskListener.fromStdout(), "*.xml", transformer, true);
         assertFalse("The archiver did not return false when it could not find any files", nunitArchiver.call());
     }
 }
