@@ -3,6 +3,7 @@ package hudson.plugins.nunit;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.xml.transform.TransformerException;
@@ -195,46 +196,47 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
      */
     private boolean recordTestResult(String junitFilePattern, Run<?, ?> build, TaskListener listener, FilePath filePath)
             throws InterruptedException, IOException {
-        TestResultAction existingAction = build.getAction(TestResultAction.class);
-        TestResultAction action;
+        synchronized (build) {
+            TestResultAction existingAction = build.getAction(TestResultAction.class);
+            TestResultAction action;
 
-        final long buildTime = build.getTimestamp().getTimeInMillis();
+            final long buildTime = build.getTimestamp().getTimeInMillis();
 
-        TestResult existingTestResults = null;
-        if (existingAction != null) {
-            existingTestResults = existingAction.getResult();
-        }
-        TestResult result = getTestResult(junitFilePattern, build, existingTestResults, buildTime, filePath);
+            TestResult existingTestResults = null;
+            if (existingAction != null) {
+                existingTestResults = existingAction.getResult();
+            }
+            TestResult result = getTestResult(junitFilePattern, build, existingTestResults, buildTime, filePath);
 
-        if (existingAction == null) {
-            action = new TestResultAction(build, result, listener);
-        } else {
-            action = existingAction;
-            action.setResult(result, listener);
-        }
+            if (existingAction == null) {
+                action = new TestResultAction(build, result, listener);
+            } else {
+                action = existingAction;
+                action.setResult(result, listener);
+            }
 
-        action.setHealthScaleFactor(getHealthScaleFactor());
+            action.setHealthScaleFactor(getHealthScaleFactor());
 
-        if (this.failIfNoResults && result.getPassCount() == 0 && result.getFailCount() == 0 && result.getSkipCount() == 0) {
-            listener.getLogger().println("None of the test reports contained any result");
-            build.setResult(Result.FAILURE);
+            if (this.failIfNoResults && result.getPassCount() == 0 && result.getFailCount() == 0 && result.getSkipCount() == 0) {
+                listener.getLogger().println("None of the test reports contained any result");
+                build.setResult(Result.FAILURE);
+                return true;
+            }
+
+            if (existingAction == null) {
+                build.addAction(action);
+            }
+
+            if (action.getResult().getFailCount() > 0) {
+                if (failedTestsFailBuild) {
+                    build.setResult(Result.FAILURE);
+                } else {
+                    build.setResult(Result.UNSTABLE);
+                }
+            }
+
             return true;
         }
-
-        if (existingAction == null) {
-            build.addAction(action);
-        }
-
-        if (action.getResult().getFailCount() > 0) {
-            if(failedTestsFailBuild) {
-                build.setResult(Result.FAILURE);
-            }
-            else {
-                build.setResult(Result.UNSTABLE);
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -296,7 +298,8 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
             String resolvedTestResultsPattern = env.expand(testResultsPattern);
 
             listener.getLogger().println("Recording NUnit tests results");
-            NUnitArchiver transformer = new NUnitArchiver(ws.getRemote(), listener, resolvedTestResultsPattern, new NUnitReportTransformer(), failIfNoResults);
+            String junitTempReportsDirectoryName = "tempJunitReports" + UUID.randomUUID().toString();
+            NUnitArchiver transformer = new NUnitArchiver(ws.getRemote(), junitTempReportsDirectoryName, listener, resolvedTestResultsPattern, new NUnitReportTransformer(), failIfNoResults);
             result = ws.act(transformer);
 
             if (result) {
@@ -304,13 +307,13 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
                     listener.getLogger().println("Skipping feeding JUnit reports to JUnitArchiver");
                 } else {
                     // Run the JUnit test archiver
-                    recordTestResult(NUnitArchiver.JUNIT_REPORTS_PATH + "/TEST-*.xml", run, listener, ws);
+                    recordTestResult(junitTempReportsDirectoryName + "/TEST-*.xml", run, listener, ws);
                 }
 
                 if (keepJUnitReports) {
                     listener.getLogger().println("Skipping deletion of temporary JUnit reports.");
                 } else {
-                    ws.child(NUnitArchiver.JUNIT_REPORTS_PATH).deleteRecursive();
+                    ws.child(junitTempReportsDirectoryName).deleteRecursive();
                 }
             } else {
                 if (this.getFailIfNoResults()) {
