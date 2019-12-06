@@ -62,7 +62,7 @@ public class InvalidXmlInputStream extends ProxyInputStream {
 
         int pos = off - 1;
         for (int readPos = off; readPos < off + read; readPos++) {
-            if (!isValid(cbuf[readPos])) {
+            if (!isValid(Byte.toUnsignedInt(cbuf[readPos]))) {
                 cbuf[readPos] = replacement;
             }
             pos++;
