@@ -14,6 +14,9 @@
     <f:entry title="${%Fail the build if no test results are present}" field="failIfNoResults">
         <f:checkbox value="${instance.failIfNoResults}" checked="${instance.failIfNoResults}" default="true" />
     </f:entry>
+    <f:entry title="${%Failed tests make build unstable}" field="failedTestsMakeBuildUnstable">
+        <f:checkbox value="${instance.failedTestsMakeBuildUnstable}" checked="${instance.failedTestsMakeBuildUnstable}" default="true" />
+    </f:entry>
     <f:entry title="${%Failed tests fail build}" field="failedTestsFailBuild">
         <f:checkbox value="${instance.failedTestsFailBuild}" checked="${instance.failedTestsFailBuild}" default="false" />
     </f:entry>

@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.xml.transform.TransformerException;
 
+import hudson.util.FormValidation;
 import jenkins.MasterToSlaveFileCallable;
 import jenkins.security.MasterToSlaveCallable;
 import org.apache.commons.lang.BooleanUtils;
@@ -43,6 +44,7 @@ import hudson.tasks.test.TestResultProjectAction;
 import jenkins.security.Roles;
 import jenkins.tasks.SimpleBuildStep;
 import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
 
 /**
  * Class that records NUnit test reports into Jenkins.
@@ -69,6 +71,13 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
      */
     private boolean failIfNoResults;
 
+    /**
+     * <p>Flag that when set, <strong>marks the build as unstable if any tests
+     * fail</strong>.</p>
+     *
+     * <p>Defaults to <code>true</code>.</p>
+     */
+    private boolean failedTestsMakeBuildUnstable;
     /**
      * <p>Flag that when set, <strong>marks the build as failed if any tests
      * fail</strong>.</p>
@@ -99,16 +108,17 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
     public NUnitPublisher(String testResultsPattern) {
         this.testResultsPattern = testResultsPattern;
         this.failIfNoResults = true;
+        this.failedTestsMakeBuildUnstable = true;
     }
     
     public Object readResolve() {
     	return new NUnitPublisher(
-			testResultsPattern, 
-			debug, 
-			keepJUnitReports, 
-			skipJUnitArchiver, 
-			BooleanUtils.toBooleanDefaultIfNull(failIfNoResults, Boolean.TRUE),
-            BooleanUtils.toBooleanDefaultIfNull(failedTestsFailBuild, Boolean.FALSE));
+    	        testResultsPattern,
+                debug,
+                keepJUnitReports,
+                skipJUnitArchiver,
+                BooleanUtils.toBooleanDefaultIfNull(failIfNoResults, Boolean.TRUE),
+                BooleanUtils.toBooleanDefaultIfNull(failedTestsFailBuild, Boolean.FALSE));
     }
 
     public String getTestResultsPattern() {
@@ -171,6 +181,14 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
         this.failedTestsFailBuild = failedTestsFailBuild;
     }
 
+    public boolean getFailedTestsMakeBuildUnstable() {
+        return failedTestsMakeBuildUnstable;
+    }
+    @DataBoundSetter
+    public void setFailedTestsMakeBuildUnstable(boolean failedTestsMakeBuildUnstable) {
+        this.failedTestsMakeBuildUnstable = failedTestsMakeBuildUnstable;
+    }
+
     @Override
     public Action getProjectAction(AbstractProject<?,?> project) {
         TestResultProjectAction action = project.getAction(TestResultProjectAction.class);
@@ -227,15 +245,21 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
                 build.addAction(action);
             }
 
-            if (action.getResult().getFailCount() > 0) {
-                if (failedTestsFailBuild) {
-                    build.setResult(Result.FAILURE);
-                } else {
-                    build.setResult(Result.UNSTABLE);
-                }
-            }
+            changeBuildResult(action, build);
 
             return true;
+        }
+    }
+
+    private void changeBuildResult(TestResultAction action, Run<?, ?> build) {
+        if (action.getResult().getFailCount() > 0) {
+            if (failedTestsFailBuild) {
+                build.setResult(Result.FAILURE);
+                return;
+            }
+            if (failedTestsMakeBuildUnstable) {
+                build.setResult(Result.UNSTABLE);
+            }
         }
     }
 
@@ -351,6 +375,13 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
         @Override
         public boolean isApplicable(@SuppressWarnings("rawtypes") Class<? extends AbstractProject> jobType) {
             return true;
+        }
+
+        public FormValidation doCheckFailedTestsMakeBuildUnstable(@QueryParameter boolean value, @QueryParameter boolean failedTestsFailBuild) {
+            if (!value && failedTestsFailBuild) {
+                return FormValidation.warningWithMarkup(Messages.NUnitPublisher_explicitly_dont_make_build_unstable_and_make_it_failed());
+            }
+            return FormValidation.ok();
         }
     }
 }
