@@ -237,6 +237,24 @@ public class NUnitPublisherTest {
     }
 
     @Test
+    public void testDoNotMakeUnstablefTestsFail() throws Exception {
+        NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
+        publisher.setFailedTestsMakeBuildUnstable(false);
+        FreeStyleProject prj = j.createFreeStyleProject("foo");
+        prj.getBuildersList().add(new TestBuilder() {
+            @Override
+            public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+                build.getWorkspace().child("nunit.xml").copyFrom(this.getClass().getResourceAsStream("NUnit-failure.xml"));
+                return true;
+            }
+        });
+
+        prj.getPublishersList().add(publisher);
+        FreeStyleBuild b = prj.scheduleBuild2(0).get();
+        j.assertBuildStatus(Result.SUCCESS, b);
+    }
+
+    @Test
     public void testDoNotOverwriteResultsIfThereAreNoFilesDuringNextPublishments() throws Exception {
         NUnitPublisher publisherWithCorrectPattern = new NUnitPublisher("nunit.xml");
         NUnitPublisher publisherWithIncorrectPattern = new NUnitPublisher("nunit2.xml");
