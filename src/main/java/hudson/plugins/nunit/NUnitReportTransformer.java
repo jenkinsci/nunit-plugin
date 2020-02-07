@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,6 +38,8 @@ import org.xml.sax.SAXParseException;
 public class NUnitReportTransformer implements TestReportTransformer, Serializable {
 
     private static final String ILLEGAL_FILE_CHARS_REGEX = "[\\*/:<>\\?\\|\\\\\";]+";
+
+    private static final Logger LOGGER = Logger.getLogger(NUnitReportTransformer.class.getName());
 
 	private static final long serialVersionUID = 1L;
     
@@ -76,7 +80,9 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
             fileOutputStream.close();
         }
         splitJUnitFile(junitTargetFile, junitOutputPath);
-        junitTargetFile.delete();
+        if(!junitTargetFile.delete()) {
+            LOGGER.log(Level.WARNING, "Could not delete "+junitTargetFile);
+        }
     }
 
     private void initialize() throws TransformerFactoryConfigurationError, TransformerConfigurationException,

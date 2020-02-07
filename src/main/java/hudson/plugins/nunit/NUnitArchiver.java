@@ -48,22 +48,24 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
         String[] nunitFiles = findNUnitReports(new File(root));
         if (nunitFiles.length > 0) {
             File junitOutputPath = new File(root, junitDirectoryName);
-            junitOutputPath.mkdirs();
-    
-            for (String nunitFileName : nunitFiles) {
-                try(FileInputStream fileStream = new FileInputStream(new File(root, nunitFileName))) {
-                    unitReportTransformer.transform(fileStream, junitOutputPath);
-                    fileCount++;
-                } catch (TransformerException te) {
-                    throw new IOException(
-                            "Could not transform the NUnit report. Please report this issue to the plugin author", te);
-                } catch (SAXException se) {
-                    throw new IOException(
-                            "Could not transform the NUnit report. Please report this issue to the plugin author", se);
-                } catch (ParserConfigurationException pce) {
-                    throw new IOException(
-                            "Could not initialize the XML parser. Please report this issue to the plugin author", pce);
+            if(junitOutputPath.mkdirs()) {
+                for (String nunitFileName : nunitFiles) {
+                    try (FileInputStream fileStream = new FileInputStream(new File(root, nunitFileName))) {
+                        unitReportTransformer.transform(fileStream, junitOutputPath);
+                        fileCount++;
+                    } catch (TransformerException te) {
+                        throw new IOException(
+                                "Could not transform the NUnit report. Please report this issue to the plugin author", te);
+                    } catch (SAXException se) {
+                        throw new IOException(
+                                "Could not transform the NUnit report. Please report this issue to the plugin author", se);
+                    } catch (ParserConfigurationException pce) {
+                        throw new IOException(
+                                "Could not initialize the XML parser. Please report this issue to the plugin author", pce);
+                    }
                 }
+            } else {
+                retValue = false;
             }
         } else {
             retValue = false;

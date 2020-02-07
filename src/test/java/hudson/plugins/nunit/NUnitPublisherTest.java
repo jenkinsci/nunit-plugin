@@ -270,9 +270,9 @@ public class NUnitPublisherTest {
         thirdTestFile.copyFrom(this.getClass().getResourceAsStream("NUnit-correct3.xml"));
 
         job.setDefinition(new CpsFlowDefinition("node {\n" +
-                "    parallel(a: { nunit testResultsPattern: 'first-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false },\n" +
-                "             b: { nunit testResultsPattern: 'second-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false },\n" +
-                "             c: { nunit testResultsPattern: 'third-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false })\n" +
+                "    parallel('a': { nunit testResultsPattern: 'first-result.xml', debug: false },\n" +
+                "             'b': { nunit testResultsPattern: 'second-result.xml', debug: false },\n" +
+                "             'c': { nunit testResultsPattern: 'third-result.xml', debug: false })\n" +
                 "}\n", true
         ));
         WorkflowRun r = j.waitForCompletion(job.scheduleBuild2(0).waitForStart());
