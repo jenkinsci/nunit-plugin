@@ -1,8 +1,13 @@
 package hudson.plugins.nunit;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 
+import org.apache.commons.io.IOUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
@@ -11,6 +16,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.hudson.test.Issue;
+
+import javax.xml.transform.TransformerException;
 
 public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements FilenameFilter {
 
@@ -108,6 +115,31 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
     public void testInvalidXmlCharacters() throws Exception {
         transformer.transform(getClass().getResourceAsStream("NUnit-issue17521.xml"), tempFilePath);
         assertJunitFiles(2);
+    }
+
+    @Issue("SEC-1752")
+    @Test(expected=TransformerException.class)
+    public void testPreventXXEWithHttps() throws Exception {
+        transformer.transform(getClass().getResourceAsStream("NUnit-sec1752-https.xml"), tempFilePath);
+        assertJunitFiles(0);
+    }
+
+    @Issue("SEC-1752")
+    @Test(expected=TransformerException.class)
+    public void testPreventXXEWithFile() throws Exception {
+        File tempFile = new File(tempFilePath, "dummy.txt");
+
+        try(FileWriter output = new FileWriter(tempFile)) {
+            output.write("You should never see this");
+        }
+
+        InputStream input = getClass().getResourceAsStream("NUnit-sec1752-file.xml");
+        String content = IOUtils.toString(input, Charset.defaultCharset()).replace("__FILEPATH__", tempFile.getAbsolutePath());
+
+        try (InputStream transformStream = IOUtils.toInputStream(content)) {
+            transformer.transform(transformStream, tempFilePath);
+        }
+        assertJunitFiles(0);
     }
 
     public boolean accept(File dir, String name) {

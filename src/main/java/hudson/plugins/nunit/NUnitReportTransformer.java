@@ -5,7 +5,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,7 +23,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.input.BOMInputStream;
-import hudson.Functions;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,16 +38,23 @@ import org.xml.sax.SAXParseException;
  */
 public class NUnitReportTransformer implements TestReportTransformer, Serializable {
 
+    private static final Logger LOGGER = Logger.getLogger(NUnitReportTransformer.class.getName());
+
     private static final String ILLEGAL_FILE_CHARS_REGEX = "[\\*/:<>\\?\\|\\\\\";]+";
 
-	private static final long serialVersionUID = 1L;
-    
+    private static final long serialVersionUID = 1L;
+
     public static final String JUNIT_FILE_POSTFIX = ".xml";
     public static final String JUNIT_FILE_PREFIX = "TEST-";
 
     private static final int MAX_PATH = 255;
     private static final String TEMP_JUNIT_FILE_STR = "temp-junit.xml";
     public static final String NUNIT_TO_JUNIT_XSLFILE_STR = "nunit-to-junit.xsl";
+
+    private static final String DISALLOW_DOCTYPE_DECL = "http://apache.org/xml/features/disallow-doctype-decl";
+    private static final String EXTERNAL_GENERAL_ENTITIES = "http://xml.org/sax/features/external-general-entities";
+    private static final String EXTERNAL_PARAMETER_ENTITIES = "http://xml.org/sax/features/external-parameter-entities";
+    private static final String LOAD_EXTERNAL_DTD = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
 
     private transient boolean xslIsInitialized;
     private transient Transformer nunitTransformer;
@@ -82,17 +92,62 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
     private void initialize() throws TransformerFactoryConfigurationError, TransformerConfigurationException,
             ParserConfigurationException {
         if (!xslIsInitialized) {
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            TransformerFactory transformerFactory = createTransformer();
+
             nunitTransformer = transformerFactory.newTransformer(new StreamSource(this.getClass().getResourceAsStream(NUNIT_TO_JUNIT_XSLFILE_STR)));
             writerTransformer = transformerFactory.newTransformer();
-    
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+            DocumentBuilderFactory factory = createDocumentBuilderFactory();
             xmlDocumentBuilder = factory.newDocumentBuilder();
-            
+
             xslIsInitialized = true;
         }
     }
 
+    private TransformerFactory createTransformer() throws TransformerConfigurationException {
+        // the default class does not support the options needed for secure processing
+        TransformerFactory transformerFactory = TransformerFactory.newInstance("com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl", null);
+        transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        return transformerFactory;
+    }
+
+    private DocumentBuilderFactory createDocumentBuilderFactory() {
+        // the default class does not support the options needed for secure processing
+        DocumentBuilderFactory dFactory = DocumentBuilderFactory.newInstance("com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl", null);
+        HashMap<String, Boolean> features = new HashMap<>();
+
+        dFactory.setExpandEntityReferences(false);
+
+        features.put(DISALLOW_DOCTYPE_DECL, true);
+        features.put(EXTERNAL_GENERAL_ENTITIES, false);
+        features.put(EXTERNAL_PARAMETER_ENTITIES, false);
+        features.put(LOAD_EXTERNAL_DTD, false);
+        features.put(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+        for(String feature : features.keySet()) {
+            try {
+                dFactory.setFeature(feature, features.get(feature));
+            } catch(ParserConfigurationException e) {
+                LOGGER.log(Level.INFO, "Could not enable/disable feature: " + feature);
+            }
+        }
+
+        HashMap<String, String> attributes = new HashMap<>();
+        attributes.put(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        attributes.put(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        for(String attribute : attributes.keySet()) {
+            try {
+                dFactory.setAttribute(attribute, attributes.get(attribute));
+            } catch(IllegalArgumentException e) {
+                LOGGER.log(Level.INFO, "Could not set attribute: " + attribute);
+            }
+        }
+
+        dFactory.setXIncludeAware(false);
+        dFactory.setExpandEntityReferences(false);
+        return dFactory;
+    }
     /**
      * Splits the junit file into several junit files in the output path
      * 
