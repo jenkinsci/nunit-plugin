@@ -6,8 +6,10 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
@@ -115,6 +117,25 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
     public void testInvalidXmlCharacters() throws Exception {
         transformer.transform(getClass().getResourceAsStream("NUnit-issue17521.xml"), tempFilePath);
         assertJunitFiles(2);
+    }
+
+    @Issue("JENKINS-50162")
+    @Test
+    public void testNonAsciiCharacters() throws Exception {
+        transformer.transform(getClass().getResourceAsStream("NUnit-issue50162.xml"), tempFilePath);
+        assertJunitFiles(2);
+        boolean foundUmlaut = false;
+        for (File file : tempFilePath.listFiles(this)) {
+            Document result = new SAXReader().read(file);
+            List<Attribute> attributes = result.selectNodes("//*/@*");
+            for (Attribute attribute : attributes) {
+                if (attribute.getValue().contains("\u00c4")) {
+                    foundUmlaut = true;
+                    break;
+                }
+            }
+        }
+        Assert.assertTrue("Non ASCII characters are not preserved.", foundUmlaut);
     }
 
     @Issue("SEC-1752")

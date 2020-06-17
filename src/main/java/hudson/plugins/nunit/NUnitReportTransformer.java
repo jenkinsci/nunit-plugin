@@ -1,10 +1,12 @@
 package hudson.plugins.nunit;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +24,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -70,18 +71,18 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
      * @throws IOException thrown if there was any problem with the transform.
      * @throws TransformerException
      * @throws SAXException
-     * @throws ParserConfigurationException 
+     * @throws ParserConfigurationException
      */
     public void transform(InputStream nunitFileStream, File junitOutputPath) throws IOException, TransformerException,
             SAXException, ParserConfigurationException {
-        
+
         initialize();
-        
+
         File junitTargetFile = new File(junitOutputPath, TEMP_JUNIT_FILE_STR);
         FileOutputStream fileOutputStream = new FileOutputStream(junitTargetFile);
         try {
-            InputStream is = new InvalidXmlInputStream(new BOMInputStream(nunitFileStream), '?');
-            nunitTransformer.transform(new StreamSource(is), new StreamResult(fileOutputStream));
+            Reader reader = new BufferedReader(new InvalidXmlStreamReader(nunitFileStream, '?'));
+            nunitTransformer.transform(new StreamSource(reader), new StreamResult(fileOutputStream));
         } finally {
             fileOutputStream.close();
         }
