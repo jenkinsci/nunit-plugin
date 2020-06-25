@@ -31,4 +31,4 @@ For more information refer to [NUnit Pipeline Steps](https://www.jenkins.io/doc/
 
 ## Version History
 
-See the [changelog](docs/CHANGELOG.md)
+See the [releases](https://github.com/jenkinsci/nunit-plugin/releases) and the [changelog](docs/CHANGELOG.md)
