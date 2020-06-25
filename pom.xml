@@ -34,6 +34,12 @@
             <email>slide.o.mix@gmail.com</email>
             <timezone>-7</timezone>
         </developer>
+        <developer>
+            <id>smorita</id>
+            <name>Shin-ichi Morita</name>
+            <email>morita.being@gmail.com</email>
+            <timezone>+9</timezone>
+        </developer>
     </developers>
 
     <scm>
