@@ -13,6 +13,11 @@
 This plugin allows you to publish [NUnit](http://www.nunit.org/) test results.
 
 ## Pipeline example
+
+For more information refer to [NUnit Pipeline Steps](https://www.jenkins.io/doc/pipeline/steps/nunit/)
+
+### For Scripted pipeline
+
 ```
 node {
 
@@ -27,7 +32,29 @@ node {
 }
 ```
 
-For more information refer to [NUnit Pipeline Steps](https://www.jenkins.io/doc/pipeline/steps/nunit/)
+### For Declarative pipeline
+
+```
+pipeline {
+    agent any
+
+    ...
+
+    stages {
+
+        ...
+
+        stage("Publish NUnit Test Report") {
+            steps {
+                nunit testResultsPattern: 'TestResult.xml'
+            }
+        }
+
+        ...
+
+    }
+}
+```
 
 ## Version History
 
