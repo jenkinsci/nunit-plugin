@@ -275,14 +275,6 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
                     return existingTestResults;
                 }
             }
-
-			/**
-			 * {@inheritDoc}
-			 */
-            public void checkRoles(RoleChecker roleChecker) throws SecurityException {
-                // It is all right to run nunit-plugin on master or slave.
-                roleChecker.check(this, Roles.MASTER);
-            }
         });
         return result;
     }
