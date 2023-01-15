@@ -48,7 +48,7 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
         this.testResultsPattern = testResultsPattern;
         this.unitReportTransformer = unitReportTransformer;
         this.failIfNoResults = failIfNoResults;
-        this.warningNUnitTestResultHanlingBehavior = "skipped";
+        this.warningNUnitTestResultHandlingBehavior = "skipped";
     }
 
     public NUnitArchiver(String root, TaskListener listener, String testResultsPattern, TestReportTransformer unitReportTransformer, boolean failIfNoResults, String warningNUnitTestResultHanlingBehavior) {
