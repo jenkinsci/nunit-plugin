@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE test [
-        <!ENTITY xxe SYSTEM "https://raw.githubusercontent.com/jenkinsci/nunit-plugin/master/.gitignore">
+        <!ENTITY xxe SYSTEM "https://raw.githubusercontent.com/jenkinsci/nunit-plugin/main/.gitignore">
         ]>
 <!--This file represents the results of running a test suite-->
 <test-results name="/home/erik/coding/test/nunittests/Tests.dll" total="4" failures="1" not-run="0" date="2007-07-27" time="11:18:43">

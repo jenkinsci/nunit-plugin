@@ -1,6 +1,6 @@
 # NUnit Plugin
 
-[![Build Status](https://ci.jenkins.io/job/Plugins/job/nunit-plugin/job/master/badge/icon)](https://ci.jenkins.io/job/Plugins/job/nunit-plugin/job/master/)
+[![Build Status](https://ci.jenkins.io/job/Plugins/job/nunit-plugin/job/main/badge/icon)](https://ci.jenkins.io/job/Plugins/job/nunit-plugin/job/main/)
 [![Contributors](https://img.shields.io/github/contributors/jenkinsci/nunit-plugin.svg)](https://github.com/jenkinsci/nunit-plugin/graphs/contributors)
 [![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/nunit.svg)](https://plugins.jenkins.io/nunit)
 [![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/nunit.svg?color=blue)](https://plugins.jenkins.io/nunit)
