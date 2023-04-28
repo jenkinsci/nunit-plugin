@@ -187,12 +187,12 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
 
     /**
      * Record the test results into the current build.
-     * @param junitFilePattern
-     * @param build
-     * @param listener
-     * @return
-     * @throws InterruptedException
-     * @throws IOException
+     * @param junitFilePattern JUnit file pattern
+     * @param build The current build
+     * @param listener Task listner
+     * @return True or false
+     * @throws InterruptedException InterruptedException
+     * @throws IOException IOException
      */
     private boolean recordTestResult(String junitFilePattern, Run<?, ?> build, TaskListener listener, FilePath filePath)
             throws InterruptedException, IOException {
@@ -241,13 +241,13 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
 
     /**
      * Collect the test results from the files
-     * @param junitFilePattern
-     * @param build
+     * @param junitFilePattern JUnit file pattern
+     * @param build The current build
      * @param existingTestResults existing test results to add results to
      * @param buildTime
      * @return a test result
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws IOException IOException
+     * @throws InterruptedException InterruptedException
      */
     private TestResult getTestResult(final String junitFilePattern, Run<?, ?> build,
                                      final TestResult existingTestResults, final long buildTime,

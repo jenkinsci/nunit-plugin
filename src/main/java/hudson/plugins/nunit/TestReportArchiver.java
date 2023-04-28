@@ -5,11 +5,7 @@ package hudson.plugins.nunit;
  */
 public interface TestReportArchiver {
     /**
-     * Performs the archiving of tests
-     * 
-     * @param build the current build
-     * @param launcher the launcher
-     * @param listener build listener
+     * Performs the archiving of test
      * @return true, if it was successful; false otherwise
      */
     boolean archive() throws java.lang.InterruptedException,

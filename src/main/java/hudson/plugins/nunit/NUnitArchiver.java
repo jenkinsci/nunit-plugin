@@ -13,6 +13,7 @@ import org.apache.tools.ant.types.FileSet;
 
 import org.xml.sax.SAXException;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Util;
 import hudson.model.TaskListener;
 /**
@@ -43,6 +44,7 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
     }
 
     /** {@inheritDoc} */
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     public Boolean call() throws IOException {
         boolean retValue = true;
         String[] nunitFiles = findNUnitReports(new File(root));

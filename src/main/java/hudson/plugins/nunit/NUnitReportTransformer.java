@@ -31,6 +31,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Transforms a NUnit report into seperate JUnit reports. The NUnit report can contain several test cases and the JUnit
  * report that is read by Jenkins should only contain one. This class will split up one NUnit report into several JUnit
@@ -69,10 +71,11 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
      * @param nunitFileStream the nunit file stream to transform
      * @param junitOutputPath the output path to put all junit files
      * @throws IOException thrown if there was any problem with the transform.
-     * @throws TransformerException
-     * @throws SAXException
-     * @throws ParserConfigurationException
+     * @throws TransformerException TransformerException
+     * @throws SAXException SAXException
+     * @throws ParserConfigurationException ParserConfigurationException
      */
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     public void transform(InputStream nunitFileStream, File junitOutputPath) throws IOException, TransformerException,
             SAXException, ParserConfigurationException {
 
@@ -113,6 +116,7 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
         return transformerFactory;
     }
 
+    @SuppressFBWarnings("WMI_WRONG_MAP_ITERATOR")
     private DocumentBuilderFactory createDocumentBuilderFactory() {
         // the default class does not support the options needed for secure processing
         DocumentBuilderFactory dFactory = DocumentBuilderFactory.newInstance("com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl", null);
@@ -154,9 +158,9 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
      * 
      * @param junitFile report containing one or more junit test suite tags
      * @param junitOutputPath the path to put all junit files
-     * @throws IOException
-     * @throws SAXException
-     * @throws TransformerException
+     * @throws IOException IOException
+     * @throws SAXException SAXException
+     * @throws TransformerException TransformerException
      */
     private void splitJUnitFile(File junitFile, File junitOutputPath) throws SAXException, IOException,
             TransformerException {

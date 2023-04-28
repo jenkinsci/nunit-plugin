@@ -1,0 +1,2 @@
+_extends: .github
+tag-template: nunit-$NEXT_MINOR_VERSION
