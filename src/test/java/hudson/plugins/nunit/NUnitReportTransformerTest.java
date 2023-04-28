@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.junit.After;
 import org.junit.Assert;
@@ -127,9 +128,9 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
         boolean foundUmlaut = false;
         for (File file : tempFilePath.listFiles(this)) {
             Document result = new SAXReader().read(file);
-            List<Attribute> attributes = result.selectNodes("//*/@*");
-            for (Attribute attribute : attributes) {
-                if (attribute.getValue().contains("\u00c4")) {
+            List<Node> nodes = result.selectNodes("//*/@*");
+            for (Node node : nodes) {
+                if (node instanceof Attribute && ((Attribute) node).getValue().contains("\u00c4")) {
                     foundUmlaut = true;
                     break;
                 }

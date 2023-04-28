@@ -1,26 +1,38 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.jenkins-ci.plugins</groupId>
-        <artifactId>plugin</artifactId>
-        <version>2.30</version>
-    </parent>
+  <parent>
+    <groupId>org.jenkins-ci.plugins</groupId>
+    <artifactId>plugin</artifactId>
+    <version>4.62</version>
+    <relativePath />
+  </parent>
 
     <artifactId>nunit</artifactId>
     <packaging>hpi</packaging>
-    <version>0.29-SNAPSHOT</version>
+    <version>${revision}${changelist}</version>
     <name>Jenkins NUnit plugin</name>
 	<description>Allows handling NUnit results similar to how JUnit results are handled</description>
     <url>https://github.com/jenkinsci/nunit-plugin</url>
 
     <properties>
-        <jenkins.version>1.642.3</jenkins.version>
-        <jenkins-test-harness.version>2.34</jenkins-test-harness.version>
-        <java.level>7</java.level>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <revision>0.29</revision>
+        <changelist>-SNAPSHOT</changelist>
+        <gitHubRepo>jenkinsci/nunit-plugin</gitHubRepo>
+        <jenkins.version>2.361.4</jenkins.version>
+        <gitHubRepo>jenkinsci/nunit-plugin</gitHubRepo>
     </properties>
-
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.jenkins.tools.bom</groupId>
+                <artifactId>bom-2.361.x</artifactId>
+                <version>2025.v816d28f1e04f</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <developers>
         <developer>
             <id>redsolo</id>
@@ -43,10 +55,10 @@
     </developers>
 
     <scm>
-        <connection>scm:git:ssh://github.com/jenkinsci/nunit-plugin.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/jenkinsci/nunit-plugin.git</developerConnection>
-        <url>https://svn.jenkins-ci.org/trunk/hudson/plugins/nunit/</url>
-        <tag>HEAD</tag>
+        <connection>scm:git:https://github.com/${gitHubRepo}.git</connection>
+        <developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
+        <url>https://github.com/${gitHubRepo}</url>
+        <tag>${scmTag}</tag>
     </scm>
 
     <build>
@@ -61,67 +73,48 @@
             </plugin>
         </plugins>
     </build>
-
-
     <dependencies>
-        <!-- junit-plugin -->
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>junit</artifactId>
-            <version>1.20</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>structs</artifactId>
-            <version>1.2</version>
         </dependency>
-
-        <!-- testing -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>1.9.5</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>hamcrest-core</artifactId>
-                    <groupId>org.hamcrest</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
-            <version>1.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>xmlunit</groupId>
             <artifactId>xmlunit</artifactId>
-            <version>1.1</version>
+            <version>1.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
             <artifactId>workflow-aggregator</artifactId>
-            <version>2.2</version>
+            <version>596.v8c21c963d92d</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <repositories>
         <repository>
             <id>repo.jenkins-ci.org</id>
             <url>https://repo.jenkins-ci.org/public/</url>
         </repository>
     </repositories>
-
     <pluginRepositories>
         <pluginRepository>
             <id>repo.jenkins-ci.org</id>
             <url>https://repo.jenkins-ci.org/public/</url>
         </pluginRepository>
     </pluginRepositories>
-</project>  
-  
-
+</project>
