@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>4.62</version>
+    <version>4.65</version>
     <relativePath />
   </parent>
 
@@ -31,46 +31,12 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <developers>
-        <developer>
-            <id>redsolo</id>
-            <name>Erik Ramfelt</name>
-            <email>eramfelt@gmail.com</email>
-            <timezone>+1</timezone>
-        </developer>
-        <developer>
-            <id>slide_o_mix</id>
-            <name>Alex Earl</name>
-            <email>slide.o.mix@gmail.com</email>
-            <timezone>-7</timezone>
-        </developer>
-        <developer>
-            <id>smorita</id>
-            <name>Shin-ichi Morita</name>
-            <email>morita.being@gmail.com</email>
-            <timezone>+9</timezone>
-        </developer>
-    </developers>
-
     <scm>
         <connection>scm:git:https://github.com/${gitHubRepo}.git</connection>
         <developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
         <url>https://github.com/${gitHubRepo}</url>
         <tag>${scmTag}</tag>
     </scm>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <configuration>
-                    <xmlOutput>true</xmlOutput>
-                    <failOnError>false</failOnError>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
@@ -87,7 +53,7 @@
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
+            <artifactId>hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -98,8 +64,17 @@
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
-            <artifactId>workflow-aggregator</artifactId>
-            <version>596.v8c21c963d92d</version>
+            <artifactId>workflow-job</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-cps</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins.workflow</groupId>
+            <artifactId>workflow-basic-steps</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
