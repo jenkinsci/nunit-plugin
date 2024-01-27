@@ -2,12 +2,11 @@ name: updatecli
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 3 * * *'
 
 jobs:
   updatecli:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'jenkinsci'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
