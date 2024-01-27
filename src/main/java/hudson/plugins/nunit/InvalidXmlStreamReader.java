@@ -2,9 +2,9 @@ package hudson.plugins.nunit;
 
 import java.io.BufferedInputStream;
 import java.io.FilterReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
 import java.io.Reader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -72,9 +72,7 @@ public class InvalidXmlStreamReader extends FilterReader {
 
     private boolean isValid(int input) {
         if (input < 0x20) return validControls[input];
-        return input <= 0xD7FF ||
-               input >= 0xE000 && input <= 0xFFFD ||
-               input >= 0x10000 && input <= 0x10FFFF;
+        return input <= 0xD7FF || input >= 0xE000 && input <= 0xFFFD || input >= 0x10000 && input <= 0x10FFFF;
     }
 
     /**
@@ -87,7 +85,7 @@ public class InvalidXmlStreamReader extends FilterReader {
     public int read() throws IOException {
         int read = super.read();
         if (read >= 0 && !isValid(read)) {
-            return (int)replacement;
+            return (int) replacement;
         }
         return read;
     }

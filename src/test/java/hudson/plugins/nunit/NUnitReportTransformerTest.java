@@ -1,13 +1,12 @@
 package hudson.plugins.nunit;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
-
+import javax.xml.transform.TransformerException;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -19,8 +18,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.hudson.test.Issue;
-
-import javax.xml.transform.TransformerException;
 
 public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements FilenameFilter {
 
@@ -73,7 +70,6 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
         transformer.transform(getClass().getResourceAsStream("NUnit-issue44315.xml"), tempFilePath);
         assertJunitFiles(195);
     }
-
 
     @Test
     public void testIssue44315_2() throws Exception {
@@ -140,23 +136,24 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
     }
 
     @Issue("SEC-1752")
-    @Test(expected=TransformerException.class)
+    @Test(expected = TransformerException.class)
     public void testPreventXXEWithHttps() throws Exception {
         transformer.transform(getClass().getResourceAsStream("NUnit-sec1752-https.xml"), tempFilePath);
         assertJunitFiles(0);
     }
 
     @Issue("SEC-1752")
-    @Test(expected=TransformerException.class)
+    @Test(expected = TransformerException.class)
     public void testPreventXXEWithFile() throws Exception {
         File tempFile = new File(tempFilePath, "dummy.txt");
 
-        try(FileWriter output = new FileWriter(tempFile)) {
+        try (FileWriter output = new FileWriter(tempFile)) {
             output.write("You should never see this");
         }
 
         InputStream input = getClass().getResourceAsStream("NUnit-sec1752-file.xml");
-        String content = IOUtils.toString(input, Charset.defaultCharset()).replace("__FILEPATH__", tempFile.getAbsolutePath());
+        String content =
+                IOUtils.toString(input, Charset.defaultCharset()).replace("__FILEPATH__", tempFile.getAbsolutePath());
 
         try (InputStream transformStream = IOUtils.toInputStream(content)) {
             transformer.transform(transformStream, tempFilePath);

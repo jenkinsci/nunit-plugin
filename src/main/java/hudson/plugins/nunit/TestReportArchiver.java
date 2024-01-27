@@ -8,6 +8,5 @@ public interface TestReportArchiver {
      * Performs the archiving of test
      * @return true, if it was successful; false otherwise
      */
-    boolean archive() throws java.lang.InterruptedException,
-            java.io.IOException;
+    boolean archive() throws java.lang.InterruptedException, java.io.IOException;
 }

@@ -3,10 +3,8 @@ package hudson.plugins.nunit;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -15,11 +13,11 @@ import org.xml.sax.SAXException;
 public interface TestReportTransformer {
     /**
      * Transforms the nunit file stream to junit files in the specified output path
-     * 
+     *
      * @param nunitFileStream nunit report file stream
      * @param junitOutputPath the output path to store junit reports to
-     * @throws ParserConfigurationException 
+     * @throws ParserConfigurationException
      */
-    void transform(InputStream nunitFileStream, File junitOutputPath) throws IOException, TransformerException,
-            SAXException, ParserConfigurationException;
+    void transform(InputStream nunitFileStream, File junitOutputPath)
+            throws IOException, TransformerException, SAXException, ParserConfigurationException;
 }
