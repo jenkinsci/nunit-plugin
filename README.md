@@ -61,3 +61,12 @@ pipeline {
 ## Version History
 
 See the [releases](https://github.com/jenkinsci/nunit-plugin/releases) and the [changelog](docs/CHANGELOG.md)
+
+## Contributing
+
+Refer to our [contribution guidelines](https://github.com/jenkinsci/.github/blob/master/CONTRIBUTING.md)
+
+## LICENSE
+
+Licensed under MIT, see [LICENSE](LICENSE.md)
+
