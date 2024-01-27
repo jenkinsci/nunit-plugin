@@ -20,7 +20,8 @@ public class InvalidXmlStreamReader extends FilterReader {
         public final Reader reader;
 
         public Source(InputStream in) throws IOException {
-            InputStream is = new BufferedInputStream(new BOMInputStream(in));
+            InputStream is = new BufferedInputStream(
+                    BOMInputStream.builder().setInputStream(in).get());
             is.mark(1024);
             String encoding;
             try {

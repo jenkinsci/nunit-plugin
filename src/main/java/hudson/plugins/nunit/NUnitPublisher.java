@@ -8,6 +8,7 @@ import hudson.Launcher;
 import hudson.Util;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
+import hudson.model.Job;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
@@ -65,30 +66,6 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
      */
     private boolean failedTestsFailBuild;
 
-    @Deprecated
-    public NUnitPublisher(
-            String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver) {
-        this(testResultsPattern, debug, keepJUnitReports, skipJUnitArchiver, Boolean.TRUE, Boolean.FALSE);
-    }
-
-    @Deprecated
-    public NUnitPublisher(
-            String testResultsPattern,
-            boolean debug,
-            boolean keepJUnitReports,
-            boolean skipJUnitArchiver,
-            Boolean failIfNoResults,
-            Boolean failedTestsFailBuild) {
-        this.testResultsPattern = testResultsPattern;
-        this.debug = debug;
-        if (this.debug) {
-            this.keepJUnitReports = keepJUnitReports;
-            this.skipJUnitArchiver = skipJUnitArchiver;
-        }
-        this.failIfNoResults = BooleanUtils.toBooleanDefaultIfNull(failIfNoResults, Boolean.TRUE);
-        this.failedTestsFailBuild = BooleanUtils.toBooleanDefaultIfNull(failedTestsFailBuild, Boolean.FALSE);
-    }
-
     @DataBoundConstructor
     public NUnitPublisher(String testResultsPattern) {
         this.testResultsPattern = testResultsPattern;
@@ -96,13 +73,16 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
     }
 
     public Object readResolve() {
-        return new NUnitPublisher(
-                testResultsPattern,
-                debug,
-                keepJUnitReports,
-                skipJUnitArchiver,
-                BooleanUtils.toBooleanDefaultIfNull(failIfNoResults, Boolean.TRUE),
-                BooleanUtils.toBooleanDefaultIfNull(failedTestsFailBuild, Boolean.FALSE));
+        NUnitPublisher nunitPublisher = new NUnitPublisher(testResultsPattern);
+        nunitPublisher.debug = this.debug;
+        if (nunitPublisher.debug) {
+            nunitPublisher.keepJUnitReports = this.keepJUnitReports;
+            nunitPublisher.skipJUnitArchiver = this.skipJUnitArchiver;
+        }
+        nunitPublisher.failIfNoResults = BooleanUtils.toBooleanDefaultIfNull(this.failIfNoResults, Boolean.TRUE);
+        nunitPublisher.failedTestsFailBuild =
+                BooleanUtils.toBooleanDefaultIfNull(this.failedTestsFailBuild, Boolean.FALSE);
+        return nunitPublisher;
     }
 
     public String getTestResultsPattern() {
@@ -173,10 +153,11 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Action getProjectAction(AbstractProject<?, ?> project) {
         TestResultProjectAction action = project.getAction(TestResultProjectAction.class);
         if (action == null) {
-            return new TestResultProjectAction(project);
+            return new TestResultProjectAction((Job) project);
         } else {
             return action;
         }
@@ -278,9 +259,9 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
                     }
                 }
                 if (existingTestResults == null) {
-                    return new TestResult(buildTime, ds, true);
+                    return new TestResult(buildTime, ds, true, false, null, false);
                 } else {
-                    existingTestResults.parse(buildTime, ds);
+                    existingTestResults.parse(buildTime, ds, null);
                     return existingTestResults;
                 }
             }
