@@ -2,7 +2,6 @@ package hudson.plugins.nunit;
 
 import hudson.FilePath;
 import hudson.Util;
-
 import java.io.File;
 
 public abstract class AbstractWorkspaceTest {

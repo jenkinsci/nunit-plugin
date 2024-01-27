@@ -4,7 +4,6 @@ import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
 import hudson.tasks.test.AbstractTestResultAction;
-
 import org.jvnet.hudson.test.HudsonTestCase;
 import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.recipes.LocalData;

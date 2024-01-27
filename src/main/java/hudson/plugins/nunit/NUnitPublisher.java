@@ -1,38 +1,16 @@
 package hudson.plugins.nunit;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.UUID;
-
-import javax.annotation.Nonnull;
-import javax.xml.transform.TransformerException;
-
-import jenkins.MasterToSlaveFileCallable;
-import jenkins.security.MasterToSlaveCallable;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.types.FileSet;
-import org.jenkinsci.Symbol;
-import org.jenkinsci.remoting.RoleChecker;
-import org.jenkinsci.remoting.RoleSensitive;
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
-import hudson.FilePath.FileCallable;
 import hudson.Launcher;
 import hudson.Util;
-import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
-import hudson.model.BuildListener;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
@@ -40,31 +18,41 @@ import hudson.tasks.Recorder;
 import hudson.tasks.junit.TestResult;
 import hudson.tasks.junit.TestResultAction;
 import hudson.tasks.test.TestResultProjectAction;
-import jenkins.security.Roles;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.UUID;
+import javax.annotation.Nonnull;
+import jenkins.security.MasterToSlaveCallable;
 import jenkins.tasks.SimpleBuildStep;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.FileSet;
+import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
 /**
  * Class that records NUnit test reports into Jenkins.
- * 
+ *
  * @author Erik Ramfelt
  */
 public class NUnitPublisher extends Recorder implements Serializable, SimpleBuildStep {
 
     private static final long serialVersionUID = 1L;
 
-    private static transient final String PLUGIN_NUNIT = "/plugin/nunit/";
+    private static final transient String PLUGIN_NUNIT = "/plugin/nunit/";
 
     private String testResultsPattern;
     private boolean debug = false;
     private boolean keepJUnitReports = false;
     private boolean skipJUnitArchiver = false;
     private Double healthScaleFactor;
-    
+
     /**
      * <p>Flag that when set, <strong>marks the build as failed if there are
      * no test results</strong>.</p>
-     * 
+     *
      * <p>Defaults to <code>true</code>.</p>
      */
     private boolean failIfNoResults;
@@ -78,13 +66,19 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
     private boolean failedTestsFailBuild;
 
     @Deprecated
-    public NUnitPublisher(String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver) {
-    	this(testResultsPattern, debug, keepJUnitReports, skipJUnitArchiver, Boolean.TRUE, Boolean.FALSE);
+    public NUnitPublisher(
+            String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver) {
+        this(testResultsPattern, debug, keepJUnitReports, skipJUnitArchiver, Boolean.TRUE, Boolean.FALSE);
     }
-    
+
     @Deprecated
-    public NUnitPublisher(String testResultsPattern, boolean debug, boolean keepJUnitReports, boolean skipJUnitArchiver,
-                          Boolean failIfNoResults, Boolean failedTestsFailBuild) {
+    public NUnitPublisher(
+            String testResultsPattern,
+            boolean debug,
+            boolean keepJUnitReports,
+            boolean skipJUnitArchiver,
+            Boolean failIfNoResults,
+            Boolean failedTestsFailBuild) {
         this.testResultsPattern = testResultsPattern;
         this.debug = debug;
         if (this.debug) {
@@ -100,39 +94,42 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
         this.testResultsPattern = testResultsPattern;
         this.failIfNoResults = true;
     }
-    
+
     public Object readResolve() {
-    	return new NUnitPublisher(
-			testResultsPattern, 
-			debug, 
-			keepJUnitReports, 
-			skipJUnitArchiver, 
-			BooleanUtils.toBooleanDefaultIfNull(failIfNoResults, Boolean.TRUE),
-            BooleanUtils.toBooleanDefaultIfNull(failedTestsFailBuild, Boolean.FALSE));
+        return new NUnitPublisher(
+                testResultsPattern,
+                debug,
+                keepJUnitReports,
+                skipJUnitArchiver,
+                BooleanUtils.toBooleanDefaultIfNull(failIfNoResults, Boolean.TRUE),
+                BooleanUtils.toBooleanDefaultIfNull(failedTestsFailBuild, Boolean.FALSE));
     }
 
     public String getTestResultsPattern() {
         return testResultsPattern;
     }
+
     @DataBoundSetter
-    public void setTestResultsPattern(String testResultsPattern){
+    public void setTestResultsPattern(String testResultsPattern) {
         this.testResultsPattern = testResultsPattern;
     }
 
     public boolean getDebug() {
         return debug;
     }
+
     @DataBoundSetter
-    public void setDebug(boolean debug){
+    public void setDebug(boolean debug) {
         this.debug = debug;
     }
 
     public boolean getKeepJUnitReports() {
         return keepJUnitReports;
     }
+
     @DataBoundSetter
-    public void setKeepJUnitReports(boolean keepJUnitReports){
-        if(debug) {
+    public void setKeepJUnitReports(boolean keepJUnitReports) {
+        if (debug) {
             this.keepJUnitReports = keepJUnitReports;
         }
     }
@@ -140,6 +137,7 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
     public double getHealthScaleFactor() {
         return healthScaleFactor == null ? 1.0 : healthScaleFactor;
     }
+
     @DataBoundSetter
     public void setHealthScaleFactor(double healthScaleFactor) {
         this.healthScaleFactor = Math.max(0.0, healthScaleFactor);
@@ -148,17 +146,19 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
     public boolean getSkipJUnitArchiver() {
         return skipJUnitArchiver;
     }
+
     @DataBoundSetter
-    public void setSkipJUnitArchiver(boolean skipJUnitArchiver){
-        if(debug) {
+    public void setSkipJUnitArchiver(boolean skipJUnitArchiver) {
+        if (debug) {
             this.skipJUnitArchiver = skipJUnitArchiver;
         }
     }
-    
+
     public boolean getFailIfNoResults() {
-		return failIfNoResults;
-	}
-	@DataBoundSetter
+        return failIfNoResults;
+    }
+
+    @DataBoundSetter
     public void setFailIfNoResults(boolean failIfNoResults) {
         this.failIfNoResults = failIfNoResults;
     }
@@ -166,13 +166,14 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
     public boolean getFailedTestsFailBuild() {
         return failedTestsFailBuild;
     }
+
     @DataBoundSetter
     public void setFailedTestsFailBuild(boolean failedTestsFailBuild) {
         this.failedTestsFailBuild = failedTestsFailBuild;
     }
 
     @Override
-    public Action getProjectAction(AbstractProject<?,?> project) {
+    public Action getProjectAction(AbstractProject<?, ?> project) {
         TestResultProjectAction action = project.getAction(TestResultProjectAction.class);
         if (action == null) {
             return new TestResultProjectAction(project);
@@ -217,7 +218,10 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
 
             action.setHealthScaleFactor(getHealthScaleFactor());
 
-            if (this.failIfNoResults && result.getPassCount() == 0 && result.getFailCount() == 0 && result.getSkipCount() == 0) {
+            if (this.failIfNoResults
+                    && result.getPassCount() == 0
+                    && result.getFailCount() == 0
+                    && result.getSkipCount() == 0) {
                 listener.getLogger().println("None of the test reports contained any result");
                 build.setResult(Result.FAILURE);
                 return true;
@@ -249,24 +253,29 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
      * @throws IOException IOException
      * @throws InterruptedException InterruptedException
      */
-    private TestResult getTestResult(final String junitFilePattern, Run<?, ?> build,
-                                     final TestResult existingTestResults, final long buildTime,
-                                     final FilePath filePath) throws IOException, InterruptedException {
+    private TestResult getTestResult(
+            final String junitFilePattern,
+            Run<?, ?> build,
+            final TestResult existingTestResults,
+            final long buildTime,
+            final FilePath filePath)
+            throws IOException, InterruptedException {
         TestResult result = filePath.act(new MasterToSlaveCallable<TestResult, IOException>() {
-			private static final long serialVersionUID = -8917897415838795523L;
+            private static final long serialVersionUID = -8917897415838795523L;
 
-			public TestResult call() throws IOException {
-                FileSet fs = Util.createFileSet(new File(filePath.getRemote()),junitFilePattern);
+            public TestResult call() throws IOException {
+                FileSet fs = Util.createFileSet(new File(filePath.getRemote()), junitFilePattern);
                 DirectoryScanner ds = fs.getDirectoryScanner();
 
                 String[] files = ds.getIncludedFiles();
-                if(files.length==0) {
-                	if (failIfNoResults) {
-	                    // no test result. Most likely a configuration error or fatal problem
-	                    throw new AbortException("No test report files were found or the NUnit input XML file contained no tests.");
-                	} else {
-                		return new TestResult();
-                	}
+                if (files.length == 0) {
+                    if (failIfNoResults) {
+                        // no test result. Most likely a configuration error or fatal problem
+                        throw new AbortException(
+                                "No test report files were found or the NUnit input XML file contained no tests.");
+                    } else {
+                        return new TestResult();
+                    }
                 }
                 if (existingTestResults == null) {
                     return new TestResult(buildTime, ds, true);
@@ -280,7 +289,9 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
     }
 
     @Override
-    public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath ws, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
+    public void perform(
+            @Nonnull Run<?, ?> run, @Nonnull FilePath ws, @Nonnull Launcher launcher, @Nonnull TaskListener listener)
+            throws InterruptedException, IOException {
         if (debug) {
             listener.getLogger().println("NUnit publisher running in debug mode.");
         }
@@ -290,8 +301,15 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
             String resolvedTestResultsPattern = env.expand(testResultsPattern);
 
             listener.getLogger().println("Recording NUnit tests results");
-            String junitTempReportsDirectoryName = "tempJunitReports" + UUID.randomUUID().toString();
-            NUnitArchiver transformer = new NUnitArchiver(ws.getRemote(), junitTempReportsDirectoryName, listener, resolvedTestResultsPattern, new NUnitReportTransformer(), failIfNoResults);
+            String junitTempReportsDirectoryName =
+                    "tempJunitReports" + UUID.randomUUID().toString();
+            NUnitArchiver transformer = new NUnitArchiver(
+                    ws.getRemote(),
+                    junitTempReportsDirectoryName,
+                    listener,
+                    resolvedTestResultsPattern,
+                    new NUnitReportTransformer(),
+                    failIfNoResults);
             result = ws.act(transformer);
 
             if (result) {
@@ -309,11 +327,12 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
                 }
             } else {
                 if (this.getFailIfNoResults()) {
-                    // this should only happen if failIfNoResults is true and there are no result files, see NUnitArchiver.
+                    // this should only happen if failIfNoResults is true and there are no result files, see
+                    // NUnitArchiver.
                     run.setResult(Result.FAILURE);
                 }
             }
-        } catch(AbortException e) {
+        } catch (AbortException e) {
             // this is used internally to signal issues, so we just rethrow instead of letting the IOException
             // catch it below.
             throw e;
@@ -323,7 +342,8 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
         }
     }
 
-    @Extension @Symbol("nunit")
+    @Extension
+    @Symbol("nunit")
     public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
         public DescriptorImpl() {

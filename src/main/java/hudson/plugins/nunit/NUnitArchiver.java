@@ -1,24 +1,21 @@
 package hudson.plugins.nunit;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import jenkins.security.MasterToSlaveCallable;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.types.FileSet;
-
-import org.xml.sax.SAXException;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Util;
 import hudson.model.TaskListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import jenkins.security.MasterToSlaveCallable;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.FileSet;
+import org.xml.sax.SAXException;
+
 /**
  * Class responsible for transforming NUnit to JUnit files and then run them all through the JUnit result archiver.
- * 
+ *
  * @author Erik Ramfelt
  */
 public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
@@ -34,7 +31,13 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
 
     private int fileCount;
 
-    public NUnitArchiver(String root, String junitDirectoryName, TaskListener listener, String testResultsPattern, TestReportTransformer unitReportTransformer, boolean failIfNoResults) {
+    public NUnitArchiver(
+            String root,
+            String junitDirectoryName,
+            TaskListener listener,
+            String testResultsPattern,
+            TestReportTransformer unitReportTransformer,
+            boolean failIfNoResults) {
         this.root = root;
         this.junitDirectoryName = junitDirectoryName;
         this.listener = listener;
@@ -51,9 +54,9 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
         if (nunitFiles.length > 0) {
             File junitOutputPath = new File(root, junitDirectoryName);
             junitOutputPath.mkdirs();
-    
+
             for (String nunitFileName : nunitFiles) {
-                try(FileInputStream fileStream = new FileInputStream(new File(root, nunitFileName))) {
+                try (FileInputStream fileStream = new FileInputStream(new File(root, nunitFileName))) {
                     unitReportTransformer.transform(fileStream, junitOutputPath);
                     fileCount++;
                 } catch (TransformerException te) {
@@ -80,7 +83,7 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
 
     /**
      * Return all NUnit report files
-     * 
+     *
      * @param parentPath parent
      * @return an array of strings
      */
@@ -90,12 +93,12 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
 
         String[] nunitFiles = ds.getIncludedFiles();
         if (nunitFiles.length == 0) {
-        	if (this.failIfNoResults) {
-	            // no test result. Most likely a configuration error or fatal problem
-	            listener.fatalError("No NUnit test report files were found. Configuration error?");
-        	} else {
-        		listener.getLogger().println("No NUnit test report files were found.");
-        	}
+            if (this.failIfNoResults) {
+                // no test result. Most likely a configuration error or fatal problem
+                listener.fatalError("No NUnit test report files were found. Configuration error?");
+            } else {
+                listener.getLogger().println("No NUnit test report files were found.");
+            }
         }
         return nunitFiles;
     }
