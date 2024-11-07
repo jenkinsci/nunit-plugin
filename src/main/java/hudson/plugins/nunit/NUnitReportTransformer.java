@@ -1,13 +1,7 @@
 package hudson.plugins.nunit;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.Serializable;
+import java.io.*;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +36,7 @@ public class NUnitReportTransformer implements TestReportTransformer, Serializab
 
     private static final String ILLEGAL_FILE_CHARS_REGEX = "[\\*/:<>\\?\\|\\\\\";]+";
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public static final String JUNIT_FILE_POSTFIX = ".xml";

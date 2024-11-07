@@ -126,7 +126,7 @@ public class NUnitReportTransformerTest extends AbstractWorkspaceTest implements
             Document result = new SAXReader().read(file);
             List<Node> nodes = result.selectNodes("//*/@*");
             for (Node node : nodes) {
-                if (node instanceof Attribute && ((Attribute) node).getValue().contains("\u00c4")) {
+                if (node instanceof Attribute attribute && attribute.getValue().contains("\u00c4")) {
                     foundUmlaut = true;
                     break;
                 }

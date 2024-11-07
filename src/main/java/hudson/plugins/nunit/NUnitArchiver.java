@@ -6,6 +6,7 @@ import hudson.model.TaskListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serial;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import jenkins.security.MasterToSlaveCallable;
@@ -20,6 +21,7 @@ import org.xml.sax.SAXException;
  */
 public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final String root;

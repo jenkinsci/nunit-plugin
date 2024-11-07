@@ -21,6 +21,7 @@ import hudson.tasks.junit.TestResultAction;
 import hudson.tasks.test.TestResultProjectAction;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -40,6 +41,7 @@ import org.kohsuke.stapler.DataBoundSetter;
  */
 public class NUnitPublisher extends Recorder implements Serializable, SimpleBuildStep {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private static final transient String PLUGIN_NUNIT = "/plugin/nunit/";
@@ -242,6 +244,7 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
             final FilePath filePath)
             throws IOException, InterruptedException {
         TestResult result = filePath.act(new MasterToSlaveCallable<TestResult, IOException>() {
+            @Serial
             private static final long serialVersionUID = -8917897415838795523L;
 
             public TestResult call() throws IOException {
