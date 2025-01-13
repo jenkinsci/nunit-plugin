@@ -1,0 +1,48 @@
+<test-run id="2" duration="0.05420000000000001" testcasecount="23" total="23" passed="21" failed="1" inconclusive="0" skipped="1" result="Failed" start-time="2025-01-13T10:50:39Z" end-time="2025-01-13T10:50:40Z">
+  <test-suite type="Assembly" name="Money.dll" fullname="C:\Users\user\OpenSourceProjects\nunit-csharp-samples\money\bin\Debug\net6.0\Money.dll" total="23" passed="21" failed="1" inconclusive="0" skipped="1" result="Failed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.0542">
+    <test-suite type="TestSuite" name="Money" fullname="Money" total="23" passed="21" failed="1" inconclusive="0" skipped="1" result="Failed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.0542">
+      <test-suite type="TestFixture" name="MoneyTest" fullname="Money.MoneyTest" classname="Money.MoneyTest" total="23" passed="21" failed="1" inconclusive="0" skipped="1" result="Failed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.0542">
+        <test-case name="BagMultiply" fullname="Money.MoneyTest.BagMultiply" methodname="BagMultiply" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.017791" asserts="0" seed="1085017776" />
+        <test-case name="BagNegate" fullname="Money.MoneyTest.BagNegate" methodname="BagNegate" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000336" asserts="0" seed="396754680" />
+        <test-case name="BagSimpleAdd" fullname="Money.MoneyTest.BagSimpleAdd" methodname="BagSimpleAdd" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000616" asserts="0" seed="145216565" />
+        <test-case name="BagSubtract" fullname="Money.MoneyTest.BagSubtract" methodname="BagSubtract" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000262" asserts="0" seed="706382434" />
+        <test-case name="BagSumAdd" fullname="Money.MoneyTest.BagSumAdd" methodname="BagSumAdd" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000119" asserts="0" seed="1661027999" />
+        <test-case name="FailedTest" fullname="Money.MoneyTest.FailedTest" methodname="FailedTest" classname="MoneyTest" result="Failed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.031292" asserts="0" seed="1029712172">
+          <failure>
+            <message>  A failure message for the failed test.
+Assert.That(false, Is.EqualTo(true))
+  Expected: True
+  But was:  False
+</message>
+            <stack-trace>   at Money.MoneyTest.FailedTest() in C:\Users\USER\OpenSourceProjects\nunit-csharp-samples\money\MoneyTest.cs:line 336
+
+1)    at Money.MoneyTest.FailedTest() in C:\Users\user\OpenSourceProjects\nunit-csharp-samples\money\MoneyTest.cs:line 336
+
+</stack-trace>
+          </failure>
+        </test-case>
+        <test-case name="IgnoredTest" fullname="Money.MoneyTest.IgnoredTest" methodname="IgnoredTest" classname="MoneyTest" result="Skipped" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000132" asserts="0" seed="1341007051">
+          <output><![CDATA[Ignoring to check correct skipped status and reason message
+]]></output>
+        </test-case>
+        <test-case name="IsZero" fullname="Money.MoneyTest.IsZero" methodname="IsZero" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000125" asserts="0" seed="1322466791" />
+        <test-case name="MixedSimpleAdd" fullname="Money.MoneyTest.MixedSimpleAdd" methodname="MixedSimpleAdd" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000134" asserts="0" seed="1667425364" />
+        <test-case name="MoneyBagEquals" fullname="Money.MoneyTest.MoneyBagEquals" methodname="MoneyBagEquals" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000287" asserts="0" seed="769551084" />
+        <test-case name="MoneyBagHash" fullname="Money.MoneyTest.MoneyBagHash" methodname="MoneyBagHash" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.001172" asserts="0" seed="1920822432" />
+        <test-case name="MoneyEquals" fullname="Money.MoneyTest.MoneyEquals" methodname="MoneyEquals" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000103" asserts="0" seed="1441461003" />
+        <test-case name="MoneyHash" fullname="Money.MoneyTest.MoneyHash" methodname="MoneyHash" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000132" asserts="0" seed="886961537" />
+        <test-case name="Normalize" fullname="Money.MoneyTest.Normalize" methodname="Normalize" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000156" asserts="0" seed="12811720" />
+        <test-case name="Normalize2" fullname="Money.MoneyTest.Normalize2" methodname="Normalize2" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000118" asserts="0" seed="173285473" />
+        <test-case name="Normalize3" fullname="Money.MoneyTest.Normalize3" methodname="Normalize3" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000127" asserts="0" seed="1697705121" />
+        <test-case name="Normalize4" fullname="Money.MoneyTest.Normalize4" methodname="Normalize4" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000168" asserts="0" seed="1641232691" />
+        <test-case name="Print" fullname="Money.MoneyTest.Print" methodname="Print" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000624" asserts="0" seed="1811977792" />
+        <test-case name="SimpleAdd" fullname="Money.MoneyTest.SimpleAdd" methodname="SimpleAdd" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000105" asserts="0" seed="306639982" />
+        <test-case name="SimpleBagAdd" fullname="Money.MoneyTest.SimpleBagAdd" methodname="SimpleBagAdd" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="0.000123" asserts="0" seed="1035804096" />
+        <test-case name="SimpleMultiply" fullname="Money.MoneyTest.SimpleMultiply" methodname="SimpleMultiply" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="9.7E-05" asserts="0" seed="1202483758" />
+        <test-case name="SimpleNegate" fullname="Money.MoneyTest.SimpleNegate" methodname="SimpleNegate" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="8.9E-05" asserts="0" seed="1758910059" />
+        <test-case name="SimpleSubtract" fullname="Money.MoneyTest.SimpleSubtract" methodname="SimpleSubtract" classname="MoneyTest" result="Passed" start-time="2025-01-13T10:50:40Z" end-time="2025-01-13T10:50:40Z" duration="9.2E-05" asserts="0" seed="199262483" />
+      </test-suite>
+    </test-suite>
+    <errors />
+  </test-suite>
+</test-run>
