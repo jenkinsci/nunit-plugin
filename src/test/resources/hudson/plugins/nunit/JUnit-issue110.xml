@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><testsuites tests="23" failures="1" disabled="1" time="0.05420000000000001">
+      
+    
+      
+    <testsuite tests="23" time="0.0542" errors="0" failures="1" skipped="1" timestamp="2025-01-13T10:50:40Z" name="Money.dll.Money.MoneyTest.">
+        <testcase name="BagMultiply" assertions="0" time="0.017791" status="Passed" classname="MoneyTest"/>
+        <testcase name="BagNegate" assertions="0" time="0.000336" status="Passed" classname="MoneyTest"/>
+        <testcase name="BagSimpleAdd" assertions="0" time="0.000616" status="Passed" classname="MoneyTest"/>
+        <testcase name="BagSubtract" assertions="0" time="0.000262" status="Passed" classname="MoneyTest"/>
+        <testcase name="BagSumAdd" assertions="0" time="0.000119" status="Passed" classname="MoneyTest"/>
+        <testcase name="FailedTest" assertions="0" time="0.031292" status="Failed" classname="MoneyTest">
+                      
+            <failure message="  A failure message for the failed test.&#10;Assert.That(false, Is.EqualTo(true))&#10;  Expected: True&#10;  But was:  False&#10;">   at Money.MoneyTest.FailedTest() in C:\Users\USER\OpenSourceProjects\nunit-csharp-samples\money\MoneyTest.cs:line 336
+
+1)    at Money.MoneyTest.FailedTest() in C:\Users\user\OpenSourceProjects\nunit-csharp-samples\money\MoneyTest.cs:line 336
+
+</failure>
+                    
+        </testcase>
+        <testcase name="IgnoredTest" assertions="0" time="0.000132" status="Skipped" classname="MoneyTest">
+            <skipped message=""/>
+                      
+            <system-out><![CDATA[Ignoring to check correct skipped status and reason message
+]]></system-out>
+                    
+        </testcase>
+        <testcase name="IsZero" assertions="0" time="0.000125" status="Passed" classname="MoneyTest"/>
+        <testcase name="MixedSimpleAdd" assertions="0" time="0.000134" status="Passed" classname="MoneyTest"/>
+        <testcase name="MoneyBagEquals" assertions="0" time="0.000287" status="Passed" classname="MoneyTest"/>
+        <testcase name="MoneyBagHash" assertions="0" time="0.001172" status="Passed" classname="MoneyTest"/>
+        <testcase name="MoneyEquals" assertions="0" time="0.000103" status="Passed" classname="MoneyTest"/>
+        <testcase name="MoneyHash" assertions="0" time="0.000132" status="Passed" classname="MoneyTest"/>
+        <testcase name="Normalize" assertions="0" time="0.000156" status="Passed" classname="MoneyTest"/>
+        <testcase name="Normalize2" assertions="0" time="0.000118" status="Passed" classname="MoneyTest"/>
+        <testcase name="Normalize3" assertions="0" time="0.000127" status="Passed" classname="MoneyTest"/>
+        <testcase name="Normalize4" assertions="0" time="0.000168" status="Passed" classname="MoneyTest"/>
+        <testcase name="Print" assertions="0" time="0.000624" status="Passed" classname="MoneyTest"/>
+        <testcase name="SimpleAdd" assertions="0" time="0.000105" status="Passed" classname="MoneyTest"/>
+        <testcase name="SimpleBagAdd" assertions="0" time="0.000123" status="Passed" classname="MoneyTest"/>
+        <testcase name="SimpleMultiply" assertions="0" time="9.7E-05" status="Passed" classname="MoneyTest"/>
+        <testcase name="SimpleNegate" assertions="0" time="8.9E-05" status="Passed" classname="MoneyTest"/>
+        <testcase name="SimpleSubtract" assertions="0" time="9.2E-05" status="Passed" classname="MoneyTest"/>
+    </testsuite>
+        
+    
+  
+
+</testsuites>

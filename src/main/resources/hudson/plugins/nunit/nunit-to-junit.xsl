@@ -115,7 +115,7 @@ STACK TRACE:
 
 	<xsl:template match="test-suite">
 		<xsl:if test="test-case">
-			<testsuite tests="{@testcasecount}" time="{@duration}" errors="{@testcasecount - @passed - @skipped - @failed - @inconclusive}" failures="{@failed}" skipped="{@skipped + @inconclusive}" timestamp="{@start-time}">
+			<testsuite tests="{count(descendant::test-case)}" time="{@duration}" errors="{count(descendant::test-case) - @passed - @skipped - @failed - @inconclusive}" failures="{@failed}" skipped="{@skipped + @inconclusive}" timestamp="{@start-time}">
 				<xsl:attribute name="name">
 					<xsl:for-each select="ancestor-or-self::test-suite/@name">
 						<xsl:value-of select="concat(., '.')"/>
@@ -135,8 +135,12 @@ STACK TRACE:
 
 	<xsl:template match="test-case">
 		<testcase name="{@name}" assertions="{@asserts}" time="{@duration}" status="{@result}" classname="{@classname}">
-			<xsl:if test="@runstate = 'Skipped' or @runstate = 'Ignored' or @runstate='Inconclusive'">
-				<skipped/>
+			<xsl:if test="@result = 'Skipped' or @runstate = 'Skipped' or @runstate = 'Ignored' or @runstate='Inconclusive'">
+				<skipped>
+					<xsl:attribute name="message">
+						<xsl:value-of select="./reason/message"/>
+					</xsl:attribute>
+				</skipped>
 			</xsl:if>
 
 			<xsl:apply-templates/>
