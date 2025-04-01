@@ -1,11 +1,12 @@
 package hudson.plugins.nunit;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Util;
 import hudson.model.TaskListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import jenkins.security.MasterToSlaveCallable;
@@ -21,6 +22,8 @@ import org.xml.sax.SAXException;
 public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = Logger.getLogger(NUnitArchiver.class.getName());
 
     private final String root;
     private final String junitDirectoryName;
@@ -47,13 +50,14 @@ public class NUnitArchiver extends MasterToSlaveCallable<Boolean, IOException> {
     }
 
     /** {@inheritDoc} */
-    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     public Boolean call() throws IOException {
         boolean retValue = true;
         String[] nunitFiles = findNUnitReports(new File(root));
         if (nunitFiles.length > 0) {
             File junitOutputPath = new File(root, junitDirectoryName);
-            junitOutputPath.mkdirs();
+            if (junitOutputPath.mkdirs()) {
+                LOGGER.log(Level.FINEST, "Created junit directories");
+            }
 
             for (String nunitFileName : nunitFiles) {
                 try (FileInputStream fileStream = new FileInputStream(new File(root, nunitFileName))) {
