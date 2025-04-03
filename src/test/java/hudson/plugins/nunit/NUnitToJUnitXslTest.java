@@ -1,6 +1,6 @@
 package hudson.plugins.nunit;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,8 +8,8 @@ import java.io.InputStreamReader;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Transform;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.Issue;
 import org.xml.sax.InputSource;
 
@@ -18,9 +18,10 @@ import org.xml.sax.InputSource;
  *
  * @author Erik Ramfelt
  */
-public class NUnitToJUnitXslTest {
-    @Before
-    public void setUp() {
+class NUnitToJUnitXslTest {
+
+    @BeforeEach
+    void setUp() {
         XMLUnit.setIgnoreWhitespace(true);
         XMLUnit.setNormalizeWhitespace(true);
         XMLUnit.setIgnoreComments(true);
@@ -28,32 +29,29 @@ public class NUnitToJUnitXslTest {
     }
 
     @Test
-    public void testTransformation() throws Exception {
-
+    void testTransformation() throws Exception {
         Transform myTransform = new Transform(
                 new InputSource(this.getClass().getResourceAsStream("NUnit-simple.xml")),
                 new InputSource(
                         this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-simple.xml"), myTransform);
-        assertTrue("XSL transformation did not work" + myDiff, myDiff.similar());
+        assertTrue(myDiff.similar(), "XSL transformation did not work" + myDiff);
     }
 
     @Test
-    public void testTransformationFailure() throws Exception {
-
+    void testTransformationFailure() throws Exception {
         Transform myTransform = new Transform(
                 new InputSource(this.getClass().getResourceAsStream("NUnit-failure.xml")),
                 new InputSource(
                         this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-failure.xml"), myTransform.getResultString());
-        assertTrue("XSL transformation did not work" + myDiff, myDiff.similar());
+        assertTrue(myDiff.similar(), "XSL transformation did not work" + myDiff);
     }
 
     @Test
-    public void testTransformationMultiNamespace() throws Exception {
-
+    void testTransformationMultiNamespace() throws Exception {
         XMLUnit.setNormalizeWhitespace(false);
         Transform myTransform = new Transform(
                 new InputSource(this.getClass().getResourceAsStream("NUnit-multinamespace.xml")),
@@ -61,102 +59,102 @@ public class NUnitToJUnitXslTest {
                         this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-multinamespace.xml"), myTransform);
-        assertTrue("XSL transformation did not work" + myDiff, myDiff.similar());
+        assertTrue(myDiff.similar(), "XSL transformation did not work" + myDiff);
     }
 
     @Test
-    public void testTransformedIgnored() throws Exception {
+    void testTransformedIgnored() throws Exception {
         Transform myTransform = new Transform(
                 new InputSource(this.getClass().getResourceAsStream("NUnit-ignored.xml")),
                 new InputSource(
                         this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-ignored.xml"), myTransform);
-        assertTrue("XSL transformation did not work" + myDiff, myDiff.similar());
+        assertTrue(myDiff.similar(), "XSL transformation did not work" + myDiff);
     }
 
     @Test
-    public void testTransformedIssue1077() throws Exception {
+    void testTransformedIssue1077() throws Exception {
         Transform myTransform = new Transform(
                 new InputSource(this.getClass().getResourceAsStream("NUnit-issue1077.xml")),
                 new InputSource(
                         this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-issue1077.xml"), myTransform);
-        assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
+        assertTrue(myDiff.similar(), "XSL transformation did not work. " + myDiff);
     }
 
     @Test
     @Issue("JENKINS-48478")
-    public void testTransformedIssue48478() throws Exception {
+    void testTransformedIssue48478() throws Exception {
         Transform myTransform = new Transform(
                 new InputSource(this.getClass().getResourceAsStream("NUnit-issue48478.xml")),
                 new InputSource(
                         this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-issue48478.xml"), myTransform);
-        assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
+        assertTrue(myDiff.similar(), "XSL transformation did not work. " + myDiff);
     }
 
     @Test
     @Issue("JENKINS-6353")
-    public void testSkippedTests() throws Exception {
+    void testSkippedTests() throws Exception {
         Transform myTransform = new Transform(
                 new InputSource(this.getClass().getResourceAsStream("NUnit-issue6353.xml")),
                 new InputSource(
                         this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-issue6353.xml"), myTransform);
-        assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
+        assertTrue(myDiff.similar(), "XSL transformation did not work. " + myDiff);
     }
 
     @Test
     @Issue("JENKINS-5674")
-    public void testThatNameIsFilledOut() throws Exception {
+    void testThatNameIsFilledOut() throws Exception {
         Transform myTransform = new Transform(
                 new InputSource(this.getClass().getResourceAsStream("NUnit-issue5674.xml")),
                 new InputSource(
                         this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-issue5674.xml"), myTransform);
-        assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
+        assertTrue(myDiff.similar(), "XSL transformation did not work. " + myDiff);
     }
 
     @Test
     @Issue("JENKINS-5674")
-    public void namedTestsAreProperlyParsed() throws Exception {
+    void namedTestsAreProperlyParsed() throws Exception {
         Transform myTransform = new Transform(
                 new InputSource(this.getClass().getResourceAsStream("NUnit-issue5674-setname.xml")),
                 new InputSource(
                         this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-issue5674-setname.xml"), myTransform);
-        assertTrue("XSL transformation did not work. " + myDiff, myDiff.similar());
+        assertTrue(myDiff.similar(), "XSL transformation did not work. " + myDiff);
     }
 
     @Test
-    public void testTransformationHandlesSkippedTestsIssue110() throws Exception {
+    void testTransformationHandlesSkippedTestsIssue110() throws Exception {
         Transform myTransform = new Transform(
                 new InputSource(this.getClass().getResourceAsStream("NUnit-issue110.xml")),
                 new InputSource(
                         this.getClass().getResourceAsStream(NUnitReportTransformer.NUNIT_TO_JUNIT_XSLFILE_STR)));
 
         Diff myDiff = new Diff(readXmlAsString("JUnit-issue110.xml"), myTransform);
-        assertTrue("XSL transformation did not correctly handle skipped tests. " + myDiff, myDiff.similar());
+        assertTrue(myDiff.similar(), "XSL transformation did not correctly handle skipped tests. " + myDiff);
     }
 
     private String readXmlAsString(String resourceName) throws IOException {
-        String xmlString = "";
+        StringBuilder xmlString = new StringBuilder();
 
         BufferedReader reader =
                 new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(resourceName)));
         String line = reader.readLine();
         while (line != null) {
-            xmlString += line + "\n";
+            xmlString.append(line).append("\n");
             line = reader.readLine();
         }
         reader.close();
 
-        return xmlString;
+        return xmlString.toString();
     }
 }
