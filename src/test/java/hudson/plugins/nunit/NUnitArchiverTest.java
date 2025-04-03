@@ -1,6 +1,6 @@
 package hudson.plugins.nunit;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import hudson.Launcher;
@@ -11,24 +11,25 @@ import hudson.model.FreeStyleProject;
 import hudson.remoting.VirtualChannel;
 import hudson.util.StreamTaskListener;
 import java.io.*;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.TestBuilder;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-public class NUnitArchiverTest {
+@WithJenkins
+class NUnitArchiverTest {
 
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
+    private JenkinsRule j;
 
     private StreamTaskListener buildListener;
     private TestReportTransformer transformer;
     private NUnitArchiver nunitArchiver;
     private VirtualChannel virtualChannel;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp(JenkinsRule rule) {
+        j = rule;
         buildListener = StreamTaskListener.fromStdout();
         transformer = mock(TestReportTransformer.class);
         virtualChannel = mock(VirtualChannel.class);
@@ -62,7 +63,7 @@ public class NUnitArchiverTest {
     }*/
 
     @Test
-    public void testTransformOfTwoReports() throws Exception {
+    void testTransformOfTwoReports() throws Exception {
         FreeStyleProject prj = j.createFreeStyleProject("foo");
         prj.getBuildersList().add(new TestBuilder() {
             @Override
@@ -76,9 +77,10 @@ public class NUnitArchiverTest {
         FreeStyleBuild b = prj.scheduleBuild2(0).get();
         nunitArchiver = new NUnitArchiver(
                 b.getWorkspace().getRemote(), "tempJunitReports", buildListener, "*.xml", transformer, true);
-        assertTrue("Error during archiver call", nunitArchiver.call());
-        assertEquals("Should have processed two files", 2, nunitArchiver.getFileCount());
+        assertTrue(nunitArchiver.call(), "Error during archiver call");
+        assertEquals(2, nunitArchiver.getFileCount(), "Should have processed two files");
     }
+
     /*
     @Test
     public void testKeepJUnitReportFiles() throws Exception {
@@ -127,7 +129,7 @@ public class NUnitArchiverTest {
     }*/
 
     @Test
-    public void testNoNUnitReports() throws Exception {
+    void testNoNUnitReports() throws Exception {
         FreeStyleProject prj = j.createFreeStyleProject("foo");
         FreeStyleBuild b = prj.scheduleBuild2(0).get();
 
@@ -138,6 +140,6 @@ public class NUnitArchiverTest {
                 "*.xml",
                 transformer,
                 true);
-        assertFalse("The archiver did not return false when it could not find any files", nunitArchiver.call());
+        assertFalse(nunitArchiver.call(), "The archiver did not return false when it could not find any files");
     }
 }

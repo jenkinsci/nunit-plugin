@@ -1,6 +1,6 @@
 package hudson.plugins.nunit;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -15,75 +15,72 @@ import java.io.IOException;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.TestBuilder;
 import org.jvnet.hudson.test.WithoutJenkins;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-public class NUnitPublisherTest {
-
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
+@WithJenkins
+class NUnitPublisherTest {
 
     @Test
     @WithoutJenkins
-    public void testGetTestResultsPattern() {
+    void testGetTestResultsPattern() {
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
         publisher.setDebug(true);
-        assertEquals("The test results pattern is incorrect", publisher.getTestResultsPattern(), "**/*.xml");
+        assertEquals("**/*.xml", publisher.getTestResultsPattern(), "The test results pattern is incorrect");
     }
 
     @Test
     @WithoutJenkins
-    public void testGetDebug() {
+    void testGetDebug() {
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
         publisher.setDebug(true);
-        assertTrue("Debug is incorrect", publisher.getDebug());
+        assertTrue(publisher.getDebug(), "Debug is incorrect");
         publisher = new NUnitPublisher("**/*.xml");
-        assertFalse("Debug is incorrect", publisher.getDebug());
+        assertFalse(publisher.getDebug(), "Debug is incorrect");
     }
 
     @Test
     @WithoutJenkins
-    public void testDisabledDebug() {
+    void testDisabledDebug() {
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
         publisher.setKeepJUnitReports(true);
         publisher.setSkipJUnitArchiver(true);
-        assertFalse("Debug is incorrect", publisher.getDebug());
-        assertFalse("KeepJunitReports() is incorrect", publisher.getKeepJUnitReports());
-        assertFalse("SkipJunitArchiver() is incorrect", publisher.getSkipJUnitArchiver());
+        assertFalse(publisher.getDebug(), "Debug is incorrect");
+        assertFalse(publisher.getKeepJUnitReports(), "KeepJunitReports() is incorrect");
+        assertFalse(publisher.getSkipJUnitArchiver(), "SkipJunitArchiver() is incorrect");
     }
 
     @Test
     @WithoutJenkins
-    public void testGetKeepJunitReports() {
+    void testGetKeepJunitReports() {
         NUnitPublisher publisher = new NUnitPublisher("**/.xml");
         publisher.setDebug(true);
         publisher.setKeepJUnitReports(true);
-        assertTrue("KeepJunitReports() is incorrect", publisher.getKeepJUnitReports());
+        assertTrue(publisher.getKeepJUnitReports(), "KeepJunitReports() is incorrect");
         publisher = new NUnitPublisher("**/*.xml");
         publisher.setDebug(true);
-        assertFalse("KeepJunitReports() is incorrect", publisher.getKeepJUnitReports());
+        assertFalse(publisher.getKeepJUnitReports(), "KeepJunitReports() is incorrect");
     }
 
     @Test
     @WithoutJenkins
-    public void testGetSkipJunitArchiver() {
+    void testGetSkipJunitArchiver() {
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
         publisher.setDebug(true);
         publisher.setSkipJUnitArchiver(true);
-        assertTrue("SkipJunitArchiver() is incorrect", publisher.getSkipJUnitArchiver());
+        assertTrue(publisher.getSkipJUnitArchiver(), "SkipJunitArchiver() is incorrect");
         publisher = new NUnitPublisher("**/*.xml");
         publisher.setDebug(true);
-        assertFalse("SkipJunitArchiver() is incorrect", publisher.getSkipJUnitArchiver());
+        assertFalse(publisher.getSkipJUnitArchiver(), "SkipJunitArchiver() is incorrect");
     }
 
     @Test
     @WithoutJenkins
-    public void testGetProjectActionProjectReusing() {
+    void testGetProjectActionProjectReusing() {
         Project project = mock(Project.class);
         when(project.getAction(TestResultProjectAction.class)).thenReturn(new TestResultProjectAction(project));
 
@@ -92,12 +89,12 @@ public class NUnitPublisherTest {
 
         @SuppressWarnings("rawtypes")
         Action projectAction = publisher.getProjectAction((AbstractProject) project);
-        assertNotNull("The action was null", projectAction);
+        assertNotNull(projectAction, "The action was null");
     }
 
     @Test
     @WithoutJenkins
-    public void testGetProjectActionProject() {
+    void testGetProjectActionProject() {
         Project project = mock(Project.class);
         when(project.getAction(TestResultProjectAction.class)).thenReturn(null);
 
@@ -105,27 +102,27 @@ public class NUnitPublisherTest {
         publisher.setSkipJUnitArchiver(true);
         @SuppressWarnings("rawtypes")
         Action projectAction = publisher.getProjectAction((AbstractProject) project);
-        assertNotNull("The action was null", projectAction);
-        assertEquals("The action type is incorrect", TestResultProjectAction.class, projectAction.getClass());
+        assertNotNull(projectAction, "The action was null");
+        assertEquals(TestResultProjectAction.class, projectAction.getClass(), "The action type is incorrect");
     }
 
     @Test
     @WithoutJenkins
-    public void testGetFailBuildIfNoResults() {
+    void testGetFailBuildIfNoResults() {
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
         publisher.setKeepJUnitReports(true);
         publisher.setSkipJUnitArchiver(true);
-        assertTrue("Fail if no results is incorrect", publisher.getFailIfNoResults());
+        assertTrue(publisher.getFailIfNoResults(), "Fail if no results is incorrect");
         publisher = new NUnitPublisher("**/*.xml");
         publisher.setKeepJUnitReports(true);
         publisher.setSkipJUnitArchiver(true);
         publisher.setFailIfNoResults(false);
-        assertFalse("Fail if no results is incorrect", publisher.getFailIfNoResults());
+        assertFalse(publisher.getFailIfNoResults(), "Fail if no results is incorrect");
     }
 
     @Test
     @Issue("JENKINS-42967")
-    public void testFailBuildIfNoResults() throws Exception {
+    void testFailBuildIfNoResults(JenkinsRule j) throws Exception {
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
         publisher.setKeepJUnitReports(true);
         publisher.setSkipJUnitArchiver(true);
@@ -140,7 +137,7 @@ public class NUnitPublisherTest {
 
     @Test
     @Issue("JENKINS-34452")
-    public void testDoNotFailIfEmptyTests() throws Exception {
+    void testDoNotFailIfEmptyTests(JenkinsRule j) throws Exception {
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
         publisher.setKeepJUnitReports(true);
         publisher.setFailIfNoResults(false);
@@ -162,7 +159,7 @@ public class NUnitPublisherTest {
     }
 
     @Test
-    public void testAgent() throws Exception {
+    void testAgent(JenkinsRule j) throws Exception {
         Slave agent = j.createOnlineSlave();
         FreeStyleProject prj = j.createFreeStyleProject("foo");
         prj.setAssignedNode(agent);
@@ -187,7 +184,7 @@ public class NUnitPublisherTest {
     }
 
     @Test
-    public void testHealthScaleFactor() throws Exception {
+    void testHealthScaleFactor(JenkinsRule j) throws Exception {
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
         publisher.setHealthScaleFactor(5.0);
         FreeStyleProject prj = j.createFreeStyleProject("foo");
@@ -214,7 +211,7 @@ public class NUnitPublisherTest {
     }
 
     @Test
-    public void testFailIfTestsFail() throws Exception {
+    void testFailIfTestsFail(JenkinsRule j) throws Exception {
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
         publisher.setKeepJUnitReports(true);
         publisher.setFailIfNoResults(false);
@@ -237,7 +234,7 @@ public class NUnitPublisherTest {
     }
 
     @Test
-    public void testUnstableIfTestsFail() throws Exception {
+    void testUnstableIfTestsFail(JenkinsRule j) throws Exception {
         NUnitPublisher publisher = new NUnitPublisher("**/*.xml");
         publisher.setKeepJUnitReports(true);
         publisher.setFailIfNoResults(false);
@@ -259,7 +256,7 @@ public class NUnitPublisherTest {
     }
 
     @Test
-    public void testDoNotOverwriteResultsIfThereAreNoFilesDuringNextPublishments() throws Exception {
+    void testDoNotOverwriteResultsIfThereAreNoFilesDuringNextPublishments(JenkinsRule j) throws Exception {
         NUnitPublisher publisherWithCorrectPattern = new NUnitPublisher("nunit.xml");
         NUnitPublisher publisherWithIncorrectPattern = new NUnitPublisher("nunit2.xml");
         publisherWithIncorrectPattern.setFailIfNoResults(false);
@@ -277,11 +274,11 @@ public class NUnitPublisherTest {
         publishersList.add(publisherWithIncorrectPattern);
         FreeStyleBuild build = freeStyleProject.scheduleBuild2(0).get();
         TestResultAction existingAction = build.getAction(TestResultAction.class);
-        Assert.assertTrue(existingAction.getTotalCount() == 4);
+        assertEquals(4, existingAction.getTotalCount());
     }
 
     @Test
-    public void parallelPublishing() throws Exception {
+    void parallelPublishing(JenkinsRule j) throws Exception {
         WorkflowJob job = j.createProject(WorkflowJob.class, "parallelInStage");
         FilePath ws = j.jenkins.getWorkspaceFor(job);
 
@@ -293,11 +290,13 @@ public class NUnitPublisherTest {
         thirdTestFile.copyFrom(this.getClass().getResourceAsStream("NUnit-correct3.xml"));
 
         job.setDefinition(new CpsFlowDefinition(
-                "node {\n"
-                        + "    parallel(a: { step([$class: 'NUnitPublisher', testResultsPattern: 'first-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false]) },\n"
-                        + "             b: { step([$class: 'NUnitPublisher', testResultsPattern: 'second-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false]) },\n"
-                        + "             c: { step([$class: 'NUnitPublisher', testResultsPattern: 'third-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false]) })\n"
-                        + "}\n",
+                """
+                        node {
+                            parallel(a: { step([$class: 'NUnitPublisher', testResultsPattern: 'first-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false]) },
+                                     b: { step([$class: 'NUnitPublisher', testResultsPattern: 'second-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false]) },
+                                     c: { step([$class: 'NUnitPublisher', testResultsPattern: 'third-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false]) })
+                        }
+                        """,
                 true));
         WorkflowRun r = j.waitForCompletion(job.scheduleBuild2(0).waitForStart());
         TestResultAction action = r.getAction(TestResultAction.class);
