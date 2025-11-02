@@ -1,5 +1,6 @@
 package hudson.plugins.nunit;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
@@ -23,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.UUID;
-import javax.annotation.Nonnull;
 import jenkins.security.MasterToSlaveCallable;
 import jenkins.tasks.SimpleBuildStep;
 import org.apache.commons.lang3.BooleanUtils;
@@ -271,7 +271,7 @@ public class NUnitPublisher extends Recorder implements Serializable, SimpleBuil
 
     @Override
     public void perform(
-            @Nonnull Run<?, ?> run, @Nonnull FilePath ws, @Nonnull Launcher launcher, @Nonnull TaskListener listener)
+            @NonNull Run<?, ?> run, @NonNull FilePath ws, @NonNull Launcher launcher, @NonNull TaskListener listener)
             throws InterruptedException, IOException {
         if (debug) {
             listener.getLogger().println("NUnit publisher running in debug mode.");
