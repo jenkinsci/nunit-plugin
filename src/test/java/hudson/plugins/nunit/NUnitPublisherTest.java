@@ -289,15 +289,13 @@ class NUnitPublisherTest {
         FilePath thirdTestFile = ws.child("third-result.xml");
         thirdTestFile.copyFrom(this.getClass().getResourceAsStream("NUnit-correct3.xml"));
 
-        job.setDefinition(new CpsFlowDefinition(
-                """
+        job.setDefinition(new CpsFlowDefinition("""
                         node {
                             parallel(a: { step([$class: 'NUnitPublisher', testResultsPattern: 'first-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false]) },
                                      b: { step([$class: 'NUnitPublisher', testResultsPattern: 'second-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false]) },
                                      c: { step([$class: 'NUnitPublisher', testResultsPattern: 'third-result.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false]) })
                         }
-                        """,
-                true));
+                        """, true));
         WorkflowRun r = j.waitForCompletion(job.scheduleBuild2(0).waitForStart());
         TestResultAction action = r.getAction(TestResultAction.class);
         assertNotNull(action);
